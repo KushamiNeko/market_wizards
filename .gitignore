@@ -1,0 +1,12 @@
+pkg
+bin
+
+resource
+
+cloud.google.com
+github.com
+golang.org
+google.golang.org
+
+*.jpg
+*.png
