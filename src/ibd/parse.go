@@ -55,6 +55,8 @@ func init() {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 type IBDCheckup struct {
+	ID string
+
 	Symbol string
 
 	RankInGroup           int
@@ -81,7 +83,7 @@ type IBDCheckup struct {
 	AnnualROE            float32
 	DebtEquityRatio      float32
 
-	Price          float32
+	//Price          float32
 	RSRating       int
 	Off52WeekHigh  float32
 	PriceVS50DayMA float32
@@ -214,10 +216,10 @@ func Parse(buffer *bytes.Buffer) (*IBDCheckup, error) {
 		return nil, err
 	}
 
-	info.Price, err = parsePrice(cleanup(results, 20, 2))
-	if err != nil {
-		return nil, err
-	}
+	//info.Price, err = parsePrice(cleanup(results, 20, 2))
+	//if err != nil {
+	//return nil, err
+	//}
 
 	info.RSRating, err = parseInt(cleanup(results, 21, 2))
 	if err != nil {
