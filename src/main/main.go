@@ -3,6 +3,8 @@ package main
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import (
+	"client"
+	"config"
 	"handler"
 	"log"
 	"net/http"
@@ -14,30 +16,16 @@ import (
 //TestFile = "resource/ibd_checkup_extr.html"
 //)
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//var (
-//ctx context.Context
-//)
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//func init() {
+func init() {
 
-//// config Init before anything
-//config.Init()
+	// config Init before anything
+	config.Init()
 
-//ctx = context.Background()
+	client.Init()
 
-//datastore.InitClient(&ctx)
-
-//storage.InitClient(&ctx)
-
-//err := cipherutils.AesCipherInstanceInit()
-//if err != nil {
-//panic(err.Error())
-//}
-//}
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -62,6 +50,10 @@ func main() {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/", handler.Login)
+
+	mux.HandleFunc("/user", handler.User)
+
+	mux.HandleFunc("/action", handler.Action)
 
 	log.Fatal(http.ListenAndServe(":8080", mux))
 }

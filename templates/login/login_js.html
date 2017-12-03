@@ -1,0 +1,63 @@
+{{define "LoginJS"}}
+
+<script>
+  function validateEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+  }
+
+  function action(url, errcb) {
+
+    $(".invalid-feedback").hide();
+
+    var email = $("#input-email").val() + "@gmail.com";
+    var password = $("#input-password").val();
+
+    if (!validateEmail(email)) {
+      $("#validate-email").show();
+      return;
+    }
+
+    if (password === "") {
+      $("#validate-password").show();
+      return;
+    }
+
+    var data = {};
+    data.Email = email;
+    data.Password = password;
+
+    var jsonBody = JSON.stringify(data);
+
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: jsonBody,
+      success: function(data) {
+        window.location = data;
+      },
+      error: function(xhr, err) {
+        errcb();
+      },
+    });
+  }
+
+  $("#button-create").click(function() {
+
+    action("/user", function() {
+      $("#validate-email").show();
+    });
+
+  });
+
+  $("#button-login").click(function() {
+
+    action("/login", function() {
+      $("#validate-email").show();
+      $("#validate-password").show();
+    });
+
+  });
+</script>
+
+{{end}}

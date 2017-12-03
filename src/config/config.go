@@ -24,11 +24,11 @@ const (
 	KeyLengthStrong  = 256
 	KeyLengthMax     = 512
 
-	NamespaceUser        = "--User--"
 	NamespaceIBD         = "--IBD-Checkup--"
 	NamespaceTransaction = "--Transaction--"
 
-	KindUser = "--user--"
+	NamespaceUser = "--User--"
+	KindUser      = "--user--"
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////

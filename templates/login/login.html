@@ -1,0 +1,93 @@
+{{define "Login"}}
+
+<html lang="en">
+
+<head>
+
+  <!---->
+  {{template "IndexHead"}}
+  <!---->
+
+  <!---->
+  {{template "IndexIcon"}}
+  <!---->
+
+  <!---->
+  {{template "CDNCSS"}}
+  <!---->
+
+  <!---->
+  {{template "LoginCSS"}}
+  <!---->
+
+</head>
+
+<body>
+
+  <!---->
+  {{template "ShareNavbar"}}
+  <!---->
+
+  <div class="my-container">
+
+    <label for="input-email"
+      class="my-margin">Email</label>
+
+    <div class="input-group">
+
+      <input type="email"
+        id="input-email"
+        class="form-control"
+        placeholder="email"
+        aria-label="email">
+
+      <span class="input-group-addon">@gmail.com</span>
+
+    </div>
+
+    <div id="validate-email"
+      class="invalid-feedback">
+      Invalid Email
+    </div>
+
+    <label for="input-password"
+      class="my-margin">Password</label>
+
+    <input type="password"
+      id="input-password"
+      class="form-control"
+      placeholder="password"
+      aria-label="password">
+
+    <div id="validate-password"
+      class="invalid-feedback">
+      Invalid Password
+    </div>
+
+    <div class="my-button-container">
+
+      <button type="button"
+        id="button-create"
+        class="btn btn-lg btn-secondary my-margin my-button">Create</button>
+
+      <button type="button"
+        id="button-login"
+        class="btn btn-lg btn-dark my-margin my-button">Login</button>
+
+    </div>
+
+  </div>
+
+  <!---->
+  {{template "CDNJS"}}
+  <!---->
+
+  <!---->
+  {{template "LoginJS"}}
+  <!---->
+
+</body>
+
+</html>
+
+{{end}}

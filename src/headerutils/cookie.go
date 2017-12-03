@@ -11,17 +11,21 @@ import (
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const (
-	CookieEncodeName = "Gozila"
-	CookiePathRoot   = "/"
+	CookieName     = "Gozila"
+	CookiePathRoot = "/"
+
+	CookieMaxAge = 2 * 60 * 60
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func SetCookie(w http.ResponseWriter, cookieName, cookieValue, cookiePath string) error {
+func SetCookie(w http.ResponseWriter, cookieName, cookieValue, cookiePath string) {
 	cookie := new(http.Cookie)
-	cookie.Name = CookieEncodeName
+	cookie.Name = cookieName
 	cookie.Value = cipherutils.AesCipherInstanceEncode(cookieValue)
 	cookie.Path = cookiePath
+
+	cookie.MaxAge = CookieMaxAge
 
 	/////// VERY IMPORTANT ///////
 	cookie.HttpOnly = true
@@ -29,14 +33,12 @@ func SetCookie(w http.ResponseWriter, cookieName, cookieValue, cookiePath string
 	/////// VERY IMPORTANT ///////
 
 	http.SetCookie(w, cookie)
-
-	return nil
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func GetCookie(r *http.Request, cookieName string) (string, error) {
-	cookie, err := r.Cookie(CookieEncodeName)
+	cookie, err := r.Cookie(cookieName)
 	if err != nil {
 		return "", err
 	}
@@ -47,6 +49,24 @@ func GetCookie(r *http.Request, cookieName string) (string, error) {
 	}
 
 	return value, nil
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func DeleteCookie(w http.ResponseWriter, cookieName, cookiePath string) {
+	cookie := new(http.Cookie)
+	cookie.Name = cookieName
+	cookie.Value = "DELETED"
+	cookie.Path = cookiePath
+
+	cookie.MaxAge = -1
+
+	/////// VERY IMPORTANT ///////
+	cookie.HttpOnly = true
+	cookie.Secure = config.TLSConnection
+	/////// VERY IMPORTANT ///////
+
+	http.SetCookie(w, cookie)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////

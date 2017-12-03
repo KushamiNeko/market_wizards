@@ -1,0 +1,33 @@
+package handler
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import (
+	"client"
+	"config"
+
+	"cloud.google.com/go/datastore"
+)
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func emailExist(email string) ([]*datastore.Key, bool, error) {
+
+	q := datastore.NewQuery(config.KindUser).Namespace(config.NamespaceUser)
+	q = q.Filter("Email =", email)
+	q = q.KeysOnly()
+
+	var entities []datastore.PropertyList
+	keys, err := client.DatastoreClient.GetAll(client.Context, q, &entities)
+	if err != nil {
+		return nil, false, err
+	}
+
+	if len(keys) > 0 {
+		return keys, true, nil
+	}
+
+	return nil, false, nil
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

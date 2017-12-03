@@ -27,12 +27,7 @@ func (u *User) JsonDecode(buffer []byte) error {
 		return err
 	}
 
-	//u.Password, err = hashutils.BcryptB64FromString(u.PasswordJson, hashutils.BcryptCostDefault)
-	//if err != nil {
-	//return err
-	//}
-
-	u.UID = hashutils.RandBytesGenerateB64(config.KeyLengthStrong)
+	u.UID = hashutils.RandBytesGenerateB64(config.KeyLengthDefault)
 
 	return nil
 }

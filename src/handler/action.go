@@ -3,19 +3,41 @@ package handler
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import (
-	"html/template"
+	"bytes"
+	"minify"
+	"net/http"
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-var (
-	templates *template.Template
-)
+func Action(w http.ResponseWriter, r *http.Request) {
+
+	switch r.Method {
+	case http.MethodGet:
+		actionGet(w, r)
+
+	default:
+		http.NotFound(w, r)
+	}
+
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func init() {
-	templates = template.Must(template.New("templates").ParseGlob("templates/**/*.html"))
+func actionGet(w http.ResponseWriter, r *http.Request) {
+	buffer := new(bytes.Buffer)
+
+	err := templates.ExecuteTemplate(
+		buffer,
+		"Action",
+		nil,
+	)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Write(minify.Minify(buffer.Bytes()))
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
