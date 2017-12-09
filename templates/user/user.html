@@ -1,0 +1,102 @@
+{{define "User"}}
+
+<html lang="en">
+
+<head>
+
+  <!---->
+  {{template "IndexHead"}}
+  <!---->
+
+  <!---->
+  {{template "IndexIcon"}}
+  <!---->
+
+  <!---->
+  {{template "CDNCSS"}}
+  <!---->
+
+  <!---->
+  {{template "UserCSS"}}
+  <!---->
+
+</head>
+
+<body>
+
+  <!---->
+  {{template "ShareNavbar"}}
+  <!---->
+
+  <div class="my-container">
+
+    <label for="input-email"
+      class="my-margin">Email</label>
+
+    <div class="input-group">
+
+      <input type="email"
+        id="input-email"
+        class="form-control"
+        placeholder="email"
+        value="{{.Email}}"
+        aria-label="email"
+        disabled>
+
+      <span class="input-group-addon">@gmail.com</span>
+
+    </div>
+
+    <label for="input-password"
+      class="my-margin">Password</label>
+
+    <input type="password"
+      id="input-password"
+      class="form-control"
+      placeholder="password"
+      aria-label="password">
+
+    <div id="validate-password"
+      class="invalid-feedback">
+      Invalid Password
+    </div>
+
+    <label for="input-password-confirm"
+      class="my-margin">Password Confirm</label>
+
+    <input type="password"
+      id="input-password-confirm"
+      class="form-control"
+      placeholder="password confirm"
+      aria-label="password confirm">
+
+    <div id="validate-password-confirm"
+      class="invalid-feedback">
+      Password Inconsistent
+    </div>
+
+    <div class="my-button-container">
+
+      <button type="button"
+        id="button-ok"
+        class="btn btn-lg btn-dark my-margin my-button">
+        OK
+      </button>
+
+    </div>
+
+  </div>
+
+  <!---->
+  {{template "CDNJS"}}
+  <!---->
+
+  <!---->
+  {{template "UserJS"}}
+  <!---->
+
+</body>
+
+</html>
+
+{{end}}

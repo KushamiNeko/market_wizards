@@ -1,22 +1,28 @@
-{{define "LoginJS"}}
+{{define "UserJS"}}
 
 <script>
-  $("#input-email").focus();
-
   function validateEmail(email) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
   }
 
-  function action(url, errcb) {
+  $("#input-password").focus();
+
+  $("#button-ok").click(function() {
 
     $(".invalid-feedback").hide();
 
-    var email = $("#input-email").val() + "@gmail.com";
+    var email = $("#input-email").val();
     var password = $("#input-password").val();
 
+    var conf = $("#input-password-confirm").val();
+
+    if (password !== conf) {
+      $("#validate-password-confirm").show();
+      return;
+    }
+
     if (!validateEmail(email)) {
-      $("#validate-email").show();
       return;
     }
 
@@ -32,33 +38,17 @@
     var jsonBody = JSON.stringify(data);
 
     $.ajax({
-      type: "POST",
-      url: url,
+      type: "PUT",
+      url: "/user",
       data: jsonBody,
       success: function(data) {
         window.location = data;
       },
       error: function(xhr, err) {
-        errcb();
+        $("#validate-password").show();
+        $("#validate-password-confirm").show();
       },
     });
-  }
-
-  $("#button-create").click(function() {
-
-    action("/user", function() {
-      $("#validate-email").show();
-    });
-
-  });
-
-  $("#button-login").click(function() {
-
-    action("/login", function() {
-      $("#validate-email").show();
-      $("#validate-password").show();
-    });
-
   });
 </script>
 

@@ -3,12 +3,10 @@ package handler
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import (
-	"bytes"
 	"client"
 	"datautils"
 	"hashutils"
 	"headerutils"
-	"minify"
 	"net/http"
 	"user"
 )
@@ -33,21 +31,10 @@ func Login(w http.ResponseWriter, r *http.Request) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func loginGet(w http.ResponseWriter, r *http.Request) {
-	buffer := new(bytes.Buffer)
 
-	err := templates.ExecuteTemplate(
-		buffer,
-		"Login",
-		nil,
-	)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	headerutils.DeleteCookie(w, headerutils.CookieName, headerutils.CookiePathRoot)
-
-	w.Write(minify.Minify(buffer.Bytes()))
+	writeTemplate(w, "Login", nil, func() {
+		headerutils.DeleteCookie(w, headerutils.CookieName, headerutils.CookiePathRoot)
+	})
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -96,6 +83,8 @@ func loginPost(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 		return
 	}
+
+	headerutils.SetCookie(w, headerutils.CookieName, ud.UID, headerutils.CookiePathRoot)
 
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("/action"))

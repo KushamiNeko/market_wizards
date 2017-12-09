@@ -3,8 +3,7 @@ package handler
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import (
-	"bytes"
-	"minify"
+	"headerutils"
 	"net/http"
 )
 
@@ -25,19 +24,14 @@ func Action(w http.ResponseWriter, r *http.Request) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func actionGet(w http.ResponseWriter, r *http.Request) {
-	buffer := new(bytes.Buffer)
 
-	err := templates.ExecuteTemplate(
-		buffer,
-		"Action",
-		nil,
-	)
+	_, err := headerutils.GetCookie(r, headerutils.CookieName)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
 
-	w.Write(minify.Minify(buffer.Bytes()))
+	writeTemplate(w, "Action", nil, nil)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
