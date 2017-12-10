@@ -48,10 +48,46 @@
 
     <!--Note string `datastore:",noindex"`-->
 
+    <div class="my-share-margin">
+
+      <div class="form-check">
+
+        <label class="form-check-label"
+          for="input-buy">
+
+          <input class="form-check-input"
+            type="radio"
+            name="transaction-type"
+            id="input-buy"
+            value="buy"
+            checked>
+
+          Buy
+        </label>
+
+      </div>
+
+      <div class="form-check">
+
+        <label class="form-check-label">
+
+          <input class="form-check-input"
+            type="radio"
+            name="transaction-type"
+            id="input-sell"
+            value="sell">
+
+          Sell
+        </label>
+
+      </div>
+
+    </div>
+
     <label for="input-date"
       class="my-share-margin">Date</label>
 
-    <input type="Text"
+    <input type="date"
       id="input-date"
       class="form-control"
       placeholder="date"
@@ -60,11 +96,12 @@
     <label for="input-symbol"
       class="my-share-margin">Symbol</label>
 
-    <input type="Text"
+    <input type="text"
       id="input-symbol"
       class="form-control"
       placeholder="symbol"
-      aria-label="symbol">
+      aria-label="symbol"
+      style="text-transform: uppercase;">
 
 
     <label for="input-price"
@@ -82,7 +119,44 @@
 
     </div>
 
+    <label for="input-share"
+      class="my-share-margin">Share</label>
+
+    <input type="text"
+      id="input-share"
+      class="form-control"
+      placeholder="share"
+      aria-label="share">
+
+    <label for="input-position"
+      class="my-share-margin">Position</label>
+
+    <div class="input-group">
+
+      <input type="text"
+        id="input-position"
+        class="form-control"
+        placeholder="position"
+        aria-label="position">
+
+      <span class="input-group-addon">%</span>
+
+    </div>
+
+    <label for="input-stage"
+      class="my-share-margin">Stage</label>
+
+    <input type="text"
+      id="input-stage"
+      class="form-control"
+      placeholder="stage"
+      aria-label="stage">
+
   </div>
+
+  <!---->
+  {{template "ShareFooter"}}
+  <!---->
 
   <!---->
   {{template "CDNJS"}}

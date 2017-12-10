@@ -13,12 +13,27 @@ func Transaction(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case http.MethodGet:
-		transactionGet(w, r)
+		if len(r.URL.Query()) == 0 {
+			transactionNewGet(w, r)
+		}
 
 	default:
 		http.NotFound(w, r)
 	}
 
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func transactionNewGet(w http.ResponseWriter, r *http.Request) {
+
+	_, err := headerutils.GetCookie(r, headerutils.CookieName)
+	if err != nil {
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		return
+	}
+
+	writeTemplate(w, "TransactionNew", nil, nil)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
