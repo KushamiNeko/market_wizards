@@ -1,6 +1,12 @@
 {{define "ActionJS"}}
 
 <script>
+  $("#button-new").focus();
+
+  $("#button-new").click(function() {
+    window.location = "/transaction";
+  });
+
   $("#button-change").click(function() {
     window.location = "/user";
   });

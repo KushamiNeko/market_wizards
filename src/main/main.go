@@ -55,6 +55,8 @@ func main() {
 
 	mux.HandleFunc("/action", handler.Action)
 
+	mux.HandleFunc("/transaction", handler.Transaction)
+
 	log.Fatal(http.ListenAndServe(":8080", mux))
 }
 

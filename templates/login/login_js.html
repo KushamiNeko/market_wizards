@@ -3,17 +3,12 @@
 <script>
   $("#input-email").focus();
 
-  function validateEmail(email) {
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(email);
-  }
-
-  function action(url, errcb) {
+  function action(email, password, url, method, errcb) {
 
     $(".invalid-feedback").hide();
 
-    var email = $("#input-email").val() + "@gmail.com";
-    var password = $("#input-password").val();
+    //var email = $("#input-email").val() + "@gmail.com";
+    //var password = $("#input-password").val();
 
     if (!validateEmail(email)) {
       $("#validate-email").show();
@@ -32,7 +27,7 @@
     var jsonBody = JSON.stringify(data);
 
     $.ajax({
-      type: "POST",
+      type: method,
       url: url,
       data: jsonBody,
       success: function(data) {
@@ -46,19 +41,41 @@
 
   $("#button-create").click(function() {
 
-    action("/user", function() {
-      $("#validate-email").show();
-    });
-
+    action(
+      $("#input-email").val() + "@gmail.com",
+      $("#input-password").val(),
+      "/user",
+      "POST",
+      function() {
+        $("#validate-email").show();
+      });
   });
 
   $("#button-login").click(function() {
 
-    action("/login", function() {
-      $("#validate-email").show();
-      $("#validate-password").show();
-    });
+    action(
+      $("#input-email").val() + "@gmail.com",
+      $("#input-password").val(),
+      "/login",
+      "POST",
+      function() {
+        $("#validate-email").show();
+        $("#validate-password").show();
+      });
 
+  });
+
+  $("#button-reset").click(function() {
+    console.log("test");
+
+    action(
+      $("#input-email").val() + "@gmail.com",
+      "0000",
+      "/user",
+      "PUT",
+      function() {
+        $("#validate-password").show();
+      });
   });
 </script>
 

@@ -1,0 +1,103 @@
+{{define "TransactionNew"}}
+
+<html lang="en">
+
+<head>
+
+  <!---->
+  {{template "IndexHead"}}
+  <!---->
+
+  <!---->
+  {{template "IndexIcon"}}
+  <!---->
+
+  <!---->
+  {{template "CDNCSS"}}
+  <!---->
+
+  <!---->
+  {{template "ShareCSS"}}
+  <!---->
+
+  <!---->
+  {{template "TransactionNewCSS"}}
+  <!---->
+
+</head>
+
+<body>
+
+  <!---->
+  {{template "ShareNavbar"}}
+  <!---->
+
+  <div class="my-share-container">
+
+    <!--Date time.Time-->
+
+    <!--Symbol string-->
+
+    <!--Price float32-->
+
+    <!--Share uint-->
+
+    <!--Position float32-->
+
+    <!--Stage float32-->
+
+    <!--Note string `datastore:",noindex"`-->
+
+    <label for="input-date"
+      class="my-share-margin">Date</label>
+
+    <input type="Text"
+      id="input-date"
+      class="form-control"
+      placeholder="date"
+      aria-label="date">
+
+    <label for="input-symbol"
+      class="my-share-margin">Symbol</label>
+
+    <input type="Text"
+      id="input-symbol"
+      class="form-control"
+      placeholder="symbol"
+      aria-label="symbol">
+
+
+    <label for="input-price"
+      class="my-share-margin">Price</label>
+
+    <div class="input-group">
+
+      <span class="input-group-addon">$</span>
+
+      <input type="text"
+        id="input-price"
+        class="form-control"
+        placeholder="price"
+        aria-label="price">
+
+    </div>
+
+  </div>
+
+  <!---->
+  {{template "CDNJS"}}
+  <!---->
+
+  <!---->
+  {{template "ShareJS"}}
+  <!---->
+
+  <!---->
+  {{template "TransactionNewJS"}}
+  <!---->
+
+</body>
+
+</html>
+
+{{end}}

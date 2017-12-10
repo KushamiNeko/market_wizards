@@ -17,6 +17,10 @@
   <!---->
 
   <!---->
+  {{template "ShareCSS"}}
+  <!---->
+
+  <!---->
   {{template "LoginCSS"}}
   <!---->
 
@@ -28,10 +32,10 @@
   {{template "ShareNavbar"}}
   <!---->
 
-  <div class="my-container">
+  <div class="my-share-container">
 
     <label for="input-email"
-      class="my-margin">Email</label>
+      class="my-share-margin">Email</label>
 
     <div class="input-group">
 
@@ -51,7 +55,7 @@
     </div>
 
     <label for="input-password"
-      class="my-margin">Password</label>
+      class="my-share-margin">Password</label>
 
     <input type="password"
       id="input-password"
@@ -64,22 +68,32 @@
       Invalid Password
     </div>
 
-    <div class="my-button-container">
+    <!--<div class="my-share-button-row">-->
 
-      <button type="button"
-        id="button-create"
-        class="btn btn-lg btn-secondary my-margin my-button">Create</button>
+    <!--<button type="button"-->
+    <!--id="button-create"-->
+    <!--class="btn btn-lg btn-secondary my-margin my-button">Create</button>-->
 
-      <button type="button"
-        id="button-login"
-        class="btn btn-lg btn-dark my-margin my-button">Login</button>
+    <!--<button type="button"-->
+    <!--id="button-reset"-->
+    <!--class="btn btn-lg btn-dark my-margin my-button">Reset</button>-->
 
-    </div>
+    <!--</div>-->
+
+    <button type="button"
+      id="button-login"
+      class="btn btn-lg btn-dark my-share-margin my-button"
+      style="width: 100%;">Login</button>
+
 
   </div>
 
   <!---->
   {{template "CDNJS"}}
+  <!---->
+
+  <!---->
+  {{template "ShareJS"}}
   <!---->
 
   <!---->

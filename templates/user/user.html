@@ -17,6 +17,10 @@
   <!---->
 
   <!---->
+  {{template "ShareCSS"}}
+  <!---->
+
+  <!---->
   {{template "UserCSS"}}
   <!---->
 
@@ -28,27 +32,21 @@
   {{template "ShareNavbar"}}
   <!---->
 
-  <div class="my-container">
+  <div class="my-share-container">
 
     <label for="input-email"
-      class="my-margin">Email</label>
+      class="my-share-margin">Email</label>
 
-    <div class="input-group">
-
-      <input type="email"
-        id="input-email"
-        class="form-control"
-        placeholder="email"
-        value="{{.Email}}"
-        aria-label="email"
-        disabled>
-
-      <span class="input-group-addon">@gmail.com</span>
-
-    </div>
+    <input type="email"
+      id="input-email"
+      class="form-control"
+      placeholder="email"
+      value="{{.Email}}"
+      aria-label="email"
+      disabled>
 
     <label for="input-password"
-      class="my-margin">Password</label>
+      class="my-share-margin">Password</label>
 
     <input type="password"
       id="input-password"
@@ -62,7 +60,7 @@
     </div>
 
     <label for="input-password-confirm"
-      class="my-margin">Password Confirm</label>
+      class="my-share-margin">Password Confirm</label>
 
     <input type="password"
       id="input-password-confirm"
@@ -75,20 +73,21 @@
       Password Inconsistent
     </div>
 
-    <div class="my-button-container">
-
-      <button type="button"
-        id="button-ok"
-        class="btn btn-lg btn-dark my-margin my-button">
+    <button type="button"
+      id="button-ok"
+      class="btn btn-lg btn-dark my-share-margin my-button"
+      style="width: 100%;">
         OK
       </button>
-
-    </div>
 
   </div>
 
   <!---->
   {{template "CDNJS"}}
+  <!---->
+
+  <!---->
+  {{template "ShareJS"}}
   <!---->
 
   <!---->
