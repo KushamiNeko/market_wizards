@@ -6,7 +6,6 @@ import (
 	"config"
 	"encoding/json"
 	"hashutils"
-	"time"
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -25,7 +24,7 @@ type Sell struct {
 
 	IBDCheckup string `datastore:",noindex"`
 
-	Date time.Time
+	Date int
 
 	Symbol string
 
@@ -33,15 +32,15 @@ type Sell struct {
 
 	Share uint
 
-	Percent float32
+	Total float32
+
+	Position float32
 
 	GainLoss float32
 
-	Stage float32
-
-	//BoughtDate time.Time `datastore:"_"`
-
 	DayHeld uint
+
+	Stage float32
 
 	Note string `datastore:",noindex"`
 }

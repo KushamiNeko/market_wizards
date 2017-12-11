@@ -1,59 +1,129 @@
 {{define "TransactionNewJS"}}
 
 <script>
-  $("#input-email").focus();
+  $(".invalid-feedback").hide();
 
-  function action(url, errcb) {
+  var buy = true;
+  var sell = false;
 
+  var decimal = 2;
+
+  $("#button-type").click(function() {
+    buy = !buy;
+    sell = !buy;
+
+    if (buy) {
+      $("#button-type").html("BUY");
+    }
+
+    if (sell) {
+      $("#button-type").html("SELL");
+    }
+  });
+
+  function calculate() {
+    if ($("#input-price").val().match(/^[0-9.]+$/) === null) {
+      return;
+    }
+
+    if ($("#input-share").val().match(/^\d+$/) === null) {
+      return;
+    }
+
+    if ($("#input-capital").val().match(/^[0-9.]+$/) === null) {
+      return;
+    }
+
+    var price = parseFloat($("#input-price").val());
+    var share = parseFloat($("#input-share").val());
+
+    var capital = parseFloat($("#input-capital").val());
+
+    var total = (price * share).toFixed(decimal);
+    var position = ((total / capital) * 100).toFixed(decimal);
+
+    $("#input-total").val(total.toString());
+    $("#input-position").val(position.toString());
+  }
+
+  $("#input-price").focusout(function() {
+    calculate();
+  });
+
+  $("#input-share").focusout(function() {
+    calculate();
+  });
+
+  $("#input-capital").focusout(function() {
+    calculate();
+  });
+
+  $("#button-create").click(function() {
     $(".invalid-feedback").hide();
 
-    var email = $("#input-email").val() + "@gmail.com";
-    var password = $("#input-password").val();
-
-    if (!validateEmail(email)) {
-      $("#validate-email").show();
+    if ($("#input-date").val().match(/^\d{8}$/) === null) {
+      $("#validate-date").show();
       return;
     }
 
-    if (password === "") {
-      $("#validate-password").show();
+    var date = parseInt($("#input-date").val());
+
+    if ($("#input-symbol").val().toUpperCase().match(/^[A-Z]+$/) === null) {
+      $("#validate-symbol").show();
       return;
     }
 
-    var data = {};
-    data.Email = email;
-    data.Password = password;
+    var symbol = $("#input-symbol").val().toUpperCase();
+
+    if ($("#input-capital").val().match(/^[0-9.]+$/) === null) {
+      $("#validate-capital").show();
+      return;
+    }
+
+    var capital = parseFloat($("#input-capital").val());
+
+    if ($("#input-price").val().match(/^[0-9.]+$/) === null) {
+      $("#validate-price").show();
+      return;
+    }
+
+    var price = parseFloat($("#input-price").val());
+
+    if ($("#input-share").val().match(/^\d+$/) === null) {
+      $("#validate-share").show();
+      return;
+    }
+
+    var share = parseInt($("#input-share").val());
+
+    var total = parseFloat($("#input-total").val());
+
+    var position = parseFloat($("#input-position").val());
+
+    if ($("#input-stage").val().match(/^\d+$/) === null) {
+      $("#validate-stage").show();
+      return;
+    }
+
+    var stage = parseInt($("#input-stage").val());
+
+    var note = $("#input-note").val();
+
+    var data = {
+      "Date": date,
+      "Symbol": symbol,
+      "Capital": capital,
+      "Price": price,
+      "Share": share,
+      "Total": total,
+      "Position": position,
+      "Stage": stage,
+      "Note": note,
+    };
 
     var jsonBody = JSON.stringify(data);
 
-    $.ajax({
-      type: "POST",
-      url: url,
-      data: jsonBody,
-      success: function(data) {
-        window.location = data;
-      },
-      error: function(xhr, err) {
-        errcb();
-      },
-    });
-  }
-
-  $("#button-create").click(function() {
-
-    action("/user", function() {
-      $("#validate-email").show();
-    });
-
-  });
-
-  $("#button-login").click(function() {
-
-    action("/login", function() {
-      $("#validate-email").show();
-      $("#validate-password").show();
-    });
-
+    console.log(jsonBody);
   });
 </script>
 

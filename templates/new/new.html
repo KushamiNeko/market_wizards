@@ -34,64 +34,24 @@
 
   <div class="my-share-container">
 
-    <!--Date time.Time-->
-
-    <!--Symbol string-->
-
-    <!--Price float32-->
-
-    <!--Share uint-->
-
-    <!--Position float32-->
-
-    <!--Stage float32-->
-
-    <!--Note string `datastore:",noindex"`-->
-
-    <div class="my-share-margin">
-
-      <div class="form-check">
-
-        <label class="form-check-label"
-          for="input-buy">
-
-          <input class="form-check-input"
-            type="radio"
-            name="transaction-type"
-            id="input-buy"
-            value="buy"
-            checked>
-
-          Buy
-        </label>
-
-      </div>
-
-      <div class="form-check">
-
-        <label class="form-check-label">
-
-          <input class="form-check-input"
-            type="radio"
-            name="transaction-type"
-            id="input-sell"
-            value="sell">
-
-          Sell
-        </label>
-
-      </div>
-
-    </div>
+    <button type="button"
+      id="button-type"
+      class="btn btn-lg btn-dark my-share-margin my-button"
+      style="width: 100%;">BUY</button>
 
     <label for="input-date"
       class="my-share-margin">Date</label>
 
-    <input type="date"
+    <input type="text"
       id="input-date"
       class="form-control"
       placeholder="date"
       aria-label="date">
+
+    <div id="validate-date"
+      class="invalid-feedback">
+      Invalid Input
+    </div>
 
     <label for="input-symbol"
       class="my-share-margin">Symbol</label>
@@ -103,6 +63,10 @@
       aria-label="symbol"
       style="text-transform: uppercase;">
 
+    <div id="validate-symbol"
+      class="invalid-feedback">
+      Invalid Input
+    </div>
 
     <label for="input-price"
       class="my-share-margin">Price</label>
@@ -119,6 +83,11 @@
 
     </div>
 
+    <div id="validate-price"
+      class="invalid-feedback">
+      Invalid Input
+    </div>
+
     <label for="input-share"
       class="my-share-margin">Share</label>
 
@@ -127,6 +96,48 @@
       class="form-control"
       placeholder="share"
       aria-label="share">
+
+    <div id="validate-share"
+      class="invalid-feedback">
+      Invalid Input
+    </div>
+
+    <label for="input-total"
+      class="my-share-margin">Total</label>
+
+    <div class="input-group">
+
+      <span class="input-group-addon">$</span>
+
+      <input type="text"
+        id="input-total"
+        class="form-control"
+        placeholder="total"
+        aria-label="total"
+        disabled>
+
+    </div>
+
+    <label for="input-capital"
+      class="my-share-margin">Capital</label>
+
+    <div class="input-group">
+
+      <span class="input-group-addon">$</span>
+
+      <input type="text"
+        id="input-capital"
+        class="form-control"
+        placeholder="capital"
+        aria-label="capital">
+
+    </div>
+
+    <div id="validate-capital"
+      class="invalid-feedback">
+      Invalid Input
+    </div>
+
 
     <label for="input-position"
       class="my-share-margin">Position</label>
@@ -137,7 +148,8 @@
         id="input-position"
         class="form-control"
         placeholder="position"
-        aria-label="position">
+        aria-label="position"
+        disabled>
 
       <span class="input-group-addon">%</span>
 
@@ -151,6 +163,23 @@
       class="form-control"
       placeholder="stage"
       aria-label="stage">
+
+    <div id="validate-stage"
+      class="invalid-feedback">
+      Invalid Input
+    </div>
+
+    <label for="input-note"
+      class="my-share-margin">Note</label>
+
+    <textarea class="form-control"
+      id="input-note"
+      rows="15"></textarea>
+
+    <button type="button"
+      id="button-create"
+      class="btn btn-lg btn-dark my-share-margin my-button"
+      style="width: 100%;">Create</button>
 
   </div>
 

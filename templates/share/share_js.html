@@ -5,6 +5,36 @@
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
   }
+
+  function fileUpload() {
+    if (!FileReader) {
+      console.log('FileReader unsupport');
+      return;
+    }
+
+    var input = this.$.uploadFile;
+
+    if (input.files && input.files[0]) {
+      //var i = parseInt(this._currentIndex);
+
+      // this.content[i] = input.files[0];
+      // console.log(this.content);
+
+      var reader = new FileReader();
+
+      reader.onload = function(e) {
+
+        //var sliderImages = Polymer.dom(this.root).querySelectorAll('.imageBack');
+        //sliderImages[i].src = e.target.result;
+
+        //this.content[i] = e.target.result.split(",", 2)[1];
+
+      };
+
+      reader.readAsDataURL(input.files[0]);
+    }
+
+  }
 </script>
 
 {{end}}
