@@ -6,34 +6,28 @@
     return re.test(email);
   }
 
-  function fileUpload() {
+  function fileChanged(input, img) {
     if (!FileReader) {
       console.log('FileReader unsupport');
       return;
     }
 
-    var input = this.$.uploadFile;
-
-    if (input.files && input.files[0]) {
-      //var i = parseInt(this._currentIndex);
-
-      // this.content[i] = input.files[0];
-      // console.log(this.content);
+    if (input[0].files && input[0].files[0]) {
 
       var reader = new FileReader();
 
       reader.onload = function(e) {
-
-        //var sliderImages = Polymer.dom(this.root).querySelectorAll('.imageBack');
-        //sliderImages[i].src = e.target.result;
-
+        img.attr("src", e.target.result);
         //this.content[i] = e.target.result.split(",", 2)[1];
-
       };
 
-      reader.readAsDataURL(input.files[0]);
+      reader.readAsDataURL(input[0].files[0]);
     }
 
+  }
+
+  function extractImg(img) {
+    return img.split(",", 2)[1];
   }
 </script>
 

@@ -125,6 +125,35 @@
 
     console.log(jsonBody);
   });
+
+  function imgChange(target) {
+    var button = "#button-img-" + target;
+    var inputs = "#input-img-" + target;
+    var img = "#img-" + target;
+
+    $(button).click(function() {
+      $(inputs).click();
+    });
+
+    $(inputs).change(function() {
+      fileChanged($(inputs), $(img));
+    });
+  }
+
+  imgChange("d");
+  imgChange("w");
+
+  imgChange("ndqc-d");
+  imgChange("ndqc-w");
+
+  imgChange("sp5-d");
+  imgChange("sp5-w");
+
+  imgChange("djia-d");
+  imgChange("djia-w");
+
+  imgChange("rus-d");
+  imgChange("rus-w");
 </script>
 
 {{end}}
