@@ -30,19 +30,20 @@
       return;
     }
 
+    var price = parseFloat($("#input-price").val());
+    var share = parseFloat($("#input-share").val());
+
+    var total = (price * share).toFixed(decimal);
+
+    $("#input-total").val(total.toString());
+
     if ($("#input-capital").val().match(/^[0-9.]+$/) === null) {
       return;
     }
 
-    var price = parseFloat($("#input-price").val());
-    var share = parseFloat($("#input-share").val());
-
     var capital = parseFloat($("#input-capital").val());
-
-    var total = (price * share).toFixed(decimal);
     var position = ((total / capital) * 100).toFixed(decimal);
 
-    $("#input-total").val(total.toString());
     $("#input-position").val(position.toString());
   }
 
@@ -109,6 +110,61 @@
 
     var note = $("#input-note").val();
 
+    if ($("#img-ibd").attr("src") === undefined) {
+      $("#validate-img-ibd").show();
+      return;
+    }
+
+    if ($("#img-d").attr("src") === undefined) {
+      $("#validate-img-d").show();
+      return;
+    }
+
+    if ($("#img-w").attr("src") === undefined) {
+      $("#validate-img-w").show();
+      return;
+    }
+
+    if ($("#img-ndqc-d").attr("src") === undefined) {
+      $("#validate-img-ndqc-d").show();
+      return;
+    }
+
+    if ($("#img-ndqc-w").attr("src") === undefined) {
+      $("#validate-img-ndqc-w").show();
+      return;
+    }
+
+    if ($("#img-sp5-d").attr("src") === undefined) {
+      $("#validate-img-sp5-d").show();
+      return;
+    }
+
+    if ($("#img-sp5-w").attr("src") === undefined) {
+      $("#validate-img-sp5-w").show();
+      return;
+    }
+
+    if ($("#img-djia-d").attr("src") === undefined) {
+      $("#validate-img-djia-d").show();
+      return;
+    }
+
+    if ($("#img-djia-w").attr("src") === undefined) {
+      $("#validate-img-djia-w").show();
+      return;
+    }
+
+    if ($("#img-rus-d").attr("src") === undefined) {
+      $("#validate-img-rus-d").show();
+      return;
+    }
+
+    if ($("#img-rus-w").attr("src") === undefined) {
+      $("#validate-img-rus-w").show();
+      return;
+    }
+
     var data = {
       "Date": date,
       "Symbol": symbol,
@@ -119,11 +175,34 @@
       "Position": position,
       "Stage": stage,
       "Note": note,
+      "JsonChartD": $("#img-d").attr("src"),
+      "JsonChartW": $("#img-w").attr("src"),
+      "JsonChartNDQCD": $("#img-ndqc-d").attr("src"),
+      "JsonChartNDQCW": $("#img-ndqc-w").attr("src"),
+      "JsonChartSP5D": $("#img-sp5-d").attr("src"),
+      "JsonChartSP5W": $("#img-sp5-w").attr("src"),
+      "JsonChartNYCD": $("#img-nyc-d").attr("src"),
+      "JsonChartNYCW": $("#img-nyc-w").attr("src"),
+      "JsonChartDJIAD": $("#img-djia-d").attr("src"),
+      "JsonChartDJIAW": $("#img-djia-w").attr("src"),
+      "JsonChartRUSD": $("#img-rus-d").attr("src"),
+      "JsonChartRUSW": $("#img-rus-w").attr("src"),
+      "JsonIBDCheckup": $("#img-ibd").attr("src"),
     };
 
     var jsonBody = JSON.stringify(data);
 
-    console.log(jsonBody);
+    $.ajax({
+      type: "POST",
+      url: "/transaction",
+      data: jsonBody,
+      success: function(data) {
+        window.location = data;
+      },
+      error: function(xhr, err) {
+        console.log(err);
+      },
+    });
   });
 
   function imgChange(target) {
@@ -149,11 +228,16 @@
   imgChange("sp5-d");
   imgChange("sp5-w");
 
+  imgChange("nyc-d");
+  imgChange("nyc-w");
+
   imgChange("djia-d");
   imgChange("djia-w");
 
   imgChange("rus-d");
   imgChange("rus-w");
+
+  imgChange("ibd");
 </script>
 
 {{end}}

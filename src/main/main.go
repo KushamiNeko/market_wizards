@@ -49,7 +49,7 @@ func main() {
 
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/", handler.Login)
+	mux.HandleFunc("/login", handler.Login)
 
 	mux.HandleFunc("/user", handler.User)
 

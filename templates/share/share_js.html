@@ -17,7 +17,11 @@
       var reader = new FileReader();
 
       reader.onload = function(e) {
-        img.attr("src", e.target.result);
+
+        if (img !== null) {
+          img.attr("src", e.target.result);
+        }
+
         //this.content[i] = e.target.result.split(",", 2)[1];
       };
 

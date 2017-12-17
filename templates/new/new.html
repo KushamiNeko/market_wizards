@@ -176,6 +176,39 @@
       id="input-note"
       rows="15"></textarea>
 
+    <div class="my-share-separator"
+      style="margin-top: 2em;">
+    </div>
+
+    <div class="my-share-margin">
+
+      <img id="img-ibd"
+        style="width: 100%; display: none">
+
+      <input type='file'
+        id="input-img-ibd"
+        class="my-share-margin"
+        accept="*"
+        style="display: none;">
+      </input>
+
+      <button type="button"
+        id="button-img-ibd"
+        class="btn btn-lg btn-dark my-share-margin my-button"
+        style="width: 100%;">IBD Checkup</button>
+
+      <div id="validate-img-ibd"
+        class="invalid-feedback">
+        Invalid IBD Checkup
+      </div>
+
+    </div>
+
+    <div class="my-share-separator"
+      style="margin-top: 2em;">
+    </div>
+
+
     <div class="my-share-margin">
 
       <img id="img-d"
@@ -191,6 +224,11 @@
         id="button-img-d"
         class="btn btn-lg btn-dark my-share-margin my-button"
         style="width: 100%;">Dialy</button>
+
+      <div id="validate-img-d"
+        class="invalid-feedback">
+        Invalid Daily Chart
+      </div>
 
     </div>
 
@@ -211,6 +249,15 @@
         class="btn btn-lg btn-dark my-share-margin my-button"
         style="width: 100%;">Weekly</button>
 
+      <div id="validate-img-w"
+        class="invalid-feedback">
+        Invalid Weekly Chart
+      </div>
+
+    </div>
+
+    <div class="my-share-separator"
+      style="margin-top: 2em;">
     </div>
 
     <div class="my-share-margin">
@@ -229,6 +276,11 @@
         id="button-img-ndqc-d"
         class="btn btn-lg btn-dark my-share-margin my-button"
         style="width: 100%;">Nasdaq Daily</button>
+
+      <div id="validate-img-ndqc-d"
+        class="invalid-feedback">
+        Invalid NDQC Daily Chart
+      </div>
 
     </div>
 
@@ -249,6 +301,15 @@
         class="btn btn-lg btn-dark my-share-margin my-button"
         style="width: 100%;">Nasdaq Weekly</button>
 
+      <div id="validate-img-ndqc-w"
+        class="invalid-feedback">
+        Invalid NDQC Weekly Chart
+      </div>
+
+    </div>
+
+    <div class="my-share-separator"
+      style="margin-top: 2em;">
     </div>
 
     <div class="my-share-margin">
@@ -267,6 +328,11 @@
         id="button-img-sp5-d"
         class="btn btn-lg btn-dark my-share-margin my-button"
         style="width: 100%;">SP500 Daily</button>
+
+      <div id="validate-img-sp5-d"
+        class="invalid-feedback">
+        Invalid SP5 Daily Chart
+      </div>
 
     </div>
 
@@ -287,6 +353,67 @@
         class="btn btn-lg btn-dark my-share-margin my-button"
         style="width: 100%;">SP500 Weekly</button>
 
+      <div id="validate-img-sp5-w"
+        class="invalid-feedback">
+        Invalid SP5 Weekly Chart
+      </div>
+
+    </div>
+
+    <div class="my-share-separator"
+      style="margin-top: 2em;">
+    </div>
+
+    <div class="my-share-margin">
+
+      <img id="img-nyc-d"
+        style="width: 100%;">
+
+      <input type='file'
+        id="input-img-nyc-d"
+        class="my-share-margin"
+        accept="image/*"
+        style="display: none;">
+      </input>
+
+      <button type="button"
+        id="button-img-nyc-d"
+        class="btn btn-lg btn-dark my-share-margin my-button"
+        style="width: 100%;">NYC Daily</button>
+
+      <div id="validate-img-nyc-d"
+        class="invalid-feedback">
+        Invalid NYC Daily Chart
+      </div>
+
+    </div>
+
+    <div class="my-share-margin">
+
+      <img id="img-nyc-w"
+        style="width: 100%;">
+
+      <input type='file'
+        id="input-img-nyc-w"
+        class="my-share-margin"
+        accept="image/*"
+        style="display: none;">
+      </input>
+
+      <button type="button"
+        id="button-img-nyc-w"
+        class="btn btn-lg btn-dark my-share-margin my-button"
+        style="width: 100%;">NYC Weekly</button>
+
+      <div id="validate-img-nyc-w"
+        class="invalid-feedback">
+        Invalid NYC Weekly Chart
+      </div>
+
+    </div>
+
+    <div class="my-share-separator"
+      style="margin-top: 2em;">
     </div>
 
     <div class="my-share-margin">
@@ -305,6 +432,11 @@
         id="button-img-djia-d"
         class="btn btn-lg btn-dark my-share-margin my-button"
         style="width: 100%;">Dow Jones Daily</button>
+
+      <div id="validate-img-djia-d"
+        class="invalid-feedback">
+        Invalid DJIA Daily Chart
+      </div>
 
     </div>
 
@@ -325,6 +457,15 @@
         class="btn btn-lg btn-dark my-share-margin my-button"
         style="width: 100%;">Dow Jones Weekly</button>
 
+      <div id="validate-img-djia-w"
+        class="invalid-feedback">
+        Invalid DJIA Weekly Chart
+      </div>
+
+    </div>
+
+    <div class="my-share-separator"
+      style="margin-top: 2em;">
     </div>
 
     <div class="my-share-margin">
@@ -343,6 +484,11 @@
         id="button-img-rus-d"
         class="btn btn-lg btn-dark my-share-margin my-button"
         style="width: 100%;">Russell 2000 Daily</button>
+
+      <div id="validate-img-rus-d"
+        class="invalid-feedback">
+        Invalid RUS Daily Chart
+      </div>
 
     </div>
 
@@ -363,22 +509,15 @@
         class="btn btn-lg btn-dark my-share-margin my-button"
         style="width: 100%;">Russell 2000 Weekly</button>
 
+      <div id="validate-img-rus-w"
+        class="invalid-feedback">
+        Invalid RUS Weekly Chart
+      </div>
+
     </div>
 
-    <div class="my-share-margin">
-
-      <input type='file'
-        id="input-ibd"
-        class="my-share-margin"
-        accept="*"
-        style="display: none;">
-      </input>
-
-      <button type="button"
-        id="button-ibd"
-        class="btn btn-lg btn-dark my-share-margin my-button"
-        style="width: 100%;">IBD Checkup</button>
-
+    <div class="my-share-separator"
+      style="margin-top: 2em;">
     </div>
 
     <button type="button"

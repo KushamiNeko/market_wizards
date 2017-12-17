@@ -14,15 +14,45 @@ type Sell struct {
 	ID   string `datastore:",noindex"`
 	Etag string
 
-	ChartDaily  string `datastore:",noindex"`
-	ChartWeekly string `datastore:",noindex"`
+	ChartD string `json:"-" datastore:",noindex"`
+	ChartW string `json:"-" datastore:",noindex"`
 
-	ChartNasdaq   string `datastore:",noindex"`
-	ChartSP500    string `datastore:",noindex"`
-	ChartNYSE     string `datastore:",noindex"`
-	ChartDowJones string `datastore:",noindex"`
+	ChartNDQCD string `json:"-" datastore:",noindex"`
+	ChartNDQCW string `json:"-" datastore:",noindex"`
 
-	IBDCheckup string `datastore:",noindex"`
+	ChartSP5D string `json:"-" datastore:",noindex"`
+	ChartSP5W string `json:"-" datastore:",noindex"`
+
+	//ChartNYCD string `datastore:",noindex"`
+	//ChartNYCW string `datastore:",noindex"`
+
+	ChartDJIAD string `json:"-" datastore:",noindex"`
+	ChartDJIAW string `json:"-" datastore:",noindex"`
+
+	ChartRUSD string `json:"-" datastore:",noindex"`
+	ChartRUSW string `json:"-" datastore:",noindex"`
+
+	IBDCheckup string `json:"-" datastore:",noindex"`
+
+	JsonChartD string `datastore:"-"`
+	JsonChartW string `datastore:"-"`
+
+	JsonChartNDQCD string `datastore:"-"`
+	JsonChartNDQCW string `datastore:"-"`
+
+	JsonChartSP5D string `datastore:"-"`
+	JsonChartSP5W string `datastore:"-"`
+
+	//JsonChartNYCD string `datastore:"-"`
+	//JsonChartNYCW string `datastore:"-"`
+
+	JsonChartDJIAD string `datastore:"-"`
+	JsonChartDJIAW string `datastore:"-"`
+
+	JsonChartRUSD string `datastore:"-"`
+	JsonChartRUSW string `datastore:"-"`
+
+	JsonIBDCheckup string `datastore:"-"`
 
 	Date int
 
@@ -30,7 +60,7 @@ type Sell struct {
 
 	Price float32
 
-	Share uint
+	Share int
 
 	Total float32
 
@@ -38,7 +68,7 @@ type Sell struct {
 
 	GainLoss float32
 
-	DayHeld uint
+	DayHeld int
 
 	Stage float32
 
@@ -57,15 +87,15 @@ func (s *Sell) JsonDecode(buffer []byte) error {
 	s.ID = hashutils.RandBytesGenerateB64(config.KeyLengthMax)
 	s.Etag = hashutils.RandBytesGenerateB64(config.KeyLengthMin)
 
-	s.ChartDaily = hashutils.RandBytesGenerateB64(config.KeyLengthMax)
-	s.ChartWeekly = hashutils.RandBytesGenerateB64(config.KeyLengthMax)
+	//s.ChartDaily = hashutils.RandBytesGenerateB64(config.KeyLengthMax)
+	//s.ChartWeekly = hashutils.RandBytesGenerateB64(config.KeyLengthMax)
 
-	s.ChartNasdaq = hashutils.RandBytesGenerateB64(config.KeyLengthMax)
-	s.ChartSP500 = hashutils.RandBytesGenerateB64(config.KeyLengthMax)
-	s.ChartNYSE = hashutils.RandBytesGenerateB64(config.KeyLengthMax)
-	s.ChartDowJones = hashutils.RandBytesGenerateB64(config.KeyLengthMax)
+	//s.ChartNasdaq = hashutils.RandBytesGenerateB64(config.KeyLengthMax)
+	//s.ChartSP500 = hashutils.RandBytesGenerateB64(config.KeyLengthMax)
+	//s.ChartNYSE = hashutils.RandBytesGenerateB64(config.KeyLengthMax)
+	//s.ChartDowJones = hashutils.RandBytesGenerateB64(config.KeyLengthMax)
 
-	s.IBDCheckup = hashutils.RandBytesGenerateB64(config.KeyLengthMax)
+	//s.IBDCheckup = hashutils.RandBytesGenerateB64(config.KeyLengthMax)
 
 	return nil
 }

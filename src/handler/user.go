@@ -42,7 +42,7 @@ func userGet(w http.ResponseWriter, r *http.Request) {
 
 	uid, err := headerutils.GetCookie(r, headerutils.CookieName)
 	if err != nil {
-		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		http.Redirect(w, r, Root, http.StatusTemporaryRedirect)
 		return
 	}
 
@@ -134,9 +134,9 @@ func userPost(w http.ResponseWriter, r *http.Request) {
 
 func userPut(w http.ResponseWriter, r *http.Request) {
 
-	_, err := headerutils.GetCookie(r, headerutils.CookieName)
+	cookie, err := headerutils.GetCookie(r, headerutils.CookieName)
 	if err != nil {
-		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		http.Redirect(w, r, Root, http.StatusTemporaryRedirect)
 		return
 	}
 
@@ -173,6 +173,11 @@ func userPut(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if ud.UID != cookie {
+		http.Error(w, err.Error(), http.StatusUnauthorized)
+		return
+	}
+
 	ud.Password = u.Password
 
 	tx, err := client.DatastoreClient.NewTransaction(client.Context)
@@ -204,8 +209,14 @@ func userPut(w http.ResponseWriter, r *http.Request) {
 
 func userDelete(w http.ResponseWriter, r *http.Request) {
 
+	cookie, err := headerutils.GetCookie(r, headerutils.CookieName)
+	if err != nil {
+		http.Redirect(w, r, Root, http.StatusTemporaryRedirect)
+		return
+	}
+
 	u := new(user.User)
-	err := datautils.JsonRequestBodyDecode(r, u)
+	err = datautils.JsonRequestBodyDecode(r, u)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -228,6 +239,18 @@ func userDelete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	key := keys[0]
+
+	ud := new(user.User)
+	err = client.DatastoreClient.Get(client.Context, key, ud)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if ud.UID != cookie {
+		http.Error(w, err.Error(), http.StatusUnauthorized)
+		return
+	}
 
 	tx, err := client.DatastoreClient.NewTransaction(client.Context)
 	if err != nil {

@@ -27,7 +27,7 @@ func actionGet(w http.ResponseWriter, r *http.Request) {
 
 	_, err := headerutils.GetCookie(r, headerutils.CookieName)
 	if err != nil {
-		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		http.Redirect(w, r, Root, http.StatusTemporaryRedirect)
 		return
 	}
 
