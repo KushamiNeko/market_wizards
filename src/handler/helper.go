@@ -9,7 +9,6 @@ import (
 	"io"
 	"minify"
 	"net/http"
-	"net/url"
 
 	"cloud.google.com/go/datastore"
 )
@@ -80,14 +79,16 @@ func writeTemplate(w http.ResponseWriter, template string, data interface{}, cb 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func writeStorageObject(object string, content string) error {
+func writeStorageObject(object string, buffer io.Reader) error {
 
 	storageBucket := client.StorageClient.Bucket(config.ProjectBucket)
-	storageObject := storageBucket.Object(url.PathEscape(object))
+	//storageObject := storageBucket.Object(url.PathEscape(object))
+
+	storageObject := storageBucket.Object(object)
 
 	storageWriter := storageObject.NewWriter(client.Context)
 
-	_, err := io.WriteString(storageWriter, content)
+	_, err := io.Copy(storageWriter, buffer)
 	if err != nil {
 		return err
 	}

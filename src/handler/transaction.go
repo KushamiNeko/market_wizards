@@ -3,10 +3,13 @@ package handler
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import (
+	"bytes"
 	"client"
 	"config"
 	"datautils"
 	"headerutils"
+	"ibd"
+	"log"
 	"net/http"
 	"transaction"
 
@@ -62,6 +65,8 @@ func transactionGet(w http.ResponseWriter, r *http.Request) {
 
 func transactionPost(w http.ResponseWriter, r *http.Request) {
 
+	var buffer *bytes.Buffer
+
 	cookie, err := headerutils.GetCookie(r, headerutils.CookieName)
 	if err != nil {
 		http.Redirect(w, r, Root, http.StatusTemporaryRedirect)
@@ -75,16 +80,47 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if t.JsonIBDCheckup == "" {
+		log.Println("ibd checkup empty")
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	buffer, err = datautils.FileReaderExtract(t.JsonIBDCheckup)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	c, err := ibd.Parse(buffer)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	log.Println("ibd checkup")
+
 	tx, err := client.DatastoreClient.NewTransaction(client.Context)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	key := datastore.IncompleteKey(cookie, nil)
-	key.Namespace = config.NamespaceTransaction
+	tkey := datastore.IncompleteKey(cookie, nil)
+	tkey.Namespace = config.NamespaceTransaction
 
-	_, err = tx.Put(key, t)
+	ckey := datastore.IncompleteKey(cookie, nil)
+	ckey.Namespace = config.NamespaceIBD
+
+	_, err = tx.Put(tkey, t)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	_, err = tx.Put(ckey, c)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -96,27 +132,205 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var content string
-
-	content = datautils.FileReaderExtractContent(t.JsonChartD)
-	if content == "" {
+	if t.JsonChartD == "" {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	err = writeStorageObject(t.ChartD, content)
+	buffer, err = datautils.FileReaderExtractImage(t.JsonChartD)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = writeStorageObject(t.ChartD, buffer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	content = datautils.FileReaderExtractContent(t.JsonChartW)
-	if content == "" {
+	if t.JsonChartW == "" {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	err = writeStorageObject(t.ChartW, content)
+	buffer, err = datautils.FileReaderExtractImage(t.JsonChartW)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = writeStorageObject(t.ChartW, buffer)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if t.JsonChartNDQCD == "" {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	buffer, err = datautils.FileReaderExtractImage(t.JsonChartNDQCD)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = writeStorageObject(t.ChartNDQCD, buffer)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if t.JsonChartNDQCW == "" {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	buffer, err = datautils.FileReaderExtractImage(t.JsonChartNDQCW)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = writeStorageObject(t.ChartNDQCW, buffer)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if t.JsonChartSP5D == "" {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	buffer, err = datautils.FileReaderExtractImage(t.JsonChartSP5D)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = writeStorageObject(t.ChartSP5D, buffer)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if t.JsonChartSP5W == "" {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	buffer, err = datautils.FileReaderExtractImage(t.JsonChartSP5W)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = writeStorageObject(t.ChartSP5W, buffer)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if t.JsonChartNYCD == "" {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	buffer, err = datautils.FileReaderExtractImage(t.JsonChartNYCD)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = writeStorageObject(t.ChartNYCD, buffer)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if t.JsonChartNYCW == "" {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	buffer, err = datautils.FileReaderExtractImage(t.JsonChartNYCW)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = writeStorageObject(t.ChartNYCW, buffer)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if t.JsonChartDJIAD == "" {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	buffer, err = datautils.FileReaderExtractImage(t.JsonChartDJIAD)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = writeStorageObject(t.ChartDJIAD, buffer)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if t.JsonChartDJIAW == "" {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	buffer, err = datautils.FileReaderExtractImage(t.JsonChartDJIAW)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = writeStorageObject(t.ChartDJIAW, buffer)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if t.JsonChartRUSD == "" {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	buffer, err = datautils.FileReaderExtractImage(t.JsonChartRUSD)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = writeStorageObject(t.ChartRUSD, buffer)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if t.JsonChartRUSW == "" {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	buffer, err = datautils.FileReaderExtractImage(t.JsonChartRUSW)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = writeStorageObject(t.ChartRUSW, buffer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

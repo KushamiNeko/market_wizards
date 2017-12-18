@@ -94,8 +94,8 @@ func (b *Buy) JsonDecode(buffer []byte) error {
 		return fmt.Errorf("Weekly Chart Cannot Be Empty")
 	}
 
-	b.ChartD = hashutils.RandBytesGenerateB64(config.KeyLengthMax)
-	b.ChartW = hashutils.RandBytesGenerateB64(config.KeyLengthMax)
+	b.ChartD = hashutils.RandBytesGenerateB64URL(config.KeyLengthMax)
+	b.ChartW = hashutils.RandBytesGenerateB64URL(config.KeyLengthMax)
 
 	if b.JsonChartNDQCD == "" {
 		return fmt.Errorf("NDQC Dialy Chart Cannot Be Empty")
@@ -105,8 +105,8 @@ func (b *Buy) JsonDecode(buffer []byte) error {
 		return fmt.Errorf("NDQC Weekly Chart Cannot Be Empty")
 	}
 
-	b.ChartNDQCD = hashutils.RandBytesGenerateB64(config.KeyLengthMax)
-	b.ChartNDQCW = hashutils.RandBytesGenerateB64(config.KeyLengthMax)
+	b.ChartNDQCD = hashutils.RandBytesGenerateB64URL(config.KeyLengthMax)
+	b.ChartNDQCW = hashutils.RandBytesGenerateB64URL(config.KeyLengthMax)
 
 	if b.JsonChartSP5D == "" {
 		return fmt.Errorf("S&P5 Dialy Chart Cannot Be Empty")
@@ -116,8 +116,8 @@ func (b *Buy) JsonDecode(buffer []byte) error {
 		return fmt.Errorf("S&P5 Weekly Chart Cannot Be Empty")
 	}
 
-	b.ChartSP5D = hashutils.RandBytesGenerateB64(config.KeyLengthMax)
-	b.ChartSP5W = hashutils.RandBytesGenerateB64(config.KeyLengthMax)
+	b.ChartSP5D = hashutils.RandBytesGenerateB64URL(config.KeyLengthMax)
+	b.ChartSP5W = hashutils.RandBytesGenerateB64URL(config.KeyLengthMax)
 
 	if b.JsonChartNYCD == "" {
 		return fmt.Errorf("NYC Dialy Chart Cannot Be Empty")
@@ -127,8 +127,8 @@ func (b *Buy) JsonDecode(buffer []byte) error {
 		return fmt.Errorf("NYC Weekly Chart Cannot Be Empty")
 	}
 
-	b.ChartNYCD = hashutils.RandBytesGenerateB64(config.KeyLengthMax)
-	b.ChartNYCW = hashutils.RandBytesGenerateB64(config.KeyLengthMax)
+	b.ChartNYCD = hashutils.RandBytesGenerateB64URL(config.KeyLengthMax)
+	b.ChartNYCW = hashutils.RandBytesGenerateB64URL(config.KeyLengthMax)
 
 	if b.JsonChartDJIAD == "" {
 		return fmt.Errorf("DJIA Dialy Chart Cannot Be Empty")
@@ -138,8 +138,8 @@ func (b *Buy) JsonDecode(buffer []byte) error {
 		return fmt.Errorf("DJIA Weekly Chart Cannot Be Empty")
 	}
 
-	b.ChartDJIAD = hashutils.RandBytesGenerateB64(config.KeyLengthMax)
-	b.ChartDJIAW = hashutils.RandBytesGenerateB64(config.KeyLengthMax)
+	b.ChartDJIAD = hashutils.RandBytesGenerateB64URL(config.KeyLengthMax)
+	b.ChartDJIAW = hashutils.RandBytesGenerateB64URL(config.KeyLengthMax)
 
 	if b.JsonChartRUSD == "" {
 		return fmt.Errorf("RUS Dialy Chart Cannot Be Empty")
@@ -149,14 +149,14 @@ func (b *Buy) JsonDecode(buffer []byte) error {
 		return fmt.Errorf("RUS Weekly Chart Cannot Be Empty")
 	}
 
-	b.ChartRUSD = hashutils.RandBytesGenerateB64(config.KeyLengthMax)
-	b.ChartRUSW = hashutils.RandBytesGenerateB64(config.KeyLengthMax)
+	b.ChartRUSD = hashutils.RandBytesGenerateB64URL(config.KeyLengthMax)
+	b.ChartRUSW = hashutils.RandBytesGenerateB64URL(config.KeyLengthMax)
 
 	if b.JsonIBDCheckup == "" {
 		return fmt.Errorf("IBD Checkup Cannot Be Empty")
 	}
 
-	b.IBDCheckup = hashutils.RandBytesGenerateB64(config.KeyLengthMax)
+	b.IBDCheckup = hashutils.RandBytesGenerateB64URL(config.KeyLengthMax)
 
 	return nil
 }

@@ -23,6 +23,20 @@ func cleanup(results [][]string, row, col int) string {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+func cleanupL(results [][]string, label string, col int) string {
+	for _, r := range results {
+		for _, rr := range r {
+			if strings.Contains(rr, label) {
+				return strings.TrimSpace(r[col])
+			}
+		}
+	}
+
+	return ""
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 func parsePercent(str string) (float32, error) {
 	if strings.Compare(str, none) == 0 {
 		return math.MaxFloat32, nil

@@ -63,6 +63,7 @@ type IBDCheckup struct {
 	CompositeRating       int
 	MarketUptrend         string
 	IndustryGroupRank     int
+	GroupRSRating         string
 	EPSRating             int
 	EPSChgLastQtr         float32
 	Last3QtrsAvgEPSGrowth float32
@@ -130,73 +131,75 @@ func Parse(buffer *bytes.Buffer) (*IBDCheckup, error) {
 
 	var err error
 
-	info.CompositeRating, err = parseInt(cleanup(results, 0, 2))
+	info.CompositeRating, err = parseInt(cleanupL(results, "Composite Rating", 2))
 	if err != nil {
 		return nil, err
 	}
 
 	info.MarketUptrend = cleanup(results, 1, 5)
 
-	info.IndustryGroupRank, err = parseInt(cleanup(results, 2, 2))
+	info.IndustryGroupRank, err = parseInt(cleanupL(results, "Industry Group Rank", 2))
 	if err != nil {
 		return nil, err
 	}
 
-	info.EPSRating, err = parseInt(cleanup(results, 4, 2))
+	info.GroupRSRating = cleanupL(results, "Group RS Raing", 2)
+
+	info.EPSRating, err = parseInt(cleanupL(results, "EPS Rating", 2))
 	if err != nil {
 		return nil, err
 	}
 
-	info.EPSChgLastQtr, err = parsePercent(cleanup(results, 5, 2))
+	info.EPSChgLastQtr, err = parsePercent(cleanupL(results, "EPS % Chg (Last Qtr)", 2))
 	if err != nil {
 		return nil, err
 	}
 
-	info.Last3QtrsAvgEPSGrowth, err = parsePercent(cleanup(results, 6, 2))
+	info.Last3QtrsAvgEPSGrowth, err = parsePercent(cleanupL(results, "Last 3 Qtrs Avg EPS Growth", 2))
 	if err != nil {
 		return nil, err
 	}
 
-	info.NQtrsOfEPSAccel, err = parseInt(cleanup(results, 7, 2))
+	info.NQtrsOfEPSAccel, err = parseInt(cleanupL(results, "# Qtrs of EPS Acceleration", 2))
 	if err != nil {
 		return nil, err
 	}
 
-	info.EPSEstChgCurrentQtr, err = parsePercent(cleanup(results, 8, 2))
+	info.EPSEstChgCurrentQtr, err = parsePercent(cleanupL(results, "EPS Est % Chg (Current Qtr)", 2))
 	if err != nil {
 		return nil, err
 	}
 
-	info.EstimateRevisions = cleanup(results, 9, 3)
+	info.EstimateRevisions = cleanupL(results, "Estimate Revisions", 3)
 
-	info.LastQtrEarningsSuprise, err = parsePercent(cleanup(results, 10, 2))
+	info.LastQtrEarningsSuprise, err = parsePercent(cleanupL(results, `Last Quarter % Earnings Surprise`, 2))
 	if err != nil {
 		return nil, err
 	}
 
-	info.ThrYrEpsGrowthRate, err = parsePercent(cleanup(results, 11, 2))
+	info.ThrYrEpsGrowthRate, err = parsePercent(cleanupL(results, "3 Yr EPS Growth Rate", 2))
 	if err != nil {
 		return nil, err
 	}
 
-	info.NYrsOfAnnualEPSGrowth, err = parseInt(cleanup(results, 12, 2))
+	info.NYrsOfAnnualEPSGrowth, err = parseInt(cleanupL(results, "Consecutive Yrs of Annual EPS Growth", 2))
 	if err != nil {
 		return nil, err
 	}
 
-	info.EPSEstChgCurrentYr, err = parsePercent(cleanup(results, 13, 2))
+	info.EPSEstChgCurrentYr, err = parsePercent(cleanupL(results, "EPS Est % Chg for Current Year", 2))
 	if err != nil {
 		return nil, err
 	}
 
-	info.SMRRating = cleanup(results, 14, 2)
+	info.SMRRating = cleanupL(results, "SMR Rating", 2)
 
-	info.SalesChgLastQtr, err = parsePercent(cleanup(results, 15, 2))
+	info.SalesChgLastQtr, err = parsePercent(cleanupL(results, "Sales % Chg (Last Qtr)", 2))
 	if err != nil {
 		return nil, err
 	}
 
-	info.ThrYrSalesGrowthRate, err = parsePercent(cleanup(results, 16, 2))
+	info.ThrYrSalesGrowthRate, err = parsePercent(cleanupL(results, "3 Yr Sales Growth Rate", 2))
 	if err != nil {
 		return nil, err
 	}
