@@ -16,8 +16,8 @@ const (
 	//TestFile = "resource/ibd_checkup_spar.html"
 	//TestFile = "resource/ibd_checkup_cacc.html"
 	//TestFile = "resource/ibd_checkup_cade.html"
-	//TestFile = "resource/ibd_checkup_extr.html"
-	TestFile = "resource/ibd_checkup_ebsb.html"
+	TestFile = "resource/ibd_checkup_extr.html"
+	//TestFile = "resource/ibd_checkup_ebsb.html"
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -50,6 +50,8 @@ func main() {
 	//}
 
 	//fmt.Println(info)
+
+	//return
 
 	mux := http.NewServeMux()
 

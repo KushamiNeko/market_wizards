@@ -136,8 +136,10 @@ func Parse(buffer *bytes.Buffer) (*IBDCheckup, error) {
 		return nil, err
 	}
 
-	//info.MarketUptrend = cleanupL(results, "Market in confirmed uptrend", 5)
-	info.MarketUptrend = cleanupL(results, "Market in confirmed uptrend", 2)
+	info.MarketUptrend = cleanupL(results, "Market Direction", 5)
+	if info.MarketUptrend == "" {
+		info.MarketUptrend = cleanupL(results, "Market in confirmed uptrend", 5)
+	}
 
 	info.IndustryGroupRank, err = parseInt(cleanupL(results, "Industry Group Rank (1 to 197)", 2))
 	if err != nil {
@@ -171,7 +173,7 @@ func Parse(buffer *bytes.Buffer) (*IBDCheckup, error) {
 		return nil, err
 	}
 
-	info.EstimateRevisions = cleanupL(results, "Estimate Revisions", 3)
+	info.EstimateRevisions = cleanupL(results, "Estimate Revisions", 5)
 
 	info.LastQtrEarningsSuprise, err = parsePercent(cleanupL(results, `Last Quarter % Earnings Surprise`, 2))
 	if err != nil {
