@@ -5,6 +5,7 @@ package ibd
 import (
 	"fmt"
 	"math"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -13,7 +14,21 @@ import (
 
 const (
 	none = "N/A"
+
+	regexL = `\s*<a\s*class=\"glossDef\"[^>]+>\s*([^<]+)\s*<\/a>\s*`
 )
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var (
+	reL *regexp.Regexp
+)
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func init() {
+	reL = regexp.MustCompile(regexL)
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -25,10 +40,13 @@ func cleanup(results [][]string, row, col int) string {
 
 func cleanupL(results [][]string, label string, col int) string {
 	for _, r := range results {
-		for _, rr := range r {
-			if strings.Contains(rr, label) {
-				return strings.TrimSpace(r[col])
-			}
+		match := reL.FindStringSubmatch(r[0])
+		if len(match) == 0 {
+			return ""
+		}
+
+		if strings.Compare(strings.TrimSpace(match[1]), strings.TrimSpace(label)) == 0 {
+			return strings.TrimSpace(r[col])
 		}
 	}
 

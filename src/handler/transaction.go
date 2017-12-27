@@ -9,7 +9,6 @@ import (
 	"datautils"
 	"headerutils"
 	"ibd"
-	"log"
 	"net/http"
 	"transaction"
 
@@ -81,26 +80,23 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if t.JsonIBDCheckup == "" {
-		log.Println("ibd checkup empty")
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	buffer, err = datautils.FileReaderExtract(t.JsonIBDCheckup)
 	if err != nil {
-		log.Println(err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	c, err := ibd.Parse(buffer)
 	if err != nil {
-		log.Println(err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	log.Println("ibd checkup")
+	c.ID = t.IBDCheckup
 
 	tx, err := client.DatastoreClient.NewTransaction(client.Context)
 	if err != nil {

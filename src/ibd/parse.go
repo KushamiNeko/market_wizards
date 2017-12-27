@@ -136,14 +136,15 @@ func Parse(buffer *bytes.Buffer) (*IBDCheckup, error) {
 		return nil, err
 	}
 
-	info.MarketUptrend = cleanup(results, 1, 5)
+	//info.MarketUptrend = cleanupL(results, "Market in confirmed uptrend", 5)
+	info.MarketUptrend = cleanupL(results, "Market in confirmed uptrend", 2)
 
-	info.IndustryGroupRank, err = parseInt(cleanupL(results, "Industry Group Rank", 2))
+	info.IndustryGroupRank, err = parseInt(cleanupL(results, "Industry Group Rank (1 to 197)", 2))
 	if err != nil {
 		return nil, err
 	}
 
-	info.GroupRSRating = cleanupL(results, "Group RS Raing", 2)
+	info.GroupRSRating = cleanupL(results, "Group RS Rating", 2)
 
 	info.EPSRating, err = parseInt(cleanupL(results, "EPS Rating", 2))
 	if err != nil {
@@ -204,17 +205,17 @@ func Parse(buffer *bytes.Buffer) (*IBDCheckup, error) {
 		return nil, err
 	}
 
-	info.AnnualPreTaxMargin, err = parsePercent(cleanup(results, 17, 2))
+	info.AnnualPreTaxMargin, err = parsePercent(cleanupL(results, "Annual Pre-Tax Margin", 2))
 	if err != nil {
 		return nil, err
 	}
 
-	info.AnnualROE, err = parsePercent(cleanup(results, 18, 2))
+	info.AnnualROE, err = parsePercent(cleanupL(results, "Annual ROE", 2))
 	if err != nil {
 		return nil, err
 	}
 
-	info.DebtEquityRatio, err = parsePercent(cleanup(results, 19, 2))
+	info.DebtEquityRatio, err = parsePercent(cleanupL(results, "Debt/Equity Ratio", 2))
 	if err != nil {
 		return nil, err
 	}
@@ -224,44 +225,44 @@ func Parse(buffer *bytes.Buffer) (*IBDCheckup, error) {
 	//return nil, err
 	//}
 
-	info.RSRating, err = parseInt(cleanup(results, 21, 2))
+	info.RSRating, err = parseInt(cleanupL(results, "RS Rating", 2))
 	if err != nil {
 		return nil, err
 	}
 
-	info.Off52WeekHigh, err = parsePercent(cleanup(results, 22, 2))
+	info.Off52WeekHigh, err = parsePercent(cleanupL(results, "% Off 52 Week High", 2))
 	if err != nil {
 		return nil, err
 	}
 
-	info.PriceVS50DayMA, err = parsePercent(cleanup(results, 23, 2))
+	info.PriceVS50DayMA, err = parsePercent(cleanupL(results, "Price vs. 50-Day Moving Average", 2))
 	if err != nil {
 		return nil, err
 	}
 
-	info.AvgVolume50Day, err = parseVolume(cleanup(results, 24, 2))
+	info.AvgVolume50Day, err = parseVolume(cleanupL(results, "50-Day Average Volume", 2))
 	if err != nil {
 		return nil, err
 	}
 
-	info.MarketCapital, err = parseMktCap(cleanup(results, 25, 2))
+	info.MarketCapital, err = parseMktCap(cleanupL(results, "Market Capitalization", 2))
 	if err != nil {
 		return nil, err
 	}
 
-	info.AccDisRating = cleanup(results, 26, 2)
+	info.AccDisRating = cleanupL(results, "Accumulation/Distribution Rating", 2)
 
-	info.UpDownVolume, err = parseFloat(cleanup(results, 27, 2))
+	info.UpDownVolume, err = parseFloat(cleanupL(results, "Up/Down Volume", 2))
 	if err != nil {
 		return nil, err
 	}
 
-	info.ChgInFunds, err = parsePercent(cleanup(results, 28, 2))
+	info.ChgInFunds, err = parsePercent(cleanupL(results, "% Change In Funds Owning Stock", 2))
 	if err != nil {
 		return nil, err
 	}
 
-	info.QtrsOfIncFund, err = parseInt(cleanup(results, 29, 2))
+	info.QtrsOfIncFund, err = parseInt(cleanupL(results, "Qtrs Of Increasing Fund Ownership", 2))
 	if err != nil {
 		return nil, err
 	}
