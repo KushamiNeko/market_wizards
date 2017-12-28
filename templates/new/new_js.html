@@ -16,76 +16,54 @@
 
     if (buy) {
       $("#button-type").html("BUY");
-      $("#input-cost").attr("disabled", "disabled");
+      $("#input-revenue").attr("disabled", "disabled");
       $("#input-dayhold").attr("disabled", "disabled");
     }
 
     if (sell) {
       $("#button-type").html("SELL");
-      $("#input-cost").removeAttr("disabled");
+      $("#input-revenue").removeAttr("disabled");
       $("#input-dayhold").removeAttr("disabled");
     }
 
     $("#input-revenue").val("");
     $("#input-cost").val("");
-    $("#input-profit").val("");
-    $("#input-gain").val("");
+    $("#input-gainD").val("");
+    $("#input-gainP").val("");
     $("#input-dayhold").val("");
 
     calculate();
   });
 
   function calculate() {
-    if ($("#input-price").val().match(/^[0-9.]+$/) === null) {
-      return;
-    }
-
-    if ($("#input-share").val().match(/^\d+$/) === null) {
-      return;
-    }
-
-    var price = parseFloat($("#input-price").val());
-    var share = parseFloat($("#input-share").val());
-
-    var total = (price * share).toFixed(decimal);
-
     var revenue = 0;
     var cost = 0;
-    var profit = 0;
-    var gain = 0;
-
-    if (buy) {
-      $("#input-cost").val(total.toString());
-      cost = total;
-    }
+    var gainD = 0;
+    var gainP = 0;
 
     if (sell) {
-      $("#input-revenue").val(total.toString());
-      revenue = total;
-    }
+      if ($("#input-revenue").val().match(/^[0-9.]+$/) === null) {
+        return;
+      }
 
-    if (sell) {
       if ($("#input-cost").val().match(/^[0-9.]+$/) === null) {
         return;
       }
 
+      revenue = parseFloat($("#input-revenue").val());
       cost = parseFloat($("#input-cost").val());
 
-      profit = (revenue - cost).toFixed(decimal);
-      $("#input-profit").val(profit.toString());
+      gainD = (revenue - cost).toFixed(decimal);
+      $("#input-gainD").val(gainD.toString());
 
-      gain = ((profit / cost) * 100).toFixed(decimal);
+      gainP = ((gainD / cost) * 100).toFixed(decimal);
 
-      $("#input-gain").val(gain.toString());
+      $("#input-gainP").val(gainP.toString());
     }
 
   }
 
-  $("#input-price").focusout(function() {
-    calculate();
-  });
-
-  $("#input-share").focusout(function() {
+  $("#input-revenue").focusout(function() {
     calculate();
   });
 
@@ -102,6 +80,7 @@
 
     if ($("#input-date").val().match(/^\d{8}$/) === null) {
       $("#validate-date").show();
+      $("#input-date").focus();
       return;
     }
 
@@ -109,6 +88,7 @@
 
     if ($("#input-symbol").val().toUpperCase().match(/^[A-Z]+$/) === null) {
       $("#validate-symbol").show();
+      $("#input-symbol").focus();
       return;
     }
 
@@ -116,6 +96,7 @@
 
     if ($("#input-price").val().match(/^[0-9.]+$/) === null) {
       $("#validate-price").show();
+      $("#input-price").focus();
       return;
     }
 
@@ -123,21 +104,37 @@
 
     if ($("#input-share").val().match(/^\d+$/) === null) {
       $("#validate-share").show();
+      $("#input-share").focus();
       return;
     }
 
     var share = parseInt($("#input-share").val());
 
+    if (sell) {
+      if ($("#input-revenue").val().match(/^[0-9.]+$/) === null) {
+        $("#validate-revenue").show();
+        $("#input-revenue").focus();
+        return;
+      }
+    }
+
     var revenue = parseFloat($("#input-revenue").val());
+
+    if ($("#input-cost").val().match(/^[0-9.]+$/) === null) {
+      $("#validate-cost").show();
+      $("#input-cost").focus();
+      return;
+    }
 
     var cost = parseFloat($("#input-cost").val());
 
-    var profit = parseFloat($("#input-profit").val());
+    var gainD = parseFloat($("#input-gainD").val());
 
-    var gain = parseFloat($("#input-gain").val());
+    var gainP = parseFloat($("#input-gainP").val());
 
-    if ($("#input-stage").val().match(/^\d+$/) === null) {
+    if ($("#input-stage").val().match(/^[0-9.]+$/) === null) {
       $("#validate-stage").show();
+      $("#input-stage").focus();
       return;
     }
 
@@ -146,6 +143,7 @@
     if (sell) {
       if ($("#input-dayhold").val().match(/^[0-9]+$/) === null) {
         $("#validate-dayhold").show();
+        $("#input-dayhold").focus();
         return;
       }
     }
@@ -156,62 +154,86 @@
 
     if ($("#img-ibd").attr("src") === undefined) {
       $("#validate-img-ibd").show();
+      $("#button-img-ibd").focus();
       return;
     }
 
     if ($("#img-d").attr("src") === undefined) {
       $("#validate-img-d").show();
+      $("#button-img-d").focus();
       return;
     }
 
     if ($("#img-w").attr("src") === undefined) {
       $("#validate-img-w").show();
+      $("#button-img-w").focus();
       return;
     }
 
     if ($("#img-ndqc-d").attr("src") === undefined) {
       $("#validate-img-ndqc-d").show();
+      $("#button-img-ndqc-d").focus();
       return;
     }
 
     if ($("#img-ndqc-w").attr("src") === undefined) {
       $("#validate-img-ndqc-w").show();
+      $("#button-img-ndqc-w").focus();
       return;
     }
 
     if ($("#img-sp5-d").attr("src") === undefined) {
       $("#validate-img-sp5-d").show();
+      $("#button-img-sp5-d").focus();
       return;
     }
 
     if ($("#img-sp5-w").attr("src") === undefined) {
       $("#validate-img-sp5-w").show();
+      $("#button-img-sp5-w").focus();
+      return;
+    }
+
+    if ($("#img-nyc-d").attr("src") === undefined) {
+      $("#validate-img-nyc-d").show();
+      $("#button-img-nyc-d").focus();
+      return;
+    }
+
+    if ($("#img-nyc-w").attr("src") === undefined) {
+      $("#validate-img-nyc-w").show();
+      $("#button-img-nyc-w").focus();
       return;
     }
 
     if ($("#img-djia-d").attr("src") === undefined) {
       $("#validate-img-djia-d").show();
+      $("#button-img-djia-d").focus();
       return;
     }
 
     if ($("#img-djia-w").attr("src") === undefined) {
       $("#validate-img-djia-w").show();
+      $("#button-img-djia-w").focus();
       return;
     }
 
     if ($("#img-rus-d").attr("src") === undefined) {
       $("#validate-img-rus-d").show();
+      $("#button-img-rus-d").focus();
       return;
     }
 
     if ($("#img-rus-w").attr("src") === undefined) {
       $("#validate-img-rus-w").show();
+      $("#button-img-rus-w").focus();
       return;
     }
 
     var data = {
       "Date": date,
       "Symbol": symbol,
+      "Order": "buy",
       "Price": price,
       "Share": share,
       "Cost": cost,
@@ -233,9 +255,10 @@
     };
 
     if (sell) {
+      data.Order = "sell";
       data.Revenue = revenue;
-      data.Profit = profit;
-      data.Gain = gain;
+      data.GainD = gainD;
+      data.GainP = gainP;
       data.DayHold = dayhold;
     }
 

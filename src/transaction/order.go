@@ -55,6 +55,8 @@ type Order struct {
 
 	JsonIBDCheckup string `datastore:"-"`
 
+	Order string
+
 	Date int
 
 	Symbol string
@@ -67,9 +69,9 @@ type Order struct {
 
 	Cost float64 `datastore:",omitempty" json:",omitempty"`
 
-	Profit float64 `datastore:",omitempty" json:",omitempty"`
+	GainD float64 `datastore:",omitempty" json:",omitempty"`
 
-	Gain float64 `datastore:",omitempty" json:",omitempty"`
+	GainP float64 `datastore:",omitempty" json:",omitempty"`
 
 	DayHold int `datastore:",omitempty" json:",omitempty"`
 
@@ -85,6 +87,10 @@ func (b *Order) JsonDecode(buffer []byte) error {
 	err := json.Unmarshal(buffer, b)
 	if err != nil {
 		return err
+	}
+
+	if b.Order != "buy" && b.Order != "sell" {
+		return fmt.Errorf("Invalid Order")
 	}
 
 	b.ID = hashutils.RandBytesGenerateB64(config.KeyLengthMax)
