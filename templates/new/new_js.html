@@ -8,17 +8,31 @@
 
   var decimal = 2;
 
+  var processing = false;
+
   $("#button-type").click(function() {
     buy = !buy;
     sell = !buy;
 
     if (buy) {
       $("#button-type").html("BUY");
+      $("#input-cost").attr("disabled", "disabled");
+      $("#input-dayhold").attr("disabled", "disabled");
     }
 
     if (sell) {
       $("#button-type").html("SELL");
+      $("#input-cost").removeAttr("disabled");
+      $("#input-dayhold").removeAttr("disabled");
     }
+
+    $("#input-revenue").val("");
+    $("#input-cost").val("");
+    $("#input-profit").val("");
+    $("#input-gain").val("");
+    $("#input-dayhold").val("");
+
+    calculate();
   });
 
   function calculate() {
@@ -35,16 +49,36 @@
 
     var total = (price * share).toFixed(decimal);
 
-    $("#input-total").val(total.toString());
+    var revenue = 0;
+    var cost = 0;
+    var profit = 0;
+    var gain = 0;
 
-    if ($("#input-capital").val().match(/^[0-9.]+$/) === null) {
-      return;
+    if (buy) {
+      $("#input-cost").val(total.toString());
+      cost = total;
     }
 
-    var capital = parseFloat($("#input-capital").val());
-    var position = ((total / capital) * 100).toFixed(decimal);
+    if (sell) {
+      $("#input-revenue").val(total.toString());
+      revenue = total;
+    }
 
-    $("#input-position").val(position.toString());
+    if (sell) {
+      if ($("#input-cost").val().match(/^[0-9.]+$/) === null) {
+        return;
+      }
+
+      cost = parseFloat($("#input-cost").val());
+
+      profit = (revenue - cost).toFixed(decimal);
+      $("#input-profit").val(profit.toString());
+
+      gain = ((profit / cost) * 100).toFixed(decimal);
+
+      $("#input-gain").val(gain.toString());
+    }
+
   }
 
   $("#input-price").focusout(function() {
@@ -55,12 +89,16 @@
     calculate();
   });
 
-  $("#input-capital").focusout(function() {
+  $("#input-cost").focusout(function() {
     calculate();
   });
 
   $("#button-create").click(function() {
     $(".invalid-feedback").hide();
+
+    if (processing) {
+      return;
+    }
 
     if ($("#input-date").val().match(/^\d{8}$/) === null) {
       $("#validate-date").show();
@@ -76,13 +114,6 @@
 
     var symbol = $("#input-symbol").val().toUpperCase();
 
-    if ($("#input-capital").val().match(/^[0-9.]+$/) === null) {
-      $("#validate-capital").show();
-      return;
-    }
-
-    var capital = parseFloat($("#input-capital").val());
-
     if ($("#input-price").val().match(/^[0-9.]+$/) === null) {
       $("#validate-price").show();
       return;
@@ -97,9 +128,13 @@
 
     var share = parseInt($("#input-share").val());
 
-    var total = parseFloat($("#input-total").val());
+    var revenue = parseFloat($("#input-revenue").val());
 
-    var position = parseFloat($("#input-position").val());
+    var cost = parseFloat($("#input-cost").val());
+
+    var profit = parseFloat($("#input-profit").val());
+
+    var gain = parseFloat($("#input-gain").val());
 
     if ($("#input-stage").val().match(/^\d+$/) === null) {
       $("#validate-stage").show();
@@ -107,6 +142,15 @@
     }
 
     var stage = parseInt($("#input-stage").val());
+
+    if (sell) {
+      if ($("#input-dayhold").val().match(/^[0-9]+$/) === null) {
+        $("#validate-dayhold").show();
+        return;
+      }
+    }
+
+    var dayhold = parseInt($("#input-dayhold").val());
 
     var note = $("#input-note").val();
 
@@ -168,11 +212,9 @@
     var data = {
       "Date": date,
       "Symbol": symbol,
-      "Capital": capital,
       "Price": price,
       "Share": share,
-      "Total": total,
-      "Position": position,
+      "Cost": cost,
       "Stage": stage,
       "Note": note,
       "JsonChartD": $("#img-d").attr("src"),
@@ -190,7 +232,16 @@
       "JsonIBDCheckup": $("#img-ibd").attr("src"),
     };
 
+    if (sell) {
+      data.Revenue = revenue;
+      data.Profit = profit;
+      data.Gain = gain;
+      data.DayHold = dayhold;
+    }
+
     var jsonBody = JSON.stringify(data);
+
+    processing = true;
 
     $.ajax({
       type: "POST",
@@ -198,11 +249,14 @@
       data: jsonBody,
       success: function(data) {
         window.location = data;
+        processing = false;
       },
       error: function(xhr, err) {
         console.log(err);
+        processing = false;
       },
     });
+
   });
 
   function imgChange(target) {

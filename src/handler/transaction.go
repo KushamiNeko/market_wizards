@@ -21,9 +21,7 @@ func Transaction(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case http.MethodGet:
-		if len(r.URL.Query()) == 0 {
-			transactionNewGet(w, r)
-		}
+		transactionGet(w, r)
 
 	case http.MethodPost:
 		transactionPost(w, r)
@@ -32,19 +30,6 @@ func Transaction(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 	}
 
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-func transactionNewGet(w http.ResponseWriter, r *http.Request) {
-
-	_, err := headerutils.GetCookie(r, headerutils.CookieName)
-	if err != nil {
-		http.Redirect(w, r, Root, http.StatusTemporaryRedirect)
-		return
-	}
-
-	writeTemplate(w, "TransactionNew", nil, nil)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -62,6 +47,19 @@ func transactionGet(w http.ResponseWriter, r *http.Request) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//func transactionGet(w http.ResponseWriter, r *http.Request) {
+
+//_, err := headerutils.GetCookie(r, headerutils.CookieName)
+//if err != nil {
+//http.Redirect(w, r, Root, http.StatusTemporaryRedirect)
+//return
+//}
+
+//writeTemplate(w, "TransactionNew", nil, nil)
+//}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 func transactionPost(w http.ResponseWriter, r *http.Request) {
 
 	var buffer *bytes.Buffer
@@ -72,7 +70,7 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t := new(transaction.Buy)
+	t := new(transaction.Order)
 	err = datautils.JsonRequestBodyDecode(r, t)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)

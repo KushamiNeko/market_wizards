@@ -65,35 +65,35 @@ type IBDCheckup struct {
 	IndustryGroupRank     int
 	GroupRSRating         string
 	EPSRating             int
-	EPSChgLastQtr         float32
-	Last3QtrsAvgEPSGrowth float32
+	EPSChgLastQtr         float64
+	Last3QtrsAvgEPSGrowth float64
 	NQtrsOfEPSAccel       int
 
-	EPSEstChgCurrentQtr    float32
+	EPSEstChgCurrentQtr    float64
 	EstimateRevisions      string
-	LastQtrEarningsSuprise float32
+	LastQtrEarningsSuprise float64
 
-	ThrYrEpsGrowthRate    float32
+	ThrYrEpsGrowthRate    float64
 	NYrsOfAnnualEPSGrowth int
-	EPSEstChgCurrentYr    float32
+	EPSEstChgCurrentYr    float64
 
 	SMRRating            string
-	SalesChgLastQtr      float32
-	ThrYrSalesGrowthRate float32
-	AnnualPreTaxMargin   float32
-	AnnualROE            float32
-	DebtEquityRatio      float32
+	SalesChgLastQtr      float64
+	ThrYrSalesGrowthRate float64
+	AnnualPreTaxMargin   float64
+	AnnualROE            float64
+	DebtEquityRatio      float64
 
-	//Price          float32
+	//Price          float64
 	RSRating       int
-	Off52WeekHigh  float32
-	PriceVS50DayMA float32
+	Off52WeekHigh  float64
+	PriceVS50DayMA float64
 	AvgVolume50Day int64
 
 	MarketCapital int64
 	AccDisRating  string
-	UpDownVolume  float32
-	ChgInFunds    float32
+	UpDownVolume  float64
+	ChgInFunds    float64
 	QtrsOfIncFund int
 }
 

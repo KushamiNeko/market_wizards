@@ -55,9 +55,9 @@ func cleanupL(results [][]string, label string, col int) string {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func parsePercent(str string) (float32, error) {
+func parsePercent(str string) (float64, error) {
 	if strings.Compare(str, none) == 0 {
-		return math.MaxFloat32, nil
+		return math.MaxFloat64, nil
 	}
 
 	ss := rePercent.FindStringSubmatch(str)
@@ -65,19 +65,19 @@ func parsePercent(str string) (float32, error) {
 		return 0.0, fmt.Errorf("No Match for Percent\n")
 	}
 
-	f, err := strconv.ParseFloat(ss[1], 32)
+	f, err := strconv.ParseFloat(ss[1], 64)
 	if err != nil {
 		return 0.0, err
 	}
 
-	return float32(f), nil
+	return f, nil
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func parsePrice(str string) (float32, error) {
+func parsePrice(str string) (float64, error) {
 	if strings.Compare(str, none) == 0 {
-		return math.MaxFloat32, nil
+		return math.MaxFloat64, nil
 	}
 
 	ss := rePrice.FindStringSubmatch(str)
@@ -85,12 +85,12 @@ func parsePrice(str string) (float32, error) {
 		return 0.0, fmt.Errorf("No Match for Price\n")
 	}
 
-	f, err := strconv.ParseFloat(ss[1], 32)
+	f, err := strconv.ParseFloat(ss[1], 64)
 	if err != nil {
 		return 0.0, err
 	}
 
-	return float32(f), nil
+	return f, nil
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -170,17 +170,17 @@ func parseInt(str string) (int, error) {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func parseFloat(str string) (float32, error) {
+func parseFloat(str string) (float64, error) {
 	if strings.Compare(str, none) == 0 {
-		return math.MaxFloat32, nil
+		return math.MaxFloat64, nil
 	}
 
-	f, err := strconv.ParseFloat(str, 32)
+	f, err := strconv.ParseFloat(str, 64)
 	if err != nil {
 		return 0.0, err
 	}
 
-	return float32(f), nil
+	return f, nil
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -11,8 +11,8 @@ import (
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-type Buy struct {
-	ID   string `datastore:",noindex"`
+type Order struct {
+	ID   string
 	Etag string
 
 	ChartD string `json:"-" datastore:",noindex"`
@@ -24,8 +24,8 @@ type Buy struct {
 	ChartSP5D string `json:"-" datastore:",noindex"`
 	ChartSP5W string `json:"-" datastore:",noindex"`
 
-	ChartNYCD string `datastore:",noindex"`
-	ChartNYCW string `datastore:",noindex"`
+	ChartNYCD string `json:"-" datastore:",noindex"`
+	ChartNYCW string `json:"-" datastore:",noindex"`
 
 	ChartDJIAD string `json:"-" datastore:",noindex"`
 	ChartDJIAW string `json:"-" datastore:",noindex"`
@@ -59,24 +59,28 @@ type Buy struct {
 
 	Symbol string
 
-	Price float32
+	Price float64
 
 	Share int
 
-	Total float32
+	Revenue float64 `datastore:",omitempty" json:",omitempty"`
 
-	Capital float32 `datastore:",noindex"`
+	Cost float64 `datastore:",omitempty" json:",omitempty"`
 
-	Position float32 `datastore:",noindex"`
+	Profit float64 `datastore:",omitempty" json:",omitempty"`
 
-	Stage float32
+	Gain float64 `datastore:",omitempty" json:",omitempty"`
+
+	DayHold int `datastore:",omitempty" json:",omitempty"`
+
+	Stage float64
 
 	Note string `datastore:",noindex"`
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (b *Buy) JsonDecode(buffer []byte) error {
+func (b *Order) JsonDecode(buffer []byte) error {
 
 	err := json.Unmarshal(buffer, b)
 	if err != nil {
