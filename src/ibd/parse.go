@@ -85,6 +85,7 @@ type IBDCheckup struct {
 	DebtEquityRatio      float64
 
 	//Price          float64
+
 	RSRating       int
 	Off52WeekHigh  float64
 	PriceVS50DayMA float64

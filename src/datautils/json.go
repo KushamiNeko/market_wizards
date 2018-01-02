@@ -3,7 +3,6 @@ package datautils
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import (
-	"encoding/json"
 	"io/ioutil"
 	"net/http"
 )
@@ -43,56 +42,56 @@ func JsonRequestBodyDecode(r *http.Request, decoder JsonBodyInterface) error {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func JsonRequestBodyToStruct(r *http.Request, structInterface interface{}) error {
-	buffer, err := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
-	if err != nil {
-		return err
-	}
+//func JsonRequestBodyToStruct(r *http.Request, structInterface interface{}) error {
+//buffer, err := ioutil.ReadAll(r.Body)
+//defer r.Body.Close()
+//if err != nil {
+//return err
+//}
 
-	err = json.Unmarshal(buffer, structInterface)
-	if err != nil {
-		return err
-	}
+//err = json.Unmarshal(buffer, structInterface)
+//if err != nil {
+//return err
+//}
 
-	return nil
-}
+//return nil
+//}
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func JsonRequestBodyToMap(r *http.Request) (map[string]interface{}, error) {
-	buffer, err := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
-	if err != nil {
-		return nil, err
-	}
+//func JsonRequestBodyToMap(r *http.Request) (map[string]interface{}, error) {
+//buffer, err := ioutil.ReadAll(r.Body)
+//defer r.Body.Close()
+//if err != nil {
+//return nil, err
+//}
 
-	var entityMap map[string]interface{}
+//var entityMap map[string]interface{}
 
-	if err := json.Unmarshal(buffer, &entityMap); err != nil {
-		return nil, err
-	}
+//if err := json.Unmarshal(buffer, &entityMap); err != nil {
+//return nil, err
+//}
 
-	return entityMap, nil
-}
+//return entityMap, nil
+//}
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func JsonRequestBodyToMapSlice(r *http.Request) ([]map[string]interface{}, error) {
-	buffer, err := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
-	if err != nil {
-		return nil, err
-	}
+//func JsonRequestBodyToMapSlice(r *http.Request) ([]map[string]interface{}, error) {
+//buffer, err := ioutil.ReadAll(r.Body)
+//defer r.Body.Close()
+//if err != nil {
+//return nil, err
+//}
 
-	var entityMaps []map[string]interface{}
+//var entityMaps []map[string]interface{}
 
-	if err := json.Unmarshal(buffer, &entityMaps); err != nil {
-		return nil, err
-	}
+//if err := json.Unmarshal(buffer, &entityMaps); err != nil {
+//return nil, err
+//}
 
-	return entityMaps, nil
-}
+//return entityMaps, nil
+//}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 

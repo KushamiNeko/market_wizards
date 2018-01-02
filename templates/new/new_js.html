@@ -3,10 +3,12 @@
 <script>
   $(".invalid-feedback").hide();
 
+  var decimal = 2;
+
   var buy = true;
   var sell = false;
 
-  var decimal = 2;
+  var buyPoint = "";
 
   var processing = false;
 
@@ -116,6 +118,12 @@
         $("#input-revenue").focus();
         return;
       }
+    }
+
+    if (buyPoint === "") {
+      $("#validate-buypoint").show();
+      $("#dropdownMenu").focus();
+      return;
     }
 
     var revenue = parseFloat($("#input-revenue").val());
@@ -236,6 +244,7 @@
       "Order": "buy",
       "Price": price,
       "Share": share,
+      "BuyPoint": buyPoint,
       "Cost": cost,
       "Stage": stage,
       "Note": note,
@@ -315,6 +324,24 @@
   imgChange("rus-w");
 
   imgChange("ibd");
+
+  function dropdownClick(target, value) {
+    $(target).click(function() {
+      $("#dropdownMenu").html($(target).html());
+      buyPoint = value;
+    });
+  }
+
+  dropdownClick("#dropdown-cup-with-handle", "CupWithHandle");
+  dropdownClick("#dropdown-cup", "Cup");
+  dropdownClick("#dropdown-double-bottom", "DoubleBottom");
+  dropdownClick("#dropdown-flat-base", "FlatBase");
+  dropdownClick("#dropdown-ipo-base", "IPOBase");
+  dropdownClick("#dropdown-tight-area", "TightArea");
+  dropdownClick("#dropdown-consolidation", "Consolidation");
+  dropdownClick("#dropdown-21d-pullback", "21DPullBack");
+  dropdownClick("#dropdown-50d-pullback", "50DPullBack");
+  dropdownClick("#dropdown-new-high", "NewHigh");
 </script>
 
 {{end}}

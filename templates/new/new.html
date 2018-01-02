@@ -36,7 +36,7 @@
 
     <button type="button"
       id="button-type"
-      class="btn btn-lg btn-dark my-share-margin my-button"
+      class="btn btn-lg btn-dark my-share-margin"
       style="width: 100%;">BUY</button>
 
     <label for="input-date"
@@ -98,6 +98,71 @@
       aria-label="share">
 
     <div id="validate-share"
+      class="invalid-feedback">
+      Invalid Input
+    </div>
+
+    <div class="dropdown my-share-margin">
+
+      <button class="btn btn-lg btn-dark dropdown-toggle"
+        type="button"
+        id="dropdownMenu"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+        style="width: 100%;">
+        Buy Point
+      </button>
+
+      <div class="dropdown-menu"
+        aria-labelledby="dropdownMenu"
+        style="width: 100%;">
+
+        <button id="dropdown-cup-with-handle"
+          class="dropdown-item"
+          type="button">Cup With Handle</button>
+
+        <button id="dropdown-cup"
+          class="dropdown-item"
+          type="button">Cup</button>
+
+        <button id="dropdown-double-bottom"
+          class="dropdown-item"
+          type="button">Double Bottom</button>
+
+        <button id="dropdown-flat-base"
+          class="dropdown-item"
+          type="button">Flat Base</button>
+
+        <button id="dropdown-ipo-base"
+          class="dropdown-item"
+          type="button">IPO Base</button>
+
+        <button id="dropdown-tight-area"
+          class="dropdown-item"
+          type="button">Tight Area</button>
+
+        <button id="dropdown-consolidation"
+          class="dropdown-item"
+          type="button">Consolidation</button>
+
+        <button id="dropdown-21d-pullback"
+          class="dropdown-item"
+          type="button">21D PullBack</button>
+
+        <button id="dropdown-50d-pullback"
+          class="dropdown-item"
+          type="button">50D PullBack</button>
+
+        <button id="dropdown-new-high"
+          class="dropdown-item"
+          type="button">New High</button>
+
+      </div>
+
+    </div>
+
+    <div id="validate-buypoint"
       class="invalid-feedback">
       Invalid Input
     </div>

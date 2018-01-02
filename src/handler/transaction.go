@@ -47,19 +47,6 @@ func transactionGet(w http.ResponseWriter, r *http.Request) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//func transactionGet(w http.ResponseWriter, r *http.Request) {
-
-//_, err := headerutils.GetCookie(r, headerutils.CookieName)
-//if err != nil {
-//http.Redirect(w, r, Root, http.StatusTemporaryRedirect)
-//return
-//}
-
-//writeTemplate(w, "TransactionNew", nil, nil)
-//}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 func transactionPost(w http.ResponseWriter, r *http.Request) {
 
 	var buffer *bytes.Buffer
@@ -137,7 +124,7 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = writeStorageObject(t.ChartD, buffer)
+	err = writeStorageObject(storagePath(cookie, t.ChartD), buffer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -154,7 +141,7 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = writeStorageObject(t.ChartW, buffer)
+	err = writeStorageObject(storagePath(cookie, t.ChartW), buffer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -171,7 +158,7 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = writeStorageObject(t.ChartNDQCD, buffer)
+	err = writeStorageObject(storagePath(cookie, t.ChartNDQCD), buffer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -188,7 +175,7 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = writeStorageObject(t.ChartNDQCW, buffer)
+	err = writeStorageObject(storagePath(cookie, t.ChartNDQCW), buffer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -205,7 +192,7 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = writeStorageObject(t.ChartSP5D, buffer)
+	err = writeStorageObject(storagePath(cookie, t.ChartSP5D), buffer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -222,7 +209,7 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = writeStorageObject(t.ChartSP5W, buffer)
+	err = writeStorageObject(storagePath(cookie, t.ChartSP5W), buffer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -239,7 +226,7 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = writeStorageObject(t.ChartNYCD, buffer)
+	err = writeStorageObject(storagePath(cookie, t.ChartNYCD), buffer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -256,7 +243,7 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = writeStorageObject(t.ChartNYCW, buffer)
+	err = writeStorageObject(storagePath(cookie, t.ChartNYCW), buffer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -273,7 +260,7 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = writeStorageObject(t.ChartDJIAD, buffer)
+	err = writeStorageObject(storagePath(cookie, t.ChartDJIAD), buffer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -290,7 +277,7 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = writeStorageObject(t.ChartDJIAW, buffer)
+	err = writeStorageObject(storagePath(cookie, t.ChartDJIAW), buffer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -307,7 +294,7 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = writeStorageObject(t.ChartRUSD, buffer)
+	err = writeStorageObject(storagePath(cookie, t.ChartRUSD), buffer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -324,7 +311,7 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = writeStorageObject(t.ChartRUSW, buffer)
+	err = writeStorageObject(storagePath(cookie, t.ChartRUSW), buffer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

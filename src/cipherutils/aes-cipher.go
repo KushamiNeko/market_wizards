@@ -24,19 +24,6 @@ type aesCipherInstance struct {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//type CacheStoreDataStruct struct {
-//Data [][]byte `datastore:"data,noindex"`
-//}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//const (
-//cachestoreKeyIndex   = iota
-//cachestoreNonceIndex = iota
-//)
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-
 var (
 	aesCipherInstanceStore []*aesCipherInstance
 )
@@ -62,11 +49,6 @@ func AesCipherInstanceInit(args ...interface{}) error {
 		instance := new(aesCipherInstance)
 		instance.Key = hashutils.RandBytesGenerate(32)
 		instance.Nonce = hashutils.RandBytesGenerate(12)
-
-		//cache := new(CacheStoreDataStruct)
-		//cache.Data = make([][]byte, 2)
-		//cache.Data[cachestoreKeyIndex] = instance.Key
-		//cache.Data[cachestoreNonceIndex] = instance.Nonce
 
 		instance.ChipherBlock, err = aes.NewCipher(instance.Key)
 		if err != nil {
