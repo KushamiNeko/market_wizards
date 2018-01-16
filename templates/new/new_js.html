@@ -12,6 +12,20 @@
 
   var processing = false;
 
+  function inProcess() {
+    processing = true;
+
+    $("#button-create").removeClass("btn-dark");
+    $("#button-create").addClass("btn-danger");
+  }
+
+  function outProcess() {
+    processing = false;
+
+    $("#button-create").removeClass("btn-danger");
+    $("#button-create").addClass("btn-dark");
+  }
+
   $("#button-type").click(function() {
     buy = !buy;
     sell = !buy;
@@ -238,6 +252,8 @@
       return;
     }
 
+    inProcess();
+
     var data = {
       "Date": date,
       "Symbol": symbol,
@@ -281,11 +297,13 @@
       data: jsonBody,
       success: function(data) {
         window.location = data;
-        processing = false;
+
+        outProcess();
       },
       error: function(xhr, err) {
         console.log(err);
-        processing = false;
+
+        outProcess();
       },
     });
 

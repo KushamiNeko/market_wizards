@@ -3,9 +3,29 @@
 <script>
   $("#input-email").focus();
 
+  var processing = false;
+
+  function inProcess() {
+    processing = true;
+
+    $("#button-login").removeClass("btn-dark");
+    $("#button-login").addClass("btn-danger");
+  }
+
+  function outProcess() {
+    processing = false;
+
+    $("#button-login").removeClass("btn-danger");
+    $("#button-login").addClass("btn-dark");
+  }
+
   function action(email, password, url, method, errcb) {
 
     $(".invalid-feedback").hide();
+
+    if (processing) {
+      return;
+    }
 
     //var email = $("#input-email").val() + "@gmail.com";
     //var password = $("#input-password").val();
@@ -20,6 +40,8 @@
       return;
     }
 
+    inProcess();
+
     var data = {};
     data.Email = email;
     data.Password = password;
@@ -32,9 +54,13 @@
       data: jsonBody,
       success: function(data) {
         window.location = data;
+
+        outProcess();
       },
       error: function(xhr, err) {
         errcb();
+
+        outProcess();
       },
     });
   }
@@ -66,7 +92,6 @@
   });
 
   $("#button-reset").click(function() {
-    console.log("test");
 
     action(
       $("#input-email").val() + "@gmail.com",

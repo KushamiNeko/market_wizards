@@ -1,0 +1,93 @@
+{{define "Statistic"}}
+
+<html lang="en">
+
+<head>
+
+  <!---->
+  {{template "IndexHead"}}
+  <!---->
+
+  <!---->
+  {{template "IndexIcon"}}
+  <!---->
+
+  <!---->
+  {{template "CDNCSS"}}
+  <!---->
+
+  <!---->
+  {{template "ShareCSS"}}
+  <!---->
+
+  <!---->
+  {{template "StatisticCSS"}}
+  <!---->
+
+</head>
+
+<body>
+
+  <!---->
+  {{template "ShareNavbar"}}
+  <!---->
+
+  <div class="my-share-container my-share-margin">
+
+    <ul class="list-group">
+      <li class="list-group-item active">General</li>
+
+      <li class="list-group-item">
+        <div class="my-list-item">
+          <span>
+            Total Trade
+          </span>
+          <span>
+            {{.TotalTrade}}
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item">
+        <div class="my-list-item">
+          <span>
+            Batting Average
+          </span>
+          <span>
+            {{.BattingAverage}}
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item">
+        <div class="my-list-item">
+          <span>
+            Win Loss Ratio
+          </span>
+          <span>
+            {{.WinLossRatio}}
+          </span>
+        </div>
+      </li>
+
+    </ul>
+
+  </div>
+
+  <!---->
+  {{template "CDNJS"}}
+  <!---->
+
+  <!---->
+  {{template "ShareJS"}}
+  <!---->
+
+  <!---->
+  {{template "StatisticJS"}}
+  <!---->
+
+</body>
+
+</html>
+
+{{end}}
