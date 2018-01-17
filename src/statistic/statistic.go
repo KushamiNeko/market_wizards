@@ -53,6 +53,12 @@ func NewStatistic(winner []*transaction.Order, losser []*transaction.Order) (*St
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+func (s *Statistic) FormatFloat(data float64) string {
+	return fmt.Sprintf("%.4f", data)
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 type TransactionStat struct {
 	//ID   string
 	//Etag string
@@ -67,7 +73,7 @@ type TransactionStat struct {
 
 	TotalTrade int
 
-	Cost map[string]int
+	//Cost map[string]int
 
 	Price map[string]int
 
@@ -103,8 +109,9 @@ type TransactionStat struct {
 func NewTransactionStat(orders []*transaction.Order) (*TransactionStat, error) {
 
 	grpPrice := 10.0
+	grpFormat := "%s ~ %s"
 
-	dictCost := make(map[string]int)
+	//dictCost := make(map[string]int)
 	dictPrice := make(map[string]int)
 	dictBuyPoint := make(map[string]int)
 	dictStage := make(map[string]int)
@@ -113,25 +120,25 @@ func NewTransactionStat(orders []*transaction.Order) (*TransactionStat, error) {
 	sliceDayHold := make([]float64, 0)
 
 	for _, o := range orders {
-		cost := o.Cost / float64(o.Share)
+		//cost := o.Cost / float64(o.Share)
 
-		cgrp := math.Floor(cost / grpPrice)
-		cgrps := strconv.FormatFloat(cgrp*grpPrice, 'f', -1, 64)
-		cgrpe := strconv.FormatFloat((cgrp+1)*grpPrice, 'f', -1, 64)
+		//cgrp := math.Floor(cost / grpPrice)
+		//cgrps := strconv.FormatFloat(cgrp*grpPrice, 'f', -1, 64)
+		//cgrpe := strconv.FormatFloat((cgrp+1)*grpPrice, 'f', -1, 64)
 
-		cgrpk := fmt.Sprintf("%s~%s", cgrps, cgrpe)
+		//cgrpk := fmt.Sprintf(grpFormat, cgrps, cgrpe)
 
-		if val, ok := dictCost[cgrpk]; ok {
-			dictCost[cgrpk] = val + 1
-		} else {
-			dictCost[cgrpk] = 1
-		}
+		//if val, ok := dictCost[cgrpk]; ok {
+		//dictCost[cgrpk] = val + 1
+		//} else {
+		//dictCost[cgrpk] = 1
+		//}
 
 		grp := math.Floor(o.Price / grpPrice)
 		grps := strconv.FormatFloat(grp*grpPrice, 'f', -1, 64)
 		grpe := strconv.FormatFloat((grp+1)*grpPrice, 'f', -1, 64)
 
-		grpk := fmt.Sprintf("%s~%s", grps, grpe)
+		grpk := fmt.Sprintf(grpFormat, grps, grpe)
 
 		if val, ok := dictPrice[grpk]; ok {
 			dictPrice[grpk] = val + 1
@@ -160,7 +167,7 @@ func NewTransactionStat(orders []*transaction.Order) (*TransactionStat, error) {
 
 	t := new(TransactionStat)
 	t.TotalTrade = len(orders)
-	t.Cost = dictCost
+	//t.Cost = dictCost
 	t.Price = dictPrice
 	t.BuyPoint = dictBuyPoint
 	t.Stage = dictStage

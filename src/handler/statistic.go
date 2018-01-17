@@ -8,6 +8,7 @@ import (
 	"headerutils"
 	"net/http"
 	"statistic"
+	"strconv"
 	"transaction"
 
 	"cloud.google.com/go/datastore"
@@ -37,6 +38,27 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var start int64
+	var end int64
+
+	if len(r.URL.Query()) > 0 {
+
+		starts := r.URL.Query().Get("start")
+		ends := r.URL.Query().Get("end")
+
+		start, err = strconv.ParseInt(starts, 10, 64)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		end, err = strconv.ParseInt(ends, 10, 64)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
+
 	q := datastore.NewQuery(cookie).Namespace(config.NamespaceTransaction)
 	q = q.Filter("Order =", "sell")
 	q = q.KeysOnly()
@@ -60,6 +82,10 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 	losser := make([]*transaction.Order, 0)
 
 	for _, o := range orders {
+
+		if o.Date < int(start) || o.Date > int(end) {
+			continue
+		}
 
 		if o.GainP >= 0.0 {
 			winner = append(winner, o)

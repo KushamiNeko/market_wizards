@@ -32,9 +32,37 @@
   {{template "ShareNavbar"}}
   <!---->
 
-  <div class="my-share-container my-share-margin">
+  <div class="my-share-container">
 
-    <ul class="list-group">
+    <label for="input-start-date"
+      class="my-share-margin">Start Date</label>
+
+    <input type="text"
+      id="input-start-date"
+      class="form-control">
+
+    <label for="input-end-date"
+      class="my-share-margin">End Date</label>
+
+    <input type="text"
+      id="input-end-date"
+      class="form-control">
+
+    <div id="validate-date"
+      class="invalid-feedback">
+      Invalid Date
+    </div>
+
+    <button type="button"
+      id="button-query"
+      class="btn btn-lg btn-dark my-share-margin my-button"
+      style="width: 100%;">Query</button>
+
+    <div class="my-share-separator"
+      style="margin-top: 2em;">
+    </div>
+
+    <ul class="list-group my-share-margin">
       <li class="list-group-item active">General</li>
 
       <li class="list-group-item">
@@ -54,7 +82,7 @@
             Batting Average
           </span>
           <span>
-            {{.BattingAverage}}
+            {{.FormatFloat .BattingAverage}}
           </span>
         </div>
       </li>
@@ -65,14 +93,279 @@
             Win Loss Ratio
           </span>
           <span>
-            {{.WinLossRatio}}
+            {{.FormatFloat .WinLossRatio}}
           </span>
         </div>
       </li>
 
     </ul>
 
+    <ul class="list-group my-share-margin">
+      <li class="list-group-item list-group-item-success">Win</li>
+
+      <li class="list-group-item">
+        <div class="my-list-item">
+          <span>
+            Total Trade
+          </span>
+          <span>
+            {{.Gain.TotalTrade}}
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item list-group-item-info">
+        <div class="my-list-item">
+          <span>
+            Price
+          </span>
+        </div>
+      </li>
+
+      <!---->
+      {{range $k, $v := .Gain.Price}}
+      <li class="list-group-item">
+        <div class="my-list-item">
+          <span>
+            {{$k}}
+          </span>
+          <span>
+            {{$v}}
+          </span>
+        </div>
+      </li>
+      {{end}}
+      <!---->
+
+      <li class="list-group-item list-group-item-info">
+        <div class="my-list-item">
+          <span>
+            Buy Point
+          </span>
+        </div>
+      </li>
+
+      <!---->
+      {{range $k, $v := .Gain.BuyPoint}}
+      <li class="list-group-item">
+        <div class="my-list-item">
+          <span>
+            {{$k}}
+          </span>
+          <span>
+            {{$v}}
+          </span>
+        </div>
+      </li>
+      {{end}}
+      <!---->
+
+      <li class="list-group-item list-group-item-info">
+        <div class="my-list-item">
+          <span>
+            Stage
+          </span>
+        </div>
+      </li>
+
+      <!---->
+      {{range $k, $v := .Gain.Stage}}
+      <li class="list-group-item">
+        <div class="my-list-item">
+          <span>
+            {{$k}}
+          </span>
+          <span>
+            {{$v}}
+          </span>
+        </div>
+      </li>
+      {{end}}
+      <!---->
+
+      <li class="list-group-item list-group-item-info">
+        <div class="my-list-item">
+          <span>
+            Gain (%)
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item">
+        <div class="my-list-item">
+          <span>
+            Mean
+          </span>
+          <span>
+            {{.FormatFloat .Gain.GainPMean}}
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item">
+        <div class="my-list-item">
+          <span>
+            Max
+          </span>
+          <span>
+            {{.FormatFloat .Gain.GainPMax}}
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item">
+        <div class="my-list-item">
+          <span>
+            Min
+          </span>
+          <span>
+            {{.FormatFloat .Gain.GainPMin}}
+          </span>
+        </div>
+      </li>
+
+    </ul>
+
+    <ul class="list-group my-share-margin">
+      <li class="list-group-item list-group-item-danger">Loss</li>
+
+      <li class="list-group-item">
+        <div class="my-list-item">
+          <span>
+            Total Trade
+          </span>
+          <span>
+            {{.Loss.TotalTrade}}
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item list-group-item-warning">
+        <div class="my-list-item">
+          <span>
+            Price
+          </span>
+        </div>
+      </li>
+
+      <!---->
+      {{range $k, $v := .Loss.Price}}
+      <li class="list-group-item">
+        <div class="my-list-item">
+          <span>
+            {{$k}}
+          </span>
+          <span>
+            {{$v}}
+          </span>
+        </div>
+      </li>
+      {{end}}
+      <!---->
+
+      <li class="list-group-item list-group-item-warning">
+        <div class="my-list-item">
+          <span>
+            Buy Point
+          </span>
+        </div>
+      </li>
+
+      <!---->
+      {{range $k, $v := .Loss.BuyPoint}}
+      <li class="list-group-item">
+        <div class="my-list-item">
+          <span>
+            {{$k}}
+          </span>
+          <span>
+            {{$v}}
+          </span>
+        </div>
+      </li>
+      {{end}}
+      <!---->
+
+      <li class="list-group-item list-group-item-warning">
+        <div class="my-list-item">
+          <span>
+            Stage
+          </span>
+        </div>
+      </li>
+
+      <!---->
+      {{range $k, $v := .Loss.Stage}}
+      <li class="list-group-item">
+        <div class="my-list-item">
+          <span>
+            {{$k}}
+          </span>
+          <span>
+            {{$v}}
+          </span>
+        </div>
+      </li>
+      {{end}}
+      <!---->
+
+      <li class="list-group-item list-group-item-warning">
+        <div class="my-list-item">
+          <span>
+            Loss (%)
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item">
+        <div class="my-list-item">
+          <span>
+            Mean
+          </span>
+          <span>
+            {{.FormatFloat .Loss.GainPMean}}
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item">
+        <div class="my-list-item">
+          <span>
+            Max
+          </span>
+          <span>
+            {{.FormatFloat .Loss.GainPMax}}
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item">
+        <div class="my-list-item">
+          <span>
+            Min
+          </span>
+          <span>
+            {{.FormatFloat .Loss.GainPMin}}
+          </span>
+        </div>
+      </li>
+
+    </ul>
+
+    <div class="my-share-separator"
+      style="margin-top: 2em;">
+    </div>
+
+    <button type="button"
+      id="button-back"
+      class="btn btn-lg btn-dark my-share-margin my-button"
+      style="width: 100%;">Back to Action</button>
+
   </div>
+
+  <!---->
+  {{template "ShareFooter"}}
+  <!---->
 
   <!---->
   {{template "CDNJS"}}

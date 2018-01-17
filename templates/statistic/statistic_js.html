@@ -1,6 +1,37 @@
 {{define "StatisticJS"}}
 
 <script>
+  $("#input-start-date").focus();
+
+  var processing = false;
+
+  $("#button-back").click(function() {
+    window.location = "/action";
+  });
+
+  $("#button-query").click(function() {
+
+    if (processing) {
+      return;
+    }
+
+    if ($("#input-start-date").val().match(/^\d{8}$/) === null) {
+      $("#validate-date").show();
+      $("#input-start-date").focus();
+      return;
+    }
+
+    if ($("#input-end-date").val().match(/^\d{8}$/) === null) {
+      $("#validate-date").show();
+      $("#input-end-date").focus();
+      return;
+    }
+
+    window.location = "/statistic?start=" + $("#input-start-date").val() + "&end=" + $("#input-end-date").val();
+
+    processing = false;
+
+  });
 </script>
 
 {{end}}
