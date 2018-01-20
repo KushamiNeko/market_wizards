@@ -3,27 +3,31 @@
 <script>
   $("#input-email").focus();
 
-  var processing = false;
-
-  function inProcess() {
-    processing = true;
-
-    $("#button-login").removeClass("btn-dark");
-    $("#button-login").addClass("btn-danger");
-  }
-
-  function outProcess() {
-    processing = false;
-
-    $("#button-login").removeClass("btn-danger");
-    $("#button-login").addClass("btn-dark");
-  }
+  //  var processing = false;
+  //
+  //  function inProcess() {
+  //    processing = true;
+  //
+  //    $("#button-login").removeClass("btn-dark");
+  //    $("#button-login").addClass("btn-danger");
+  //  }
+  //
+  //  function outProcess() {
+  //    processing = false;
+  //
+  //    $("#button-login").removeClass("btn-danger");
+  //    $("#button-login").addClass("btn-dark");
+  //  }
 
   function action(email, password, url, method, errcb) {
 
     $(".invalid-feedback").hide();
 
-    if (processing) {
+    //    if (processing) {
+    //      return;
+    //    }
+
+    if (isProcessing()) {
       return;
     }
 
@@ -40,7 +44,7 @@
       return;
     }
 
-    inProcess();
+    inProcess("#button-login");
 
     var data = {};
     data.Email = email;
@@ -60,7 +64,7 @@
       error: function(xhr, err) {
         errcb();
 
-        outProcess();
+        outProcess("#button-login");
       },
     });
   }

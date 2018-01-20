@@ -83,8 +83,10 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 
 	for _, o := range orders {
 
-		if o.Date < int(start) || o.Date > int(end) {
-			continue
+		if start > 0 && end > 0 && end > start {
+			if o.Date < int(start) || o.Date > int(end) {
+				continue
+			}
 		}
 
 		if o.GainP >= 0.0 {

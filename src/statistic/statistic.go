@@ -26,22 +26,34 @@ type Statistic struct {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func NewStatistic(winner []*transaction.Order, losser []*transaction.Order) (*Statistic, error) {
+func NewStatistic(winner []*transaction.Order, loser []*transaction.Order) (*Statistic, error) {
 	s := new(Statistic)
 
-	stat, err := NewTransactionStat(winner)
-	if err != nil {
-		return nil, err
+	var stat *TransactionStat
+	var err error
+
+	if winner != nil && len(winner) != 0 {
+		stat, err = NewTransactionStat(winner)
+		if err != nil {
+			return nil, err
+		}
+
+		s.Gain = stat
+	} else {
+		s.Gain = new(TransactionStat)
 	}
 
-	s.Gain = stat
+	if loser != nil && len(loser) != 0 {
 
-	stat, err = NewTransactionStat(losser)
-	if err != nil {
-		return nil, err
+		stat, err = NewTransactionStat(loser)
+		if err != nil {
+			return nil, err
+		}
+
+		s.Loss = stat
+	} else {
+		s.Loss = new(TransactionStat)
 	}
-
-	s.Loss = stat
 
 	s.TotalTrade = s.Gain.TotalTrade + s.Loss.TotalTrade
 	s.BattingAverage = float64(s.Gain.TotalTrade) / float64(s.TotalTrade)

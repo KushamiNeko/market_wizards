@@ -10,21 +10,21 @@
 
   var buyPoint = "";
 
-  var processing = false;
-
-  function inProcess() {
-    processing = true;
-
-    $("#button-create").removeClass("btn-dark");
-    $("#button-create").addClass("btn-danger");
-  }
-
-  function outProcess() {
-    processing = false;
-
-    $("#button-create").removeClass("btn-danger");
-    $("#button-create").addClass("btn-dark");
-  }
+  //  var processing = false;
+  //
+  //  function inProcess() {
+  //    processing = true;
+  //
+  //    $("#button-create").removeClass("btn-dark");
+  //    $("#button-create").addClass("btn-danger");
+  //  }
+  //
+  //  function outProcess() {
+  //    processing = false;
+  //
+  //    $("#button-create").removeClass("btn-danger");
+  //    $("#button-create").addClass("btn-dark");
+  //  }
 
   $("#button-type").click(function() {
     buy = !buy;
@@ -90,7 +90,11 @@
   $("#button-create").click(function() {
     $(".invalid-feedback").hide();
 
-    if (processing) {
+    //if (processing) {
+    //  return;
+    //}
+
+    if (isProcessing()) {
       return;
     }
 
@@ -252,7 +256,7 @@
       return;
     }
 
-    inProcess();
+    inProcess("#button-create");
 
     var data = {
       "Date": date,
@@ -303,7 +307,7 @@
       error: function(xhr, err) {
         console.log(err);
 
-        outProcess();
+        outProcess("#button-create");
       },
     });
 
@@ -356,6 +360,7 @@
   dropdownClick("#dropdown-flat-base", "FlatBase");
   dropdownClick("#dropdown-ipo-base", "IPOBase");
   dropdownClick("#dropdown-tight-area", "TightArea");
+  dropdownClick("#dropdown-channel", "Channel");
   dropdownClick("#dropdown-consolidation", "Consolidation");
   dropdownClick("#dropdown-21d-pullback", "21DPullBack");
   dropdownClick("#dropdown-50d-pullback", "50DPullBack");

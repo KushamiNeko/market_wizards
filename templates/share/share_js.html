@@ -33,6 +33,27 @@
   function extractImg(img) {
     return img.split(",", 2)[1];
   }
+
+  var processing = false;
+
+  function inProcess(target) {
+    console.log(target);
+    processing = true;
+
+    $(target).removeClass("btn-dark");
+    $(target).addClass("btn-danger");
+  }
+
+  function outProcess(target) {
+    processing = false;
+
+    $(target).removeClass("btn-danger");
+    $(target).addClass("btn-dark");
+  }
+
+  function isProcessing() {
+    return processing;
+  }
 </script>
 
 {{end}}
