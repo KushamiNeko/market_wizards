@@ -1,0 +1,5 @@
+@mixin will-change($p, $s, $f) {
+  will-change: $p;
+  -webkit-transition: $p $s $f;
+  transition: $p $s $f;
+}

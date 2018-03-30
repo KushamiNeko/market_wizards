@@ -3,15 +3,11 @@ package main
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import (
-	"bytes"
 	"client"
 	"config"
 	"handler"
-	"ibd"
-	"io"
 	"log"
 	"net/http"
-	"os"
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -40,40 +36,40 @@ func init() {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func main() {
-	buffer := new(bytes.Buffer)
+	//buffer := new(bytes.Buffer)
 
-	f, err := os.Open(TestFile)
-	if err != nil {
-		panic(err)
-	}
-	defer f.Close()
+	//f, err := os.Open(TestFile)
+	//if err != nil {
+	//panic(err)
+	//}
+	//defer f.Close()
 
-	io.Copy(buffer, f)
+	//io.Copy(buffer, f)
 
-	//ibd, err := ibd.Parse(buffer)
-	_, err = ibd.Parse(buffer)
-	if err != nil {
-		panic(err)
-	}
-
-	//fmt.Println(ibd)
-
-	//jsonBuffer, err := json.Marshal(ibd)
+	////ibd, err := ibd.Parse(buffer)
+	//_, err = ibd.Parse(buffer)
 	//if err != nil {
 	//panic(err)
 	//}
 
-	//storageBucket := client.StorageClient.Bucket(config.ProjectBucket)
+	////fmt.Println(ibd)
 
-	//storageObject := storageBucket.Object("test")
+	////jsonBuffer, err := json.Marshal(ibd)
+	////if err != nil {
+	////panic(err)
+	////}
 
-	//storageWriter := storageObject.NewWriter(client.Context)
+	////storageBucket := client.StorageClient.Bucket(config.ProjectBucket)
 
-	//storageWriter.Write(jsonBuffer)
+	////storageObject := storageBucket.Object("test")
 
-	//storageWriter.Close()
+	////storageWriter := storageObject.NewWriter(client.Context)
 
-	return
+	////storageWriter.Write(jsonBuffer)
+
+	////storageWriter.Close()
+
+	//return
 
 	mux := http.NewServeMux()
 
@@ -86,6 +82,8 @@ func main() {
 	mux.HandleFunc("/transaction", handler.Transaction)
 
 	mux.HandleFunc("/statistic", handler.Statistic)
+
+	mux.HandleFunc("/resource/", handler.Resource)
 
 	log.Fatal(http.ListenAndServe(":8080", mux))
 }

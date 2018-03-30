@@ -1,0 +1,10 @@
+.my-list-item {
+display: -ms-flexbox;
+display: -webkit-flex;
+display: flex; }
+.my-list-item {
+-ms-flex-direction: row;
+-webkit-flex-direction: row;
+flex-direction: row; }
+.my-list-item {
+justify-content: space-between; }

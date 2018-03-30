@@ -13,6 +13,13 @@ import (
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+const (
+	grpPrice  = 50
+	grpFormat = "%s ~ %s"
+)
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 type Statistic struct {
 	TotalTrade int
 
@@ -105,10 +112,10 @@ type TransactionStat struct {
 	GainPMax  float64
 	GainPMin  float64
 
-	//DayHold int `datastore:",omitempty" json:",omitempty"`
-	DayHoldMean float64
-	DayHoldMax  float64
-	DayHoldMin  float64
+	//DaysHeld int `datastore:",omitempty" json:",omitempty"`
+	DaysHeldMean float64
+	DaysHeldMax  float64
+	DaysHeldMin  float64
 
 	//Stage float64
 	Stage map[string]int
@@ -120,8 +127,8 @@ type TransactionStat struct {
 
 func NewTransactionStat(orders []*transaction.Order) (*TransactionStat, error) {
 
-	grpPrice := 10.0
-	grpFormat := "%s ~ %s"
+	//grpPrice := 10.0
+	//grpFormat := "%s ~ %s"
 
 	//dictCost := make(map[string]int)
 	dictPrice := make(map[string]int)
@@ -129,7 +136,7 @@ func NewTransactionStat(orders []*transaction.Order) (*TransactionStat, error) {
 	dictStage := make(map[string]int)
 
 	sliceGainP := make([]float64, 0)
-	sliceDayHold := make([]float64, 0)
+	sliceDaysHeld := make([]float64, 0)
 
 	for _, o := range orders {
 		//cost := o.Cost / float64(o.Share)
@@ -165,7 +172,8 @@ func NewTransactionStat(orders []*transaction.Order) (*TransactionStat, error) {
 		}
 
 		sliceGainP = append(sliceGainP, o.GainP)
-		sliceDayHold = append(sliceDayHold, float64(o.DayHold))
+		//sliceDayHold = append(sliceDayHold, float64(o.DayHold))
+		sliceDaysHeld = append(sliceDaysHeld, float64(o.DaysHeld))
 
 		stages := strconv.FormatFloat(math.Floor(o.Stage), 'f', -1, 64)
 
@@ -201,17 +209,17 @@ func NewTransactionStat(orders []*transaction.Order) (*TransactionStat, error) {
 		return nil, err
 	}
 
-	t.DayHoldMean, err = stats.Mean(sliceDayHold)
+	t.DaysHeldMean, err = stats.Mean(sliceDaysHeld)
 	if err != nil {
 		return nil, err
 	}
 
-	t.DayHoldMax, err = stats.Max(sliceDayHold)
+	t.DaysHeldMax, err = stats.Max(sliceDaysHeld)
 	if err != nil {
 		return nil, err
 	}
 
-	t.DayHoldMin, err = stats.Min(sliceDayHold)
+	t.DaysHeldMin, err = stats.Min(sliceDaysHeld)
 	if err != nil {
 		return nil, err
 	}
@@ -221,48 +229,48 @@ func NewTransactionStat(orders []*transaction.Order) (*TransactionStat, error) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-type IBDCheckUp struct {
-	ID string
+//type IBDCheckUp struct {
+//ID string
 
-	Symbol string
+//Symbol string
 
-	RankInGroup           int
-	CompositeRating       int
-	MarketUptrend         string
-	IndustryGroupRank     int
-	GroupRSRating         string
-	EPSRating             int
-	EPSChgLastQtr         float64
-	Last3QtrsAvgEPSGrowth float64
-	NQtrsOfEPSAccel       int
+//RankInGroup           int
+//CompositeRating       int
+//MarketUptrend         string
+//IndustryGroupRank     int
+//GroupRSRating         string
+//EPSRating             int
+//EPSChgLastQtr         float64
+//Last3QtrsAvgEPSGrowth float64
+//NQtrsOfEPSAccel       int
 
-	EPSEstChgCurrentQtr    float64
-	EstimateRevisions      string
-	LastQtrEarningsSuprise float64
+//EPSEstChgCurrentQtr    float64
+//EstimateRevisions      string
+//LastQtrEarningsSuprise float64
 
-	ThrYrEpsGrowthRate    float64
-	NYrsOfAnnualEPSGrowth int
-	EPSEstChgCurrentYr    float64
+//ThrYrEpsGrowthRate    float64
+//NYrsOfAnnualEPSGrowth int
+//EPSEstChgCurrentYr    float64
 
-	SMRRating            string
-	SalesChgLastQtr      float64
-	ThrYrSalesGrowthRate float64
-	AnnualPreTaxMargin   float64
-	AnnualROE            float64
-	DebtEquityRatio      float64
+//SMRRating            string
+//SalesChgLastQtr      float64
+//ThrYrSalesGrowthRate float64
+//AnnualPreTaxMargin   float64
+//AnnualROE            float64
+//DebtEquityRatio      float64
 
-	//Price          float64
+////Price          float64
 
-	RSRating       int
-	Off52WeekHigh  float64
-	PriceVS50DayMA float64
-	AvgVolume50Day int64
+//RSRating       int
+//Off52WeekHigh  float64
+//PriceVS50DayMA float64
+//AvgVolume50Day int64
 
-	MarketCapital int64
-	AccDisRating  string
-	UpDownVolume  float64
-	ChgInFunds    float64
-	QtrsOfIncFund int
-}
+//MarketCapital int64
+//AccDisRating  string
+//UpDownVolume  float64
+//ChgInFunds    float64
+//QtrsOfIncFund int
+//}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

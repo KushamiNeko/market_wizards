@@ -9,5 +9,6 @@ golang.org
 google.golang.org
 go.opencensus.io
 
+images
 *.jpg
 *.png

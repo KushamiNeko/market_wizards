@@ -76,7 +76,8 @@ type Order struct {
 
 	GainP float64 `datastore:",omitempty" json:",omitempty"`
 
-	DayHold int `datastore:",omitempty" json:",omitempty"`
+	//DayHold int `datastore:",omitempty" json:",omitempty"`
+	DaysHeld int `datastore:",omitempty" json:",omitempty"`
 
 	Stage float64
 
