@@ -3,21 +3,27 @@ package main
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import (
+	"bytes"
 	"client"
 	"config"
 	"handler"
+	"ibd"
+	"io"
 	"log"
 	"net/http"
+	"os"
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const (
-	//TestFile = "resource/ibd_checkup_spar.html"
-	//TestFile = "resource/ibd_checkup_cacc.html"
-	//TestFile = "resource/ibd_checkup_cade.html"
-	TestFile = "resource/ibd_checkup_extr.html"
-	//TestFile = "resource/ibd_checkup_ebsb.html"
+	//TestFile = "test_files/ibd_checkup_spar.html"
+	//TestFile = "test_files/ibd_checkup_cade.html"
+	//TestFile = "test_files/ibd_checkup_extr.html"
+	//TestFile = "test_files/ibd_checkup_ebsb.html"
+
+	TestFile = "test_files/ibd_checkup_cacc.html"
+	//TestFile = "test_files/ibd_checkup_sgh.html"
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,24 +40,40 @@ func init() {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func main() {
-	//buffer := new(bytes.Buffer)
+	buffer := new(bytes.Buffer)
 
-	//f, err := os.Open(TestFile)
+	f, err := os.Open(TestFile)
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+
+	io.Copy(buffer, f)
+
+	//ibd, err := ibd.Parse(buffer)
+	_, err = ibd.Parse(buffer)
+	if err != nil {
+		panic(err)
+	}
+
+	//fmt.Println(ibd)
+
+	//jsonBuffer, err := json.Marshal(ibd)
 	//if err != nil {
 	//panic(err)
 	//}
-	//defer f.Close()
 
-	//io.Copy(buffer, f)
+	//storageBucket := client.StorageClient.Bucket(config.ProjectBucket)
 
-	//info, err := ibd.Parse(buffer)
-	//if err != nil {
-	//panic(err)
-	//}
+	//storageObject := storageBucket.Object("test")
 
-	//fmt.Println(info)
+	//storageWriter := storageObject.NewWriter(client.Context)
 
-	//return
+	//storageWriter.Write(jsonBuffer)
+
+	//storageWriter.Close()
+
+	return
 
 	mux := http.NewServeMux()
 

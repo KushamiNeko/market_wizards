@@ -54,7 +54,7 @@ func BcryptFromBytes(password []byte, cost int) ([]byte, error) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func BcryptCompareWithB64PasswordHash(b64PasswordHash string, password string) (bool, error) {
+func BcryptCompareB64Hash(b64PasswordHash string, password string) (bool, error) {
 	passwordHash, err := base64.StdEncoding.DecodeString(b64PasswordHash)
 	if err != nil {
 		return false, err

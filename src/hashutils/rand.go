@@ -11,16 +11,19 @@ import (
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func RandBytesGenerateB64(bytesLength int) string {
+//func RandBytesGenerateB64(bytesLength int) string {
+func RandBytesB64(bytesLength int) string {
 
-	nonce := RandBytesGenerate(bytesLength)
+	//nonce := RandBytesGenerate(bytesLength)
+	nonce := RandBytes(bytesLength)
 
 	return base64.StdEncoding.EncodeToString(nonce)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func RandBytesGenerate(bytesLength int) []byte {
+//func RandBytesGenerate(bytesLength int) []byte {
+func RandBytes(bytesLength int) []byte {
 	nonce := make([]byte, bytesLength)
 
 	var err error
@@ -36,8 +39,9 @@ func RandBytesGenerate(bytesLength int) []byte {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func RandBytesGenerateB64URL(bytesLength int) string {
-	return url.PathEscape(RandBytesGenerateB64(bytesLength))
+//func RandBytesGenerateB64URL(bytesLength int) string {
+func RandBytesB64URL(bytesLength int) string {
+	return url.PathEscape(RandBytesB64(bytesLength))
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////

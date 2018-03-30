@@ -6,6 +6,7 @@ import (
 	"client"
 	"config"
 	"datautils"
+	"errorlog"
 	"hashutils"
 	"headerutils"
 	"net/http"
@@ -59,6 +60,7 @@ func userGet(w http.ResponseWriter, r *http.Request) {
 
 	if len(keys) > 1 {
 		http.Error(w, "Multiple Keys for unique uid", http.StatusInternalServerError)
+		errorlog.ArchitectureLogicalError("Multiple keys for unique uid")
 		return
 	}
 

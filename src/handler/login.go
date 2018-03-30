@@ -5,6 +5,7 @@ package handler
 import (
 	"client"
 	"datautils"
+	"errorlog"
 	"hashutils"
 	"headerutils"
 	"net/http"
@@ -61,6 +62,7 @@ func loginPost(w http.ResponseWriter, r *http.Request) {
 
 	if len(keys) > 1 {
 		http.Error(w, "Multiple Keys for unique email", http.StatusInternalServerError)
+		errorlog.ArchitectureLogicalError("Multiple keys for unique email")
 		return
 	}
 
@@ -73,7 +75,7 @@ func loginPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	match, err := hashutils.BcryptCompareWithB64PasswordHash(ud.Password, u.Password)
+	match, err := hashutils.BcryptCompareB64Hash(ud.Password, u.Password)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

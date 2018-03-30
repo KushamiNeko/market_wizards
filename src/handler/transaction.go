@@ -7,9 +7,13 @@ import (
 	"client"
 	"config"
 	"datautils"
+	"encoding/json"
+	"fmt"
 	"headerutils"
 	"ibd"
 	"net/http"
+	"net/url"
+	"path/filepath"
 	"transaction"
 
 	"cloud.google.com/go/datastore"
@@ -64,6 +68,38 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//c.ID = t.IBDCheckup
+
+	tx, err := client.DatastoreClient.NewTransaction(client.Context)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	tkey := datastore.IncompleteKey(cookie, nil)
+	tkey.Namespace = config.NamespaceTransaction
+
+	//ckey := datastore.IncompleteKey(cookie, nil)
+	//ckey.Namespace = config.NamespaceIBD
+
+	_, err = tx.Put(tkey, t)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	//_, err = tx.Put(ckey, c)
+	//if err != nil {
+	//http.Error(w, err.Error(), http.StatusInternalServerError)
+	//return
+	//}
+
+	_, err = tx.Commit()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusPreconditionFailed)
+		return
+	}
+
 	if t.JsonIBDCheckup == "" {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -75,41 +111,26 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	c, err := ibd.Parse(buffer)
+	ibd, err := ibd.Parse(buffer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	c.ID = t.IBDCheckup
-
-	tx, err := client.DatastoreClient.NewTransaction(client.Context)
+	ibdJson, err := json.Marshal(ibd)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	tkey := datastore.IncompleteKey(cookie, nil)
-	tkey.Namespace = config.NamespaceTransaction
+	buffer = bytes.NewBuffer(ibdJson)
 
-	ckey := datastore.IncompleteKey(cookie, nil)
-	ckey.Namespace = config.NamespaceIBD
+	cookiePath := url.PathEscape(cookie)
 
-	_, err = tx.Put(tkey, t)
+	err = writeStorageObject(
+		filepath.Join(cookiePath, config.StorageNamespaceIBDs, fmt.Sprintf("%d_%s", t.Date, t.Symbol)), buffer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	_, err = tx.Put(ckey, c)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	_, err = tx.Commit()
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusPreconditionFailed)
 		return
 	}
 
@@ -124,7 +145,8 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = writeStorageObject(storagePath(cookie, t.ChartD), buffer)
+	err = writeStorageObject(
+		filepath.Join(cookiePath, config.StorageNamespaceCharts, fmt.Sprintf("%d_%s_D", t.Date, t.Symbol)), buffer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -141,7 +163,8 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = writeStorageObject(storagePath(cookie, t.ChartW), buffer)
+	err = writeStorageObject(filepath.Join(
+		cookiePath, config.StorageNamespaceCharts, fmt.Sprintf("%d_%s_W", t.Date, t.Symbol)), buffer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -158,7 +181,8 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = writeStorageObject(storagePath(cookie, t.ChartNDQCD), buffer)
+	err = writeStorageObject(filepath.Join(
+		cookiePath, config.StorageNamespaceCharts, fmt.Sprintf("%d_%s_D", t.Date, "NDQC")), buffer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -175,7 +199,8 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = writeStorageObject(storagePath(cookie, t.ChartNDQCW), buffer)
+	err = writeStorageObject(filepath.Join(
+		cookiePath, config.StorageNamespaceCharts, fmt.Sprintf("%d_%s_W", t.Date, "NDQC")), buffer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -192,7 +217,8 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = writeStorageObject(storagePath(cookie, t.ChartSP5D), buffer)
+	err = writeStorageObject(filepath.Join(
+		cookiePath, config.StorageNamespaceCharts, fmt.Sprintf("%d_%s_D", t.Date, "S&P5")), buffer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -209,7 +235,8 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = writeStorageObject(storagePath(cookie, t.ChartSP5W), buffer)
+	err = writeStorageObject(filepath.Join(
+		cookiePath, config.StorageNamespaceCharts, fmt.Sprintf("%d_%s_W", t.Date, "S&P5")), buffer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -226,7 +253,8 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = writeStorageObject(storagePath(cookie, t.ChartNYCD), buffer)
+	err = writeStorageObject(
+		filepath.Join(cookiePath, config.StorageNamespaceCharts, fmt.Sprintf("%d_%s_D", t.Date, "NYC")), buffer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -243,7 +271,8 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = writeStorageObject(storagePath(cookie, t.ChartNYCW), buffer)
+	err = writeStorageObject(
+		filepath.Join(cookiePath, config.StorageNamespaceCharts, fmt.Sprintf("%d_%s_W", t.Date, "NYC")), buffer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -260,7 +289,8 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = writeStorageObject(storagePath(cookie, t.ChartDJIAD), buffer)
+	err = writeStorageObject(
+		filepath.Join(cookiePath, config.StorageNamespaceCharts, fmt.Sprintf("%d_%s_D", t.Date, "DJIA")), buffer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -277,7 +307,8 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = writeStorageObject(storagePath(cookie, t.ChartDJIAW), buffer)
+	err = writeStorageObject(
+		filepath.Join(cookiePath, config.StorageNamespaceCharts, fmt.Sprintf("%d_%s_W", t.Date, "DJIA")), buffer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -294,7 +325,8 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = writeStorageObject(storagePath(cookie, t.ChartRUSD), buffer)
+	err = writeStorageObject(
+		filepath.Join(cookiePath, config.StorageNamespaceCharts, fmt.Sprintf("%d_%s_D", t.Date, "RUS")), buffer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -311,7 +343,8 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = writeStorageObject(storagePath(cookie, t.ChartRUSW), buffer)
+	err = writeStorageObject(
+		filepath.Join(cookiePath, config.StorageNamespaceCharts, fmt.Sprintf("%d_%s_W", t.Date, "RUS")), buffer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

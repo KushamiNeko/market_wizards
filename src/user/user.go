@@ -27,7 +27,7 @@ func (u *User) JsonDecode(buffer []byte) error {
 		return err
 	}
 
-	u.UID = hashutils.RandBytesGenerateB64URL(config.KeyLengthDefault)
+	u.UID = hashutils.RandBytesB64URL(config.KeyLengthDefault)
 
 	return nil
 }

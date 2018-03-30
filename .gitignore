@@ -1,12 +1,13 @@
 pkg
 bin
 
-resource
+test_files
 
 cloud.google.com
 github.com
 golang.org
 google.golang.org
+go.opencensus.io
 
 *.jpg
 *.png

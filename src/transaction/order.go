@@ -12,28 +12,25 @@ import (
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 type Order struct {
-	ID   string
-	Etag string
+	//ChartD string `json:"-" datastore:",noindex"`
+	//ChartW string `json:"-" datastore:",noindex"`
 
-	ChartD string `json:"-" datastore:",noindex"`
-	ChartW string `json:"-" datastore:",noindex"`
+	//ChartNDQCD string `json:"-" datastore:",noindex"`
+	//ChartNDQCW string `json:"-" datastore:",noindex"`
 
-	ChartNDQCD string `json:"-" datastore:",noindex"`
-	ChartNDQCW string `json:"-" datastore:",noindex"`
+	//ChartSP5D string `json:"-" datastore:",noindex"`
+	//ChartSP5W string `json:"-" datastore:",noindex"`
 
-	ChartSP5D string `json:"-" datastore:",noindex"`
-	ChartSP5W string `json:"-" datastore:",noindex"`
+	//ChartNYCD string `json:"-" datastore:",noindex"`
+	//ChartNYCW string `json:"-" datastore:",noindex"`
 
-	ChartNYCD string `json:"-" datastore:",noindex"`
-	ChartNYCW string `json:"-" datastore:",noindex"`
+	//ChartDJIAD string `json:"-" datastore:",noindex"`
+	//ChartDJIAW string `json:"-" datastore:",noindex"`
 
-	ChartDJIAD string `json:"-" datastore:",noindex"`
-	ChartDJIAW string `json:"-" datastore:",noindex"`
+	//ChartRUSD string `json:"-" datastore:",noindex"`
+	//ChartRUSW string `json:"-" datastore:",noindex"`
 
-	ChartRUSD string `json:"-" datastore:",noindex"`
-	ChartRUSW string `json:"-" datastore:",noindex"`
-
-	IBDCheckup string `json:"-" datastore:",noindex"`
+	//IBDCheckup string `json:"-" datastore:",noindex"`
 
 	JsonChartD string `datastore:"-"`
 	JsonChartW string `datastore:"-"`
@@ -54,6 +51,10 @@ type Order struct {
 	JsonChartRUSW string `datastore:"-"`
 
 	JsonIBDCheckup string `datastore:"-"`
+
+	ID string
+
+	Etag string
 
 	Order string
 
@@ -95,8 +96,8 @@ func (b *Order) JsonDecode(buffer []byte) error {
 		return fmt.Errorf("Invalid Order")
 	}
 
-	b.ID = hashutils.RandBytesGenerateB64(config.KeyLengthStrong)
-	b.Etag = hashutils.RandBytesGenerateB64(config.KeyLengthMin)
+	b.ID = hashutils.RandBytesB64URL(config.KeyLengthStrong)
+	b.Etag = hashutils.RandBytesB64URL(config.KeyLengthMin)
 
 	if b.JsonChartD == "" {
 		return fmt.Errorf("Dialy Chart Cannot Be Empty")
@@ -106,8 +107,8 @@ func (b *Order) JsonDecode(buffer []byte) error {
 		return fmt.Errorf("Weekly Chart Cannot Be Empty")
 	}
 
-	b.ChartD = hashutils.RandBytesGenerateB64URL(config.KeyLengthStrong)
-	b.ChartW = hashutils.RandBytesGenerateB64URL(config.KeyLengthStrong)
+	//b.ChartD = hashutils.RandBytesB64URL(config.KeyLengthStrong)
+	//b.ChartW = hashutils.RandBytesB64URL(config.KeyLengthStrong)
 
 	if b.JsonChartNDQCD == "" {
 		return fmt.Errorf("NDQC Dialy Chart Cannot Be Empty")
@@ -117,8 +118,8 @@ func (b *Order) JsonDecode(buffer []byte) error {
 		return fmt.Errorf("NDQC Weekly Chart Cannot Be Empty")
 	}
 
-	b.ChartNDQCD = hashutils.RandBytesGenerateB64URL(config.KeyLengthStrong)
-	b.ChartNDQCW = hashutils.RandBytesGenerateB64URL(config.KeyLengthStrong)
+	//b.ChartNDQCD = hashutils.RandBytesB64URL(config.KeyLengthStrong)
+	//b.ChartNDQCW = hashutils.RandBytesB64URL(config.KeyLengthStrong)
 
 	if b.JsonChartSP5D == "" {
 		return fmt.Errorf("S&P5 Dialy Chart Cannot Be Empty")
@@ -128,8 +129,8 @@ func (b *Order) JsonDecode(buffer []byte) error {
 		return fmt.Errorf("S&P5 Weekly Chart Cannot Be Empty")
 	}
 
-	b.ChartSP5D = hashutils.RandBytesGenerateB64URL(config.KeyLengthStrong)
-	b.ChartSP5W = hashutils.RandBytesGenerateB64URL(config.KeyLengthStrong)
+	//b.ChartSP5D = hashutils.RandBytesB64URL(config.KeyLengthStrong)
+	//b.ChartSP5W = hashutils.RandBytesB64URL(config.KeyLengthStrong)
 
 	if b.JsonChartNYCD == "" {
 		return fmt.Errorf("NYC Dialy Chart Cannot Be Empty")
@@ -139,8 +140,8 @@ func (b *Order) JsonDecode(buffer []byte) error {
 		return fmt.Errorf("NYC Weekly Chart Cannot Be Empty")
 	}
 
-	b.ChartNYCD = hashutils.RandBytesGenerateB64URL(config.KeyLengthStrong)
-	b.ChartNYCW = hashutils.RandBytesGenerateB64URL(config.KeyLengthStrong)
+	//b.ChartNYCD = hashutils.RandBytesB64URL(config.KeyLengthStrong)
+	//b.ChartNYCW = hashutils.RandBytesB64URL(config.KeyLengthStrong)
 
 	if b.JsonChartDJIAD == "" {
 		return fmt.Errorf("DJIA Dialy Chart Cannot Be Empty")
@@ -150,8 +151,8 @@ func (b *Order) JsonDecode(buffer []byte) error {
 		return fmt.Errorf("DJIA Weekly Chart Cannot Be Empty")
 	}
 
-	b.ChartDJIAD = hashutils.RandBytesGenerateB64URL(config.KeyLengthStrong)
-	b.ChartDJIAW = hashutils.RandBytesGenerateB64URL(config.KeyLengthStrong)
+	//b.ChartDJIAD = hashutils.RandBytesB64URL(config.KeyLengthStrong)
+	//b.ChartDJIAW = hashutils.RandBytesB64URL(config.KeyLengthStrong)
 
 	if b.JsonChartRUSD == "" {
 		return fmt.Errorf("RUS Dialy Chart Cannot Be Empty")
@@ -161,14 +162,14 @@ func (b *Order) JsonDecode(buffer []byte) error {
 		return fmt.Errorf("RUS Weekly Chart Cannot Be Empty")
 	}
 
-	b.ChartRUSD = hashutils.RandBytesGenerateB64URL(config.KeyLengthStrong)
-	b.ChartRUSW = hashutils.RandBytesGenerateB64URL(config.KeyLengthStrong)
+	//b.ChartRUSD = hashutils.RandBytesB64URL(config.KeyLengthStrong)
+	//b.ChartRUSW = hashutils.RandBytesB64URL(config.KeyLengthStrong)
 
 	if b.JsonIBDCheckup == "" {
 		return fmt.Errorf("IBD Checkup Cannot Be Empty")
 	}
 
-	b.IBDCheckup = hashutils.RandBytesGenerateB64URL(config.KeyLengthStrong)
+	//b.IBDCheckup = hashutils.RandBytesB64URL(config.KeyLengthStrong)
 
 	return nil
 }

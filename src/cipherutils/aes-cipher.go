@@ -47,8 +47,8 @@ func AesCipherInstanceInit(args ...interface{}) error {
 	for i := 0; i < config.CacheStoreKeyLens; i++ {
 
 		instance := new(aesCipherInstance)
-		instance.Key = hashutils.RandBytesGenerate(32)
-		instance.Nonce = hashutils.RandBytesGenerate(12)
+		instance.Key = hashutils.RandBytes(32)
+		instance.Nonce = hashutils.RandBytes(12)
 
 		instance.ChipherBlock, err = aes.NewCipher(instance.Key)
 		if err != nil {
