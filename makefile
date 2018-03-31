@@ -1,10 +1,11 @@
 css:
-	/home/onionhuang/programming_projects/golang/sass_compile/bin/main -input ./templates -output ./resource/css
-	/home/onionhuang/programming_projects/golang/web_minifier/bin/main -input ./resource/css -overwrite -nohtml -nojs
+	/home/onionhuang/programming_projects/golang/sass_compile/bin/main -input ./templates 
+	/home/onionhuang/programming_projects/golang/make_template/bin/main -input ./templates
+	rm templates/**/*.css
 
 js:
-	/home/onionhuang/programming_projects/golang/web_minifier/bin/main -input ./templates -output ./resource/js -nohtml -nocss
+	/home/onionhuang/programming_projects/golang/make_template/bin/main -input ./templates
+
 
 web:
 	make css
-	make js

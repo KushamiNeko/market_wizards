@@ -1,0 +1,190 @@
+%font-common-base {
+  font-family: 'Roboto', 'Noto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+%font-common-code {
+  font-family: 'Roboto Mono', 'Consolas', 'Menlo', monospace;
+  -webkit-font-smoothing: antialiased;
+}
+
+%font-common-expensive-kerning {
+  text-rendering: optimizeLegibility;
+}
+
+%font-common-nowrap {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+%font-display4-spec {
+  font-size: 112px;
+  font-weight: 300;
+  letter-spacing: -.044em;
+  line-height: 120px;
+}
+
+%font-display4 {
+  @extend %font-common-base;
+  @extend %font-common-nowrap;
+  @extend %font-display4-spec;
+}
+
+%font-display3-spec {
+  font-size: 56px;
+  font-weight: 400;
+  letter-spacing: -.026em;
+  line-height: 60px;
+}
+
+%font-display3 {
+  @extend %font-common-base;
+  @extend %font-common-nowrap;
+  @extend %font-display3-spec;
+}
+
+%font-display2-spec {
+  font-size: 45px;
+  font-weight: 400;
+  letter-spacing: -.018em;
+  line-height: 48px;
+}
+
+%font-display2 {
+  @extend %font-common-base;
+  @extend %font-display2-spec;
+}
+
+%font-display1-spec {
+  @extend %font-common-base;
+}
+
+%font-display1 {
+  @extend %font-common-base;
+  @extend %font-display1-spec;
+}
+
+%font-headline-spec {
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: -.012em;
+  line-height: 32px;
+}
+
+%font-headline {
+  @extend %font-common-base;
+  @extend %font-headline-spec;
+}
+
+%font-title-spec {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 28px;
+}
+
+%font-title {
+  @extend %font-common-base;
+  @extend %font-common-nowrap;
+  @extend %font-title-spec;
+}
+
+%font-subhead-spec {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+%font-subhead {
+  @extend %font-common-base;
+  @extend %font-subhead-spec;
+}
+
+%font-body2-spec {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+%font-body2 {
+  @extend %font-common-base;
+  @extend %font-body2-spec;
+}
+
+%font-body1-spec {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+%font-body1 {
+  @extend %font-common-base;
+  @extend %font-body1-spec;
+}
+
+%font-caption-spec {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.011em;
+  line-height: 20px;
+}
+
+%font-caption {
+  @extend %font-common-base;
+  @extend %font-common-nowrap;
+  @extend %font-caption-spec;
+}
+
+%font-menu-spec {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+%font-menu {
+  @extend %font-common-base;
+  @extend %font-common-nowrap;
+  @extend %font-menu-spec;
+}
+
+%font-button-icon-spec {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+%font-button-spec {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.018em;
+  line-height: 24px;
+  text-transform: uppercase;
+}
+
+%font-button {
+  @extend %font-common-base;
+  @extend %font-common-nowrap;
+  @extend %font-button-spec;
+}
+
+%font-code2-spec {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 20px;
+}
+
+%font-code2 {
+  @extend %font-common-code;
+  @extend %font-code2-spec;
+}
+
+%font-code1-spec {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+%font-code1 {
+  @extend %font-common-code;
+  @extend %font-code1-spec;
+}

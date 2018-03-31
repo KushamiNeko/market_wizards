@@ -1,9 +1,3 @@
-{{define "LoginJS"}}
-
-<!---->
-
-<script>
-
 $("#input-email").focus();
 
 function action(email, password, url, method, errcb) {
@@ -83,10 +77,3 @@ $("#button-reset").click(function() {
       $("#validate-password").show();
     });
 });
-
-
-</script>
-
-<!---->
-
-{{end}}

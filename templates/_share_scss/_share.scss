@@ -1,0 +1,23 @@
+@import "../_common_scss/material_design_style/layout";
+
+%my-share-container {
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+%my-share-button-row {
+  @extend %layout-horizontal;
+  @extend %layout-justified;
+}
+
+%my-share-margin-top {
+  margin-top: 2em;
+}
+
+%my-share-button {
+  //font-family: 'Noto Sans', sans-serif;
+  //font-family: 'Oxygen', sans-serif;
+  //font-family: 'Ubuntu', sans-serif;
+  //font-family: 'Padauk', sans-serif;
+}
