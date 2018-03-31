@@ -19,4 +19,6 @@
 
 .action-separator {
   @extend %my-share-separator;
+  margin-top: 2em;
+  margin-bottom: 0;
 }

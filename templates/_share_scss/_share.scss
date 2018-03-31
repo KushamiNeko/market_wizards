@@ -1,5 +1,6 @@
 @import "../_common_scss/material_design_style/layout";
 @import "../_common_scss/material_design_style/typography";
+@import "../_common_scss/material_design_style/colors";
 @import "../_common_scss/material_design_style/shadows";
 
 %my-share-font-family {
@@ -10,9 +11,13 @@
 }
 
 %my-share-container {
-  width: 75%;
+  width: 60%;
   margin-left: auto;
   margin-right: auto;
+
+  @media (max-width: 500px) {
+    width: 85%;
+  }
 }
 
 %my-share-button-row {
@@ -45,12 +50,13 @@
 }
 
 %my-share-button-icons {
-  font-size: 16px;
-  line-height: 16px;
-  font-weight: 500;
-  vertical-align: text-top;
-  margin: 0;
-  margin-right: 0.15em;
+  //font-size: 16px;
+  //line-height: 16px;
+  //font-weight: 500;
+  //vertical-align: text-top;
+  //margin: 0;
+  //margin-right: 0.15em;
+  @extend %font-button-icon-spec;
 }
 
 %my-share-separator {
@@ -58,7 +64,8 @@
   height: 1px;
   width: 97.5%;
 
-  margin: 10px auto 10px auto;
+  margin: 5px auto 5px auto;
+
   background-color: black;
-  opacity: 0.38;
+  opacity: $dark-divider-opacity;
 }

@@ -12,6 +12,13 @@
   overflow: hidden;
   text-overflow: ellipsis; }
 
+.action-button-icons {
+  font-size: 16px;
+  line-height: 16px;
+  font-weight: 500;
+  vertical-align: text-top;
+  margin: 0 0.15em 0 0; }
+
 .action-button {
   font-size: 14px;
   font-weight: 500;
@@ -23,31 +30,30 @@
   font-family: 'Ubuntu', sans-serif; }
 
 .action-container {
-  width: 75%;
+  width: 60%;
   margin-left: auto;
   margin-right: auto; }
+  @media (max-width: 500px) {
+    .action-container {
+      width: 85%; } }
 
 .action-margin-top {
   margin-top: 2em; }
-
-.action-button-icons {
-  font-size: 16px;
-  line-height: 16px;
-  font-weight: 500;
-  vertical-align: text-top;
-  margin: 0;
-  margin-right: 0.15em; }
 
 .action-separator {
   display: block;
   height: 1px;
   width: 97.5%;
-  margin: 10px auto 10px auto;
+  margin: 5px auto 5px auto;
   background-color: black;
-  opacity: 0.38; }
+  opacity: 0.12; }
 
 .action-button {
   width: 100%; }
+
+.action-separator {
+  margin-top: 2em;
+  margin-bottom: 0; }
 
 
 </style>

@@ -1,0 +1,73 @@
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$("#input-password").focus();
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$("#button-back").click(function() {
+  window.location = "/action";
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$("#button-ok").click(function() {
+
+  $(".invalid-feedback").hide();
+
+  if (isProcessing()) {
+    return;
+  }
+
+  inProcess("#button-ok");
+
+  var email = $("#input-email").val();
+  var password = $("#input-password").val();
+
+  var conf = $("#input-password-confirm").val();
+
+  if (password === "") {
+    $("#validate-password").show();
+    outProcess("#button-ok");
+    return;
+  }
+
+  if (password !== conf) {
+    $("#validate-password-confirm").show();
+    outProcess("#button-ok");
+    return;
+  }
+
+  if (!validateEmail(email)) {
+    outProcess("#button-ok");
+    return;
+  }
+
+  if (password === "") {
+    $("#validate-password").show();
+    outProcess("#button-ok");
+    return;
+  }
+
+  var data = {};
+  data.Email = email;
+  data.Password = password;
+
+  var jsonBody = JSON.stringify(data);
+
+  $.ajax({
+    type: "PUT",
+    url: "/user",
+    data: jsonBody,
+    success: function(data) {
+      window.location = data;
+      outProcess("#button-ok");
+    },
+    error: function(xhr, err) {
+      $("#validate-password").show();
+      $("#validate-password-confirm").show();
+      outProcess("#button-ok");
+    },
+  });
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////

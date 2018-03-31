@@ -78,6 +78,19 @@ func (s *Statistic) FormatFloat(data float64) string {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+func FormatGrpPrice(price int) string {
+
+	grp := math.Floor(float64(price) / grpPrice)
+	grps := strconv.FormatFloat(grp*grpPrice, 'f', -1, 64)
+	grpe := strconv.FormatFloat((grp+1)*grpPrice, 'f', -1, 64)
+
+	grpk := fmt.Sprintf(grpFormat, grps, grpe)
+
+	return grpk
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 type TransactionStat struct {
 	//ID   string
 	//Etag string
@@ -94,7 +107,8 @@ type TransactionStat struct {
 
 	//Cost map[string]int
 
-	Price map[string]int
+	//Price map[string]int
+	Price map[int]int
 
 	//Share int
 
@@ -131,7 +145,10 @@ func NewTransactionStat(orders []*transaction.Order) (*TransactionStat, error) {
 	//grpFormat := "%s ~ %s"
 
 	//dictCost := make(map[string]int)
-	dictPrice := make(map[string]int)
+
+	//dictPrice := make(map[string]int)
+	dictPrice := make(map[int]int)
+
 	dictBuyPoint := make(map[string]int)
 	dictStage := make(map[string]int)
 
@@ -154,15 +171,19 @@ func NewTransactionStat(orders []*transaction.Order) (*TransactionStat, error) {
 		//}
 
 		grp := math.Floor(o.Price / grpPrice)
-		grps := strconv.FormatFloat(grp*grpPrice, 'f', -1, 64)
-		grpe := strconv.FormatFloat((grp+1)*grpPrice, 'f', -1, 64)
+		grps := int(grp * grpPrice)
+		//grps := strconv.FormatFloat(grp*grpPrice, 'f', -1, 64)
+		//grpe := strconv.FormatFloat((grp+1)*grpPrice, 'f', -1, 64)
 
-		grpk := fmt.Sprintf(grpFormat, grps, grpe)
+		//grpk := fmt.Sprintf(grpFormat, grps, grpe)
 
-		if val, ok := dictPrice[grpk]; ok {
-			dictPrice[grpk] = val + 1
+		//if val, ok := dictPrice[grpk]; ok {
+		if val, ok := dictPrice[grps]; ok {
+			//dictPrice[grpk] = val + 1
+			dictPrice[grps] = val + 1
 		} else {
-			dictPrice[grpk] = 1
+			//dictPrice[grpk] = 1
+			dictPrice[grps] = 1
 		}
 
 		if val, ok := dictBuyPoint[o.BuyPoint]; ok {

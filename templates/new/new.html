@@ -1,0 +1,757 @@
+{{define "TransactionNew"}}
+
+<html lang="en">
+
+<head>
+
+  <!---->
+  {{template "IndexHead"}}
+  <!---->
+
+  <!---->
+  {{template "IndexIcon"}}
+  <!---->
+
+  <!---->
+  {{template "CDNCSS"}}
+  <!---->
+
+  <!---->
+  {{template "ShareCSS"}}
+  <!---->
+
+  <!---->
+  {{template "NewCSS"}}
+  <!---->
+
+</head>
+
+<body>
+
+  <!---->
+  {{template "ShareNavbar"}}
+  <!---->
+
+  <div class="new-container">
+
+    <button type="button"
+      id="button-type"
+      class="btn btn-lg btn-dark new-margin-top new-button">
+      BUY
+    </button>
+
+    <label for="input-date"
+      class="new-margin-top new-label">
+      Date
+    </label>
+
+    <input type="text"
+      id="input-date"
+      class="form-control new-input"
+      placeholder="date"
+      aria-label="date">
+
+    <div id="validate-date"
+      class="invalid-feedback new-validate">
+      Invalid Date
+    </div>
+
+    <label for="input-symbol"
+      class="new-margin-top new-label">
+      Symbol
+    </label>
+
+    <input type="text"
+      id="input-symbol"
+      class="form-control new-input"
+      placeholder="symbol"
+      aria-label="symbol"
+      style="text-transform: uppercase;">
+
+    <div id="validate-symbol"
+      class="invalid-feedback new-validate">
+      Invalid Symbol
+    </div>
+
+    <label for="input-price"
+      class="new-margin-top new-label">
+      Price
+    </label>
+
+    <div class="input-group">
+
+      <span class="input-group-addon new-input">$</span>
+
+      <input type="text"
+        id="input-price"
+        class="form-control new-input"
+        placeholder="price"
+        aria-label="price">
+
+    </div>
+
+    <div id="validate-price"
+      class="invalid-feedback new-validate">
+      Invalid Price
+    </div>
+
+    <label for="input-share"
+      class="new-margin-top new-label">
+      Share
+    </label>
+
+    <input type="text"
+      id="input-share"
+      class="form-control new-input"
+      placeholder="share"
+      aria-label="share">
+
+    <div id="validate-share"
+      class="invalid-feedback new-validate">
+      Invalid Share Number
+    </div>
+
+    <div class="dropdown new-margin-top">
+
+      <button class="btn btn-lg btn-dark new-button dropdown-toggle"
+        type="button"
+        id="dropdownMenu"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false">
+        Buy Point
+      </button>
+
+      <div class="dropdown-menu new-menu"
+        aria-labelledby="dropdownMenu">
+
+        <button id="dropdown-vcp-early-entry"
+          class="dropdown-item new-tiem"
+          type="button">
+          VCP Early Entry
+        </button>
+
+        <button id="dropdown-earnings-report"
+          class="dropdown-item new-tiem"
+          type="button">
+          Earnings Report
+        </button>
+
+        <button id="dropdown-po-so"
+          class="dropdown-item new-tiem"
+          type="button">
+          PO / SO
+        </button>
+
+        <button id="dropdown-gap"
+          class="dropdown-item new-tiem"
+          type="button">
+          Gap
+        </button>
+
+        <button id="dropdown-cup-with-handle"
+          class="dropdown-item new-item"
+          type="button">
+          Cup With Handle
+        </button>
+
+        <button id="dropdown-cup"
+          class="dropdown-item new-item"
+          type="button">
+          Cup
+        </button>
+
+        <button id="dropdown-double-bottom"
+          class="dropdown-item new-item"
+          type="button">
+          Double Bottom
+        </button>
+
+        <button id="dropdown-flat-base"
+          class="dropdown-item new-item"
+          type="button">
+          Flat Base
+        </button>
+
+        <button id="dropdown-ipo-base"
+          class="dropdown-item new-item"
+          type="button">
+          IPO Base
+        </button>
+
+        <button id="dropdown-tight-area"
+          class="dropdown-item new-tiem"
+          type="button">
+          Tight Area
+        </button>
+
+        <!--<button id="dropdown-channel"-->
+        <!--class="dropdown-item new-item"-->
+        <!--type="button">-->
+        <!--Channel-->
+        <!--</button>-->
+
+        <button id="dropdown-consolidation"
+          class="dropdown-item new-item"
+          type="button">
+          Consolidation
+        </button>
+
+        <button id="dropdown-21d-pullback"
+          class="dropdown-item new-item"
+          type="button">
+          21D PullBack
+        </button>
+
+        <button id="dropdown-50d-pullback"
+          class="dropdown-item new-item"
+          type="button">
+          50D PullBack
+        </button>
+
+        <button id="dropdown-new-high"
+          class="dropdown-item new-item"
+          type="button">
+          New High
+        </button>
+
+        <button id="dropdown-trend-line"
+          class="dropdown-item new-tiem"
+          type="button">
+          Trend Line
+        </button>
+
+        <button id="dropdown-resistance"
+          class="dropdown-item new-tiem"
+          type="button">
+          Resistance
+        </button>
+
+        <button id="dropdown-support"
+          class="dropdown-item new-tiem"
+          type="button">
+          Support
+        </button>
+
+      </div>
+
+    </div>
+
+    <div id="validate-buypoint"
+      class="invalid-feedback new-validate">
+      Invalid Buy Point
+    </div>
+
+    <!--<label for="input-commission"-->
+    <!--class="my-share-margin">Commission</label>-->
+
+    <!--<div class="input-group">-->
+
+    <!--<span class="input-group-addon">$</span>-->
+
+    <!--<input type="text"-->
+    <!--id="input-commission"-->
+    <!--class="form-control"-->
+    <!--placeholder="commission"-->
+    <!--aria-label="commission"-->
+    <!--disabled>-->
+
+    <!--</div>-->
+
+    <label for="input-revenue"
+      class="new-margin-top new-label">
+      Revenue
+    </label>
+
+    <div class="input-group">
+
+      <span class="input-group-addon new-input">$</span>
+
+      <input type="text"
+        id="input-revenue"
+        class="form-control new-input"
+        placeholder="revenue"
+        aria-label="revenue"
+        disabled>
+
+    </div>
+
+    <div id="validate-revenue"
+      class="invalid-feedback new-validate">
+      Invalid Revenue
+    </div>
+
+    <label for="input-cost"
+      class="new-margin-top new-label">
+      Cost
+    </label>
+
+    <div class="input-group">
+
+      <span class="input-group-addon new-input">$</span>
+
+      <input type="text"
+        id="input-cost"
+        class="form-control new-input"
+        placeholder="cost"
+        aria-label="cost">
+
+    </div>
+
+    <div id="validate-cost"
+      class="invalid-feedback new-validate">
+      Invalid Cost
+    </div>
+
+    <label for="input-gainD"
+      class="new-margin-top new-label">
+      Gain($)
+    </label>
+
+    <div class="input-group">
+
+      <span class="input-group-addon new-input">$</span>
+
+      <input type="text"
+        id="input-gainD"
+        class="form-control new-input"
+        placeholder="gain($)"
+        aria-label="gain($)"
+        disabled>
+
+    </div>
+
+    <label for="input-gainP"
+      class="new-margin-top new-label">
+      Gain(%)
+    </label>
+
+    <div class="input-group">
+
+      <input type="text"
+        id="input-gainP"
+        class="form-control new-input"
+        placeholder="gain(%)"
+        aria-label="gain(%)"
+        disabled>
+
+      <span class="input-group-addon new-input">%</span>
+
+    </div>
+
+    <label for="input-stage"
+      class="new-margin-top new-label">
+      Stage
+    </label>
+
+    <input type="text"
+      id="input-stage"
+      class="form-control new-input"
+      placeholder="stage"
+      aria-label="stage">
+
+    <div id="validate-stage"
+      class="invalid-feedback new-validate">
+      Invalid Stage
+    </div>
+
+    <label for="input-daysheld"
+      class="new-margin-top new-label">Days Held</label>
+
+    <input type="text"
+      id="input-daysheld"
+      class="form-control new-input"
+      placeholder="days held"
+      aria-label="days held"
+      disabled>
+
+    <div id="validate-daysheld"
+      class="invalid-feedback new-validate">
+      Invalid Number of Days
+    </div>
+
+    <label for="input-note"
+      class="new-margin-top new-label">
+      Note
+    </label>
+
+    <textarea class="form-control new-input"
+      id="input-note"
+      rows="15">
+    </textarea>
+
+    <div class="new-separator">
+    </div>
+
+    <div class="new-margin-top">
+
+      <img id="img-ibd"
+        class="new-img"
+        style="display: none;">
+
+      <input type='file'
+        id="input-img-ibd"
+        accept="*"
+        style="display: none;">
+      </input>
+
+      <button type="button"
+        id="button-img-ibd"
+        class="btn btn-lg btn-dark new-margin-top new-button">
+        IBD Checkup
+      </button>
+
+      <div id="validate-img-ibd"
+        class="invalid-feedback new-validate">
+        Invalid IBD Checkup
+      </div>
+
+    </div>
+
+    <div class="new-separator">
+    </div>
+
+
+    <div class="new-margin-top">
+
+      <img id="img-d"
+        class="new-img">
+
+      <input type='file'
+        id="input-img-d"
+        accept="image/*"
+        style="display: none;">
+      </input>
+
+      <button type="button"
+        id="button-img-d"
+        class="btn btn-lg btn-dark new-margin-top new-button">
+        Dialy
+      </button>
+
+      <div id="validate-img-d"
+        class="invalid-feedback new-validate">
+        Invalid Daily Chart
+      </div>
+
+    </div>
+
+    <div class="new-margin-top">
+
+      <img id="img-w"
+        class="new-img">
+
+      <input type='file'
+        id="input-img-w"
+        accept="image/*"
+        style="display: none;">
+      </input>
+
+      <button type="button"
+        id="button-img-w"
+        class="btn btn-lg btn-dark new-margin-top new-button">
+        Weekly
+      </button>
+
+      <div id="validate-img-w"
+        class="invalid-feedback new-validate">
+        Invalid Weekly Chart
+      </div>
+
+    </div>
+
+    <div class="new-separator">
+    </div>
+
+    <div class="new-margin-top">
+
+      <img id="img-ndqc-d"
+        class="new-img">
+
+      <input type='file'
+        id="input-img-ndqc-d"
+        accept="image/*"
+        style="display: none;">
+      </input>
+
+      <button type="button"
+        id="button-img-ndqc-d"
+        class="btn btn-lg btn-dark new-margin-top new-button">
+        Nasdaq Daily
+      </button>
+
+      <div id="validate-img-ndqc-d"
+        class="invalid-feedback new-validate">
+        Invalid NDQC Daily Chart
+      </div>
+
+    </div>
+
+    <div class="new-margin-top">
+
+      <img id="img-ndqc-w"
+        class="new-img">
+
+      <input type='file'
+        id="input-img-ndqc-w"
+        accept="image/*"
+        style="display: none;">
+      </input>
+
+      <button type="button"
+        id="button-img-ndqc-w"
+        class="btn btn-lg btn-dark new-margin-top new-button">
+        Nasdaq Weekly
+      </button>
+
+      <div id="validate-img-ndqc-w"
+        class="invalid-feedback new-validate">
+        Invalid NDQC Weekly Chart
+      </div>
+
+    </div>
+
+    <div class="new-separator">
+    </div>
+
+    <div class="new-margin-top">
+
+      <img id="img-sp5-d"
+        class="new-img">
+
+      <input type='file'
+        id="input-img-sp5-d"
+        accept="image/*"
+        style="display: none;">
+      </input>
+
+      <button type="button"
+        id="button-img-sp5-d"
+        class="btn btn-lg btn-dark new-margin-top new-button">
+        SP500 Daily
+      </button>
+
+      <div id="validate-img-sp5-d"
+        class="invalid-feedback new-validate">
+        Invalid SP5 Daily Chart
+      </div>
+
+    </div>
+
+    <div class="new-margin-top">
+
+      <img id="img-sp5-w"
+        class="new-img">
+
+      <input type='file'
+        id="input-img-sp5-w"
+        accept="image/*"
+        style="display: none;">
+      </input>
+
+      <button type="button"
+        id="button-img-sp5-w"
+        class="btn btn-lg btn-dark new-margin-top new-button">
+        SP500 Weekly
+      </button>
+
+      <div id="validate-img-sp5-w"
+        class="invalid-feedback new-validate">
+        Invalid SP5 Weekly Chart
+      </div>
+
+    </div>
+
+    <div class="new-separator">
+    </div>
+
+    <div class="new-margin-top">
+
+      <img id="img-nyc-d"
+        class="new-img">
+
+      <input type='file'
+        id="input-img-nyc-d"
+        accept="image/*"
+        style="display: none;">
+      </input>
+
+      <button type="button"
+        id="button-img-nyc-d"
+        class="btn btn-lg btn-dark new-margin-top new-button">
+        NYC Daily
+      </button>
+
+      <div id="validate-img-nyc-d"
+        class="invalid-feedback new-validate">
+        Invalid NYC Daily Chart
+      </div>
+
+    </div>
+
+    <div class="new-margin-top">
+
+      <img id="img-nyc-w"
+        class="new-img">
+
+      <input type='file'
+        id="input-img-nyc-w"
+        accept="image/*"
+        style="display: none;">
+      </input>
+
+      <button type="button"
+        id="button-img-nyc-w"
+        class="btn btn-lg btn-dark new-margin-top new-button">
+        NYC Weekly
+      </button>
+
+      <div id="validate-img-nyc-w"
+        class="invalid-feedback new-validate">
+        Invalid NYC Weekly Chart
+      </div>
+
+    </div>
+
+    <div class="new-separator">
+    </div>
+
+    <div class="new-margin-top">
+
+      <img id="img-djia-d"
+        class="new-img">
+
+      <input type='file'
+        id="input-img-djia-d"
+        accept="image/*"
+        style="display: none;">
+      </input>
+
+      <button type="button"
+        id="button-img-djia-d"
+        class="btn btn-lg btn-dark new-margin-top new-button">
+        Dow Jones Daily
+      </button>
+
+      <div id="validate-img-djia-d"
+        class="invalid-feedback new-validate">
+        Invalid DJIA Daily Chart
+      </div>
+
+    </div>
+
+    <div class="new-margin-top">
+
+      <img id="img-djia-w"
+        class="new-img">
+
+      <input type='file'
+        id="input-img-djia-w"
+        accept="image/*"
+        style="display: none;">
+      </input>
+
+      <button type="button"
+        id="button-img-djia-w"
+        class="btn btn-lg btn-dark new-margin-top new-button">
+        Dow Jones Weekly
+      </button>
+
+      <div id="validate-img-djia-w"
+        class="invalid-feedback new-validate">
+        Invalid DJIA Weekly Chart
+      </div>
+
+    </div>
+
+    <div class="new-separator">
+    </div>
+
+    <div class="new-margin-top">
+
+      <img id="img-rus-d"
+        class="new-img">
+
+      <input type='file'
+        id="input-img-rus-d"
+        accept="image/*"
+        style="display: none;">
+      </input>
+
+      <button type="button"
+        id="button-img-rus-d"
+        class="btn btn-lg btn-dark new-margin-top new-button">
+        Russell 2000 Daily
+      </button>
+
+      <div id="validate-img-rus-d"
+        class="invalid-feedback new-validate">
+        Invalid RUS Daily Chart
+      </div>
+
+    </div>
+
+    <div class="new-margin-top">
+
+      <img id="img-rus-w"
+        class="new-img">
+
+      <input type='file'
+        id="input-img-rus-w"
+        accept="image/*"
+        style="display: none;">
+      </input>
+
+      <button type="button"
+        id="button-img-rus-w"
+        class="btn btn-lg btn-dark new-margin-top new-button">
+        Russell 2000 Weekly
+      </button>
+
+      <div id="validate-img-rus-w"
+        class="invalid-feedback new-validate">
+        Invalid RUS Weekly Chart
+      </div>
+
+    </div>
+
+    <div class="new-separator">
+    </div>
+
+    <button type="button"
+      id="button-create"
+      class="btn btn-lg btn-dark new-margin-top new-button">
+      <i class="material-icons new-button-icons">add</i>
+      Create
+    </button>
+
+    <button type="button"
+      id="button-back"
+      class="btn btn-lg btn-dark new-margin-top new-button">
+      <i class="material-icons new-button-icons">home</i>
+      Back to Action
+    </button>
+
+  </div>
+
+  <!---->
+  {{template "ShareFooter"}}
+  <!---->
+
+  <!---->
+  {{template "CDNJS"}}
+  <!---->
+
+  <!---->
+  {{template "ShareJS"}}
+  <!---->
+
+  <!---->
+  {{template "NewJS"}}
+  <!---->
+
+</body>
+
+</html>
+
+{{end}}

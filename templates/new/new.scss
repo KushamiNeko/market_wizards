@@ -1,0 +1,50 @@
+@import "../_share_scss/share";
+
+.new-container {
+  @extend %my-share-container;
+}
+
+.new-margin-top {
+  @extend %my-share-margin-top;
+}
+
+.new-button {
+  @extend %my-share-button;
+  width: 100%;
+}
+
+.new-button-icons {
+  @extend %my-share-button-icons;
+}
+
+.new-label {
+  @extend %my-share-label;
+}
+
+.new-input {
+  @extend %my-share-input;
+}
+
+.new-validate {
+  @extend %my-share-validate;
+}
+
+.new-menu {
+  @extend %my-share-label;
+  width: 100%;
+}
+
+.new-item {
+  @extend %my-share-label;
+  width: 100%;
+}
+
+.new-img {
+  width: 100%;
+}
+
+.new-separator {
+  @extend %my-share-separator;
+  margin-top: 2em;
+  margin-bottom: 0;
+}

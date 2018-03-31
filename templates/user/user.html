@@ -1,0 +1,114 @@
+{{define "User"}}
+
+<html lang="en">
+
+<head>
+
+  <!---->
+  {{template "IndexHead"}}
+  <!---->
+
+  <!---->
+  {{template "IndexIcon"}}
+  <!---->
+
+  <!---->
+  {{template "CDNCSS"}}
+  <!---->
+
+  <!---->
+  {{template "ShareCSS"}}
+  <!---->
+
+  <!---->
+  {{template "UserCSS"}}
+  <!---->
+
+</head>
+
+<body>
+
+  <!---->
+  {{template "ShareNavbar"}}
+  <!---->
+
+  <div class="user-container">
+
+    <label for="input-email"
+      class="user-margin-top user-label">
+      Email
+    </label>
+
+    <input type="email"
+      id="input-email"
+      class="form-control user-input"
+      placeholder="email"
+      value="{{.Email}}"
+      aria-label="email"
+      disabled>
+
+    <label for="input-password"
+      class="user-margin-top user-label">
+      Password
+    </label>
+
+    <input type="password"
+      id="input-password"
+      class="form-control user-input"
+      placeholder="password"
+      aria-label="password">
+
+    <div id="validate-password"
+      class="invalid-feedback user-validate">
+      Invalid Password
+    </div>
+
+    <label for="input-password-confirm"
+      class="user-label user-margin-top">
+      Password Confirm
+    </label>
+
+    <input type="password"
+      id="input-password-confirm"
+      class="form-control user-input"
+      placeholder="password confirm"
+      aria-label="password confirm">
+
+    <div id="validate-password-confirm"
+      class="invalid-feedback user-validate">
+      Password Inconsistent
+    </div>
+
+    <button type="button"
+      id="button-ok"
+      class="btn btn-lg btn-dark user-margin-top user-button">
+      <i class="material-icons user-button-icons">check</i>
+      OK
+    </button>
+
+    <button type="button"
+      id="button-back"
+      class="btn btn-lg btn-dark user-margin-top user-button">
+      <i class="material-icons user-button-icons">home</i>
+      Back to Action
+    </button>
+
+  </div>
+
+  <!---->
+  {{template "CDNJS"}}
+  <!---->
+
+  <!---->
+  {{template "ShareJS"}}
+  <!---->
+
+  <!---->
+  {{template "UserJS"}}
+  <!---->
+
+</body>
+
+</html>
+
+{{end}}

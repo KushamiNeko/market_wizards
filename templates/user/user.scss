@@ -1,0 +1,30 @@
+@import "../_share_scss/share";
+
+.user-container {
+  @extend %my-share-container;
+}
+
+.user-margin-top {
+  @extend %my-share-margin-top;
+}
+
+.user-button {
+  @extend %my-share-button;
+  width: 100%;
+}
+
+.user-button-icons {
+  @extend %my-share-button-icons;
+}
+
+.user-label {
+  @extend %my-share-label;
+}
+
+.user-input {
+  @extend %my-share-input;
+}
+
+.user-validate {
+  @extend %my-share-validate;
+}

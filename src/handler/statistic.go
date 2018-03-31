@@ -108,6 +108,19 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//func FormatGrpPrice(price int) string {
+
+//grp := math.Floor(float64(price) / statistic.GrpPrice)
+//grps := strconv.FormatFloat(grp*statistic.GrpPrice, 'f', -1, 64)
+//grpe := strconv.FormatFloat((grp+1)*statistic.GrpPrice, 'f', -1, 64)
+
+//grpk := fmt.Sprintf(statistic.GrpFormat, grps, grpe)
+
+//return grpk
+//}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //type Transaction struct {
 //ID   string
 //Etag string
