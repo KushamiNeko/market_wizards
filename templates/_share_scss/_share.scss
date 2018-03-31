@@ -1,4 +1,13 @@
 @import "../_common_scss/material_design_style/layout";
+@import "../_common_scss/material_design_style/typography";
+@import "../_common_scss/material_design_style/shadows";
+
+%my-share-font-family {
+  //font-family: 'Noto Sans', sans-serif;
+  //font-family: 'Oxygen', sans-serif;
+  //font-family: 'Padauk', sans-serif;
+  font-family: 'Ubuntu', sans-serif;
+}
 
 %my-share-container {
   width: 75%;
@@ -15,9 +24,41 @@
   margin-top: 2em;
 }
 
+%my-share-label {
+  @extend %font-subhead;
+  @extend %my-share-font-family;
+}
+
+%my-share-input {
+  @extend %font-subhead;
+  @extend %my-share-font-family;
+}
+
+%my-share-validate {
+  @extend %font-body2;
+  @extend %my-share-font-family;
+}
+
 %my-share-button {
-  //font-family: 'Noto Sans', sans-serif;
-  //font-family: 'Oxygen', sans-serif;
-  //font-family: 'Ubuntu', sans-serif;
-  //font-family: 'Padauk', sans-serif;
+  @extend %font-button;
+  @extend %my-share-font-family;
+}
+
+%my-share-button-icons {
+  font-size: 16px;
+  line-height: 16px;
+  font-weight: 500;
+  vertical-align: text-top;
+  margin: 0;
+  margin-right: 0.15em;
+}
+
+%my-share-separator {
+  display: block;
+  height: 1px;
+  width: 97.5%;
+
+  margin: 10px auto 10px auto;
+  background-color: black;
+  opacity: 0.38;
 }

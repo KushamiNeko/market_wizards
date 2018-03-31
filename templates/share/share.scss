@@ -1,26 +1,13 @@
+@import "../_share_scss/share";
 @import "../_common_scss/material_design_style/layout";
+@import "../_common_scss/material_design_style/typography";
 
-.my-share-separator {
-  display: block;
-  height: 1px;
-  width: 97.5%;
-
-  margin: 10px auto 10px auto;
-  background-color: black;
-  opacity: 0.38;
+.share-navbar {
+  @extend %font-title;
+  @extend %my-share-font-family;
 }
 
-.my-share-container {
-  width: 75%;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.my-share-button-row {
-  @extend %layout-horizontal;
-  @extend %layout-justified;
-}
-
-.my-share-margin-top {
-  margin-top: 2em;
+.share-navbar-icon {
+  margin-right: 0.25em;
+  vertical-align: text-top;
 }

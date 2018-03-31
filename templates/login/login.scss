@@ -1,5 +1,4 @@
 @import "../_share_scss/share";
-@import "../_common_scss/material_design_style/typography";
 
 .login-container {
   @extend %my-share-container;
@@ -10,5 +9,21 @@
 }
 
 .login-button {
-  @extend %font-button;
+  @extend %my-share-button;
+}
+
+.login-button-icons {
+  @extend %my-share-button-icons;
+}
+
+.login-label {
+  @extend %my-share-label;
+}
+
+.login-input {
+  @extend %my-share-input;
+}
+
+.login-validate {
+  @extend %my-share-validate;
 }

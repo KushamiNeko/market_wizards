@@ -1,0 +1,87 @@
+{{define "Action"}}
+
+<html lang="en">
+
+<head>
+
+  <!---->
+  {{template "IndexHead"}}
+  <!---->
+
+  <!---->
+  {{template "IndexIcon"}}
+  <!---->
+
+  <!---->
+  {{template "CDNCSS"}}
+  <!---->
+
+  <!---->
+  {{template "ShareCSS"}}
+  <!---->
+
+  <!---->
+  {{template "ActionCSS"}}
+  <!---->
+
+</head>
+
+<body>
+
+  <!---->
+  {{template "ShareNavbar"}}
+  <!---->
+
+  <div class="action-container">
+
+    <button id="button-new"
+      type="button"
+      class="btn btn-dark btn-lg action-button action-margin-top">
+      <i class="material-icons action-button-icons">add</i>
+      New Transaction
+    </button>
+
+    <button id="button-statistic"
+      type="button"
+      class="btn btn-dark btn-lg action-button action-margin-top">
+      <i class="material-icons action-button-icons">assessment</i>
+      Statistic
+    </button>
+
+    <div class="action-separator"
+      style="margin-top: 2em;">
+    </div>
+
+    <button id="button-change"
+      type="button"
+      class="btn btn-dark btn-lg action-button action-margin-top">
+      <i class="material-icons action-button-icons">edit</i>
+      Change Password
+    </button>
+
+    <button id="button-logout"
+      type="button"
+      class="btn btn-dark btn-lg action-button action-margin-top">
+      <i class="material-icons action-button-icons">lock</i>
+      Logout 
+    </button>
+
+  </div>
+
+  <!---->
+  {{template "CDNJS"}}
+  <!---->
+
+  <!---->
+  {{template "ShareJS"}}
+  <!---->
+
+  <!---->
+  {{template "ActionJS"}}
+  <!---->
+
+</body>
+
+</html>
+
+{{end}}

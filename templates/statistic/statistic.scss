@@ -1,0 +1,71 @@
+@import "../_common_scss/material_design_style/layout";
+@import "../_common_scss/material_design_style/typography";
+@import "../_common_scss/material_design_style/colors";
+@import "../_share_scss/share";
+
+.statistic-container {
+  @extend %my-share-container;
+}
+
+.statistic-margin-top {
+  @extend %my-share-margin-top;
+}
+
+.statistic-button {
+  @extend %my-share-button;
+  width: 100%;
+}
+
+.statistic-button-icons {
+  @extend %my-share-button-icons;
+}
+
+.statistic-label {
+  @extend %my-share-label;
+}
+
+.statistic-input {
+  @extend %my-share-input;
+}
+
+.statistic-validate {
+  @extend %my-share-validate;
+}
+
+.statistic-separator {
+  @extend %my-share-separator;
+  margin-top: 2em;
+}
+
+.statistic-list-item {
+  @extend %layout-horizontal;
+  @extend %layout-justified;
+}
+
+.statistic-color-general {
+  background-color: $paper-teal-500;
+  color: white;
+}
+
+.statistic-color-fantastic {
+  background-color: $paper-light-blue-500;
+  color: white;
+}
+
+.statistic-color-info {
+  background-color: $paper-cyan-a400;
+}
+
+.statistic-color-danger {
+  background-color: $paper-red-500;
+  color: white;
+}
+
+.statistic-color-warning {
+  background-color: $paper-amber-a200;
+}
+
+li {
+  @extend %font-subhead;
+  font-family: 'Padauk', sans-serif;
+}
