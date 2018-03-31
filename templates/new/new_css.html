@@ -4,15 +4,20 @@
 
 <style>
 
-.new-label, .new-menu, .new-item, .new-input, .new-validate, .new-button {
+.new-modal-title, .new-label, .new-menu, .new-item, .new-input, .new-modal-body, .new-validate, .new-button {
   -webkit-font-smoothing: antialiased; }
 
-.new-button {
+.new-modal-title, .new-button {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis; }
 
-.new-label, .new-menu, .new-item, .new-input {
+.new-modal-title {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 28px; }
+
+.new-label, .new-menu, .new-item, .new-input, .new-modal-body {
   font-size: 16px;
   font-weight: 400;
   line-height: 24px; }
@@ -36,7 +41,7 @@
   line-height: 24px;
   text-transform: uppercase; }
 
-.new-label, .new-menu, .new-item, .new-input, .new-validate, .new-button {
+.new-label, .new-menu, .new-item, .new-input, .new-modal-body, .new-validate, .new-button, .new-modal-title {
   font-family: 'Ubuntu', sans-serif; }
 
 .new-container {
@@ -58,6 +63,43 @@
   background-color: black;
   opacity: 0.12; }
 
+.new-modal-title, .new-label, .new-menu, .new-item, .new-input, .new-modal-body, .new-validate, .new-button {
+  -webkit-font-smoothing: antialiased; }
+
+.new-modal-title, .new-button {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; }
+
+.new-modal-title {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 28px; }
+
+.new-label, .new-menu, .new-item, .new-input, .new-modal-body {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px; }
+
+.new-validate {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px; }
+
+.new-button-icons {
+  font-size: 16px;
+  line-height: 16px;
+  font-weight: 500;
+  vertical-align: text-top;
+  margin: 0 0.15em 0 0; }
+
+.new-button {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.018em;
+  line-height: 24px;
+  text-transform: uppercase; }
+
 .new-button {
   width: 100%; }
 
@@ -73,6 +115,19 @@
 .new-separator {
   margin-top: 2em;
   margin-bottom: 0; }
+
+.new-modal-body {
+  display: block;
+  resize: none;
+  border: none;
+  outline: none;
+  width: 100%;
+  overflow: hidden;
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-top: 1em;
+  color: black;
+  opacity: 0.87; }
 
 
 </style>

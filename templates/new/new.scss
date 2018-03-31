@@ -1,4 +1,6 @@
 @import "../_share_scss/share";
+@import "../_common_scss/material_design_style/colors";
+@import "../_common_scss/material_design_style/typography";
 
 .new-container {
   @extend %my-share-container;
@@ -47,4 +49,28 @@
   @extend %my-share-separator;
   margin-top: 2em;
   margin-bottom: 0;
+}
+
+.new-modal-title {
+  @extend %font-title;
+  @extend %my-share-font-family;
+}
+
+.new-modal-body {
+  @extend %my-share-input;
+
+  display: block;
+  resize: none;
+  border: none;
+  outline: none;
+  width: 100%;
+
+  overflow: hidden;
+
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-top: 1em;
+
+  color: black;
+  opacity: $dark-primary-opacity;
 }

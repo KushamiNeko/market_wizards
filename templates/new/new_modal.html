@@ -1,0 +1,50 @@
+{{define "NewModal"}}
+
+<div class="modal fade"
+  id="new-modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="Error"
+  aria-hidden="true">
+
+  <div class="modal-dialog modal-lg">
+
+    <div class="modal-content">
+
+      <div class="modal-header">
+
+        <h4 class="modal-title new-modal-title"
+          style="margin-left: 0.5em;"
+          id="new-modal-title">
+          There is a problem
+        </h4>
+
+      </div>
+
+      <div class="modal-body">
+
+        <textarea id="new-modal-body"
+          readonly
+          class="new-modal-body">
+        </textarea>
+
+      </div>
+
+      <div class="modal-footer">
+
+        <button type="button"
+          class="btn btn-lg btn-secondary new-button"
+          data-dismiss="modal">
+          <i class="material-icons new-button-icons">close</i>
+          Close
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+{{end}}

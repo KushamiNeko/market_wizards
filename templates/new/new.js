@@ -5,7 +5,24 @@ $(".invalid-feedback").hide();
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $("#button-back").click(function() {
+  if (isProcessing()) {
+    return;
+  }
+
   window.location = "/action";
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$("#new-modal-body").on("input", function() {
+  this.style.height = "auto";
+  this.style.height = (this.scrollHeight) + "px";
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$("#new-modal").on("shown.bs.modal", function() {
+  $("#new-modal-body").trigger("input");
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -302,7 +319,8 @@ $("#button-create").click(function() {
       outProcess();
     },
     error: function(xhr, err) {
-      console.log(err);
+      $("#new-modal-body").val(xhr.responseText);
+      $("#new-modal").modal("show");
 
       outProcess("#button-create");
     },
@@ -350,28 +368,14 @@ imgChange("ibd");
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//function dropdownClick(target, value) {
 function dropdownClick(target) {
   $(target).click(function() {
     $("#dropdownMenu").html($(target).html());
-    //buyPoint = value;
     buyPoint = $(target).html();
   });
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//dropdownClick("#dropdown-cup-with-handle", "Cup With Handle");
-//dropdownClick("#dropdown-cup", "Cup");
-//dropdownClick("#dropdown-double-bottom", "Double Bottom");
-//dropdownClick("#dropdown-flat-base", "Flat Base");
-//dropdownClick("#dropdown-ipo-base", "IPO Base");
-//dropdownClick("#dropdown-tight-area", "Tight Area");
-//dropdownClick("#dropdown-channel", "Channel");
-//dropdownClick("#dropdown-consolidation", "Consolidation");
-//dropdownClick("#dropdown-21d-pullback", "21D PullBack");
-//dropdownClick("#dropdown-50d-pullback", "50D PullBack");
-//dropdownClick("#dropdown-new-high", "New High");
 
 dropdownClick("#dropdown-vcp-early-entry");
 dropdownClick("#dropdown-earnings-report");
@@ -386,26 +390,9 @@ dropdownClick("#dropdown-double-bottom");
 dropdownClick("#dropdown-flat-base");
 dropdownClick("#dropdown-ipo-base");
 dropdownClick("#dropdown-tight-area");
-//dropdownClick("#dropdown-channel");
 dropdownClick("#dropdown-consolidation");
 dropdownClick("#dropdown-21d-pullback");
 dropdownClick("#dropdown-50d-pullback");
 dropdownClick("#dropdown-new-high");
-
-//"VCP Early Entry",
-//"VCP Pivot",
-//"Earnings Report",
-//"Gap",
-//"PO / SO",
-//"Trend Line",
-//"IPO Base",
-//"Cup With Handle",
-//"Cup",
-//"Flat Base",
-//"Tight Area",
-//"Double Bottom",
-//"Consolidation",
-//"21D Pullback",
-//"50D Pullback",
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -5,6 +5,10 @@ $("#input-password").focus();
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $("#button-back").click(function() {
+  if (isProcessing()) {
+    return;
+  }
+
   window.location = "/action";
 });
 
