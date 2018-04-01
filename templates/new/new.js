@@ -43,20 +43,20 @@ $("#button-type").click(function() {
   if (buy) {
     $("#button-type").html("BUY");
     $("#input-revenue").attr("disabled", "disabled");
-    $("#input-dayhold").attr("disabled", "disabled");
+    $("#input-daysheld").attr("disabled", "disabled");
   }
 
   if (sell) {
     $("#button-type").html("SELL");
     $("#input-revenue").removeAttr("disabled");
-    $("#input-dayhold").removeAttr("disabled");
+    $("#input-daysheld").removeAttr("disabled");
   }
 
   $("#input-revenue").val("");
   $("#input-cost").val("");
   $("#input-gainD").val("");
   $("#input-gainP").val("");
-  $("#input-dayhold").val("");
+  $("#input-daysheld").val("");
 
   calculate();
 });
@@ -181,14 +181,14 @@ $("#button-create").click(function() {
   var stage = parseFloat($("#input-stage").val());
 
   if (sell) {
-    if ($("#input-dayhold").val().match(/^[0-9]+$/) === null) {
-      $("#validate-dayhold").show();
-      $("#input-dayhold").focus();
+    if ($("#input-daysheld").val().match(/^[0-9]+$/) === null) {
+      $("#validate-daysheld").show();
+      $("#input-daysheld").focus();
       return;
     }
   }
 
-  var dayhold = parseInt($("#input-dayhold").val());
+  var daysheld = parseInt($("#input-daysheld").val());
 
   var note = $("#input-note").val();
 
@@ -302,7 +302,7 @@ $("#button-create").click(function() {
     data.Revenue = revenue;
     data.GainD = gainD;
     data.GainP = gainP;
-    data.DayHold = dayhold;
+    data.DaysHeld = daysheld;
   }
 
   var jsonBody = JSON.stringify(data);
@@ -371,7 +371,7 @@ imgChange("ibd");
 function dropdownClick(target) {
   $(target).click(function() {
     $("#dropdownMenu").html($(target).html());
-    buyPoint = $(target).html();
+    buyPoint = $(target).html().trim();
   });
 }
 

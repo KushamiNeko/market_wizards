@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"math"
 	"strconv"
+	"strings"
 	"transaction"
 
 	"github.com/montanaflynn/stats"
@@ -186,10 +187,12 @@ func NewTransactionStat(orders []*transaction.Order) (*TransactionStat, error) {
 			dictPrice[grps] = 1
 		}
 
-		if val, ok := dictBuyPoint[o.BuyPoint]; ok {
-			dictBuyPoint[o.BuyPoint] = val + 1
+		buyPoint := strings.TrimSpace(o.BuyPoint)
+
+		if val, ok := dictBuyPoint[buyPoint]; ok {
+			dictBuyPoint[buyPoint] = val + 1
 		} else {
-			dictBuyPoint[o.BuyPoint] = 1
+			dictBuyPoint[buyPoint] = 1
 		}
 
 		sliceGainP = append(sliceGainP, o.GainP)
