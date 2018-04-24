@@ -17,6 +17,8 @@ import (
 const (
 	grpPrice  = 50
 	grpFormat = "%s ~ %s"
+
+	LoserGainThreshold = 1.0
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -27,6 +29,10 @@ type Statistic struct {
 	BattingAverage float64
 
 	WinLossRatio float64
+
+	//AdjustedWinLossRatio float64
+
+	Expectancy float64
 
 	Gain *TransactionStat
 	Loss *TransactionStat
@@ -67,6 +73,10 @@ func NewStatistic(winner []*transaction.Order, loser []*transaction.Order) (*Sta
 	s.BattingAverage = float64(s.Gain.TotalTrade) / float64(s.TotalTrade)
 
 	s.WinLossRatio = s.Gain.GainPMean / math.Abs(s.Loss.GainPMean)
+
+	//s.AdjustedWinLossRatio = s.Gain.GainPMean * s.BattingAverage / math.Abs(s.Loss.GainPMean) * (1.0 - s.BattingAverage)
+
+	s.Expectancy = s.Gain.GainPMean * s.BattingAverage / math.Abs(s.Loss.GainPMean) * (1.0 - s.BattingAverage)
 
 	return s, nil
 }

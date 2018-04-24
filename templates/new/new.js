@@ -380,7 +380,9 @@ function dropdownClick(target) {
 dropdownClick("#dropdown-vcp-early-entry");
 dropdownClick("#dropdown-earnings-report");
 dropdownClick("#dropdown-gap");
-dropdownClick("#dropdown-po-so");
+//dropdownClick("#dropdown-po-so");
+dropdownClick("#dropdown-tennis-ball");
+dropdownClick("#dropdown-pullback");
 dropdownClick("#dropdown-trend-line");
 dropdownClick("#dropdown-resistance");
 dropdownClick("#dropdown-support");

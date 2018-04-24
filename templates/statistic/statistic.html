@@ -110,6 +110,17 @@
         </div>
       </li>
 
+      <li class="list-group-item">
+        <div class="statistic-list-item">
+          <span>
+            Expectancy
+          </span>
+          <span>
+            {{.FormatFloat .Expectancy}}
+          </span>
+        </div>
+      </li>
+
     </ul>
 
     <ul class="list-group statistic-margin-top">
@@ -127,75 +138,6 @@
           </span>
         </div>
       </li>
-
-      <li class="list-group-item statistic-color-info">
-        <div class="statistic-list-item">
-          <span>
-            Price
-          </span>
-        </div>
-      </li>
-
-      <!---->
-      {{range $k, $v := .Gain.Price}}
-      <li class="list-group-item">
-        <div class="statistic-list-item">
-          <span>
-            {{formatGrpPrice $k}}
-          </span>
-          <span>
-            {{$v}}
-          </span>
-        </div>
-      </li>
-      {{end}}
-      <!---->
-
-      <li class="list-group-item statistic-color-info">
-        <div class="statistic-list-item">
-          <span>
-            Buy Point
-          </span>
-        </div>
-      </li>
-
-      <!---->
-      {{range $k, $v := .Gain.BuyPoint}}
-      <li class="list-group-item">
-        <div class="statistic-list-item">
-          <span>
-            {{$k}}
-          </span>
-          <span>
-            {{$v}}
-          </span>
-        </div>
-      </li>
-      {{end}}
-      <!---->
-
-      <li class="list-group-item statistic-color-info">
-        <div class="statistic-list-item">
-          <span>
-            Stage
-          </span>
-        </div>
-      </li>
-
-      <!---->
-      {{range $k, $v := .Gain.Stage}}
-      <li class="list-group-item">
-        <div class="statistic-list-item">
-          <span>
-            {{$k}}
-          </span>
-          <span>
-            {{$v}}
-          </span>
-        </div>
-      </li>
-      {{end}}
-      <!---->
 
       <li class="list-group-item statistic-color-info">
         <div class="statistic-list-item">
@@ -238,6 +180,116 @@
         </div>
       </li>
 
+      <li class="list-group-item statistic-color-info">
+        <div class="statistic-list-item">
+          <span>
+            Days Held
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item">
+        <div class="statistic-list-item">
+          <span>
+            Mean
+          </span>
+          <span>
+            {{.FormatFloat .Gain.DaysHeldMean}}
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item">
+        <div class="statistic-list-item">
+          <span>
+            Max
+          </span>
+          <span>
+            {{.FormatFloat .Gain.DaysHeldMax}}
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item">
+        <div class="statistic-list-item">
+          <span>
+            Min
+          </span>
+          <span>
+            {{.FormatFloat .Gain.DaysHeldMin}}
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item statistic-color-info">
+        <div class="statistic-list-item">
+          <span>
+            Price
+          </span>
+        </div>
+      </li>
+
+      <!---->
+      {{range $k, $v := .Gain.Price}}
+      <li class="list-group-item">
+        <div class="statistic-list-item">
+          <span>
+            {{formatGrpPrice $k}}
+          </span>
+          <span>
+            {{$v}}
+          </span>
+        </div>
+      </li>
+      {{end}}
+      <!---->
+
+      <li class="list-group-item statistic-color-info">
+        <div class="statistic-list-item">
+          <span>
+            Stage
+          </span>
+        </div>
+      </li>
+
+      <!---->
+      {{range $k, $v := .Gain.Stage}}
+      <li class="list-group-item">
+        <div class="statistic-list-item">
+          <span>
+            {{$k}}
+          </span>
+          <span>
+            {{$v}}
+          </span>
+        </div>
+      </li>
+      {{end}}
+      <!---->
+
+      <li class="list-group-item statistic-color-info">
+        <div class="statistic-list-item">
+          <span>
+            Buy Point
+          </span>
+        </div>
+      </li>
+
+      <!---->
+      {{range $k, $v := .Gain.BuyPoint}}
+      <li class="list-group-item">
+        <div class="statistic-list-item">
+          <span>
+            {{$k}}
+          </span>
+          <span>
+            {{$v}}
+          </span>
+        </div>
+      </li>
+      {{end}}
+      <!---->
+
     </ul>
 
     <ul class="list-group statistic-margin-top">
@@ -255,75 +307,6 @@
           </span>
         </div>
       </li>
-
-      <li class="list-group-item statistic-color-warning">
-        <div class="statistic-list-item">
-          <span>
-            Price
-          </span>
-        </div>
-      </li>
-
-      <!---->
-      {{range $k, $v := .Loss.Price}}
-      <li class="list-group-item">
-        <div class="statistic-list-item">
-          <span>
-            {{formatGrpPrice $k}}
-          </span>
-          <span>
-            {{$v}}
-          </span>
-        </div>
-      </li>
-      {{end}}
-      <!---->
-
-      <li class="list-group-item statistic-color-warning">
-        <div class="statistic-list-item">
-          <span>
-            Buy Point
-          </span>
-        </div>
-      </li>
-
-      <!---->
-      {{range $k, $v := .Loss.BuyPoint}}
-      <li class="list-group-item">
-        <div class="statistic-list-item">
-          <span>
-            {{$k}}
-          </span>
-          <span>
-            {{$v}}
-          </span>
-        </div>
-      </li>
-      {{end}}
-      <!---->
-
-      <li class="list-group-item statistic-color-warning">
-        <div class="statistic-list-item">
-          <span>
-            Stage
-          </span>
-        </div>
-      </li>
-
-      <!---->
-      {{range $k, $v := .Loss.Stage}}
-      <li class="list-group-item">
-        <div class="statistic-list-item">
-          <span>
-            {{$k}}
-          </span>
-          <span>
-            {{$v}}
-          </span>
-        </div>
-      </li>
-      {{end}}
-      <!---->
 
       <li class="list-group-item statistic-color-warning">
         <div class="statistic-list-item">
@@ -366,6 +349,116 @@
         </div>
       </li>
 
+      <li class="list-group-item statistic-color-warning">
+        <div class="statistic-list-item">
+          <span>
+            Days Held
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item">
+        <div class="statistic-list-item">
+          <span>
+            Mean
+          </span>
+          <span>
+            {{.FormatFloat .Loss.DaysHeldMean}}
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item">
+        <div class="statistic-list-item">
+          <span>
+            Max
+          </span>
+          <span>
+            {{.FormatFloat .Loss.DaysHeldMax}}
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item">
+        <div class="statistic-list-item">
+          <span>
+            Min
+          </span>
+          <span>
+            {{.FormatFloat .Loss.DaysHeldMin}}
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item statistic-color-warning">
+        <div class="statistic-list-item">
+          <span>
+            Price
+          </span>
+        </div>
+      </li>
+
+      <!---->
+      {{range $k, $v := .Loss.Price}}
+      <li class="list-group-item">
+        <div class="statistic-list-item">
+          <span>
+            {{formatGrpPrice $k}}
+          </span>
+          <span>
+            {{$v}}
+          </span>
+        </div>
+      </li>
+      {{end}}
+      <!---->
+
+      <li class="list-group-item statistic-color-warning">
+        <div class="statistic-list-item">
+          <span>
+            Stage
+          </span>
+        </div>
+      </li>
+
+      <!---->
+      {{range $k, $v := .Loss.Stage}}
+      <li class="list-group-item">
+        <div class="statistic-list-item">
+          <span>
+            {{$k}}
+          </span>
+          <span>
+            {{$v}}
+          </span>
+        </div>
+      </li>
+      {{end}}
+      <!---->
+
+      <li class="list-group-item statistic-color-warning">
+        <div class="statistic-list-item">
+          <span>
+            Buy Point
+          </span>
+        </div>
+      </li>
+
+      <!---->
+      {{range $k, $v := .Loss.BuyPoint}}
+      <li class="list-group-item">
+        <div class="statistic-list-item">
+          <span>
+            {{$k}}
+          </span>
+          <span>
+            {{$v}}
+          </span>
+        </div>
+      </li>
+      {{end}}
+      <!---->
+
     </ul>
 
     <!--<div class="statistic-separator">-->
@@ -394,6 +487,10 @@
 
   <!---->
   {{template "StatisticJS"}}
+  <!---->
+
+  <!---->
+  {{template "StatisticChartsJS"}}
   <!---->
 
 </body>

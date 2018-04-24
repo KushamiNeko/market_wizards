@@ -89,7 +89,7 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		if o.GainP >= 0.0 {
+		if o.GainP >= statistic.LoserGainThreshold {
 			winner = append(winner, o)
 		} else {
 			losser = append(losser, o)
