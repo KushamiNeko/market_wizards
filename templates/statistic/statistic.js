@@ -2,6 +2,8 @@
 
 $("#input-start-date").focus();
 
+//$("#input-threshold").val("1.0");
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $("#button-back").click(function() {
@@ -46,8 +48,17 @@ $("#button-query").click(function() {
       return;
     }
 
-    window.location = "/statistic?start=" + $("#input-start-date").val() + "&end=" + $("#input-end-date").val();
+    if ($("#input-threshold").val().match(/^[0-9.]+$/) === null) {
+      $("#validate-threshold").show();
+      $("#input-threshold").focus();
 
+      outProcess("#button-query");
+      return;
+    }
+
+    window.location =
+      "/statistic?start=" + $("#input-start-date").val() + "&end=" + $("#input-end-date").val() +
+      "&threshold=" + $("#input-threshold").val();
   }
 
   outProcess("#button-query");

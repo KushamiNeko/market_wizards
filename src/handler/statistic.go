@@ -41,23 +41,40 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 	var start int64
 	var end int64
 
-	if len(r.URL.Query()) > 0 {
+	var threshold float64 = 1.0
 
-		starts := r.URL.Query().Get("start")
-		ends := r.URL.Query().Get("end")
+	//if len(r.URL.Query()) > 0 {
 
+	starts := r.URL.Query().Get("start")
+	ends := r.URL.Query().Get("end")
+
+	thresholds := r.URL.Query().Get("threshold")
+
+	if starts != "" {
 		start, err = strconv.ParseInt(starts, 10, 64)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+	}
 
+	if ends != "" {
 		end, err = strconv.ParseInt(ends, 10, 64)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 	}
+
+	if thresholds != "" {
+		threshold, err = strconv.ParseFloat(thresholds, 64)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
+
+	//}
 
 	q := datastore.NewQuery(cookie).Namespace(config.NamespaceTransaction)
 	q = q.Filter("Order =", "sell")
@@ -89,7 +106,8 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		if o.GainP >= statistic.LoserGainThreshold {
+		//if o.GainP >= statistic.LoserGainThreshold {
+		if o.GainP >= threshold {
 			winner = append(winner, o)
 		} else {
 			losser = append(losser, o)
@@ -102,6 +120,10 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	statistic.StartDate = starts
+	statistic.EndDate = ends
+	statistic.LossThresholdP = threshold
 
 	writeTemplate(w, "Statistic", statistic, nil)
 }

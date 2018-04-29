@@ -24,15 +24,27 @@ const (
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 type Statistic struct {
+	StartDate      string
+	EndDate        string
+	LossThresholdP float64
+
 	TotalTrade int
 
 	BattingAverage float64
 
-	WinLossRatio float64
+	WinLossRatioP float64
 
-	//AdjustedWinLossRatio float64
+	AdjustedWinLossRatioP float64
 
-	Expectancy float64
+	ExpectedValueP float64
+
+	WinLossRatioD float64
+
+	AdjustedWinLossRatioD float64
+
+	ExpectedValueD float64
+
+	//Expectancy float64
 
 	Gain *TransactionStat
 	Loss *TransactionStat
@@ -72,11 +84,17 @@ func NewStatistic(winner []*transaction.Order, loser []*transaction.Order) (*Sta
 	s.TotalTrade = s.Gain.TotalTrade + s.Loss.TotalTrade
 	s.BattingAverage = float64(s.Gain.TotalTrade) / float64(s.TotalTrade)
 
-	s.WinLossRatio = s.Gain.GainPMean / math.Abs(s.Loss.GainPMean)
+	s.WinLossRatioP = s.Gain.GainPMean / math.Abs(s.Loss.GainPMean)
 
-	//s.AdjustedWinLossRatio = s.Gain.GainPMean * s.BattingAverage / math.Abs(s.Loss.GainPMean) * (1.0 - s.BattingAverage)
+	s.AdjustedWinLossRatioP = s.Gain.GainPMean * s.BattingAverage / math.Abs(s.Loss.GainPMean) * (1.0 - s.BattingAverage)
 
-	s.Expectancy = s.Gain.GainPMean * s.BattingAverage / math.Abs(s.Loss.GainPMean) * (1.0 - s.BattingAverage)
+	s.ExpectedValueP = s.Gain.GainPMean*s.BattingAverage + s.Loss.GainPMean*(1.0-s.BattingAverage)
+
+	s.WinLossRatioD = s.Gain.GainDMean / math.Abs(s.Loss.GainDMean)
+
+	s.AdjustedWinLossRatioD = s.Gain.GainDMean * s.BattingAverage / math.Abs(s.Loss.GainDMean) * (1.0 - s.BattingAverage)
+
+	s.ExpectedValueD = s.Gain.GainDMean*s.BattingAverage + s.Loss.GainDMean*(1.0-s.BattingAverage)
 
 	return s, nil
 }
@@ -137,6 +155,10 @@ type TransactionStat struct {
 	GainPMax  float64
 	GainPMin  float64
 
+	GainDMean float64
+	GainDMax  float64
+	GainDMin  float64
+
 	//DaysHeld int `datastore:",omitempty" json:",omitempty"`
 	DaysHeldMean float64
 	DaysHeldMax  float64
@@ -164,6 +186,7 @@ func NewTransactionStat(orders []*transaction.Order) (*TransactionStat, error) {
 	dictStage := make(map[string]int)
 
 	sliceGainP := make([]float64, 0)
+	sliceGainD := make([]float64, 0)
 	sliceDaysHeld := make([]float64, 0)
 
 	for _, o := range orders {
@@ -183,6 +206,7 @@ func NewTransactionStat(orders []*transaction.Order) (*TransactionStat, error) {
 
 		grp := math.Floor(o.Price / grpPrice)
 		grps := int(grp * grpPrice)
+
 		//grps := strconv.FormatFloat(grp*grpPrice, 'f', -1, 64)
 		//grpe := strconv.FormatFloat((grp+1)*grpPrice, 'f', -1, 64)
 
@@ -206,7 +230,7 @@ func NewTransactionStat(orders []*transaction.Order) (*TransactionStat, error) {
 		}
 
 		sliceGainP = append(sliceGainP, o.GainP)
-		//sliceDayHold = append(sliceDayHold, float64(o.DayHold))
+		sliceGainD = append(sliceGainD, o.GainD)
 		sliceDaysHeld = append(sliceDaysHeld, float64(o.DaysHeld))
 
 		stages := strconv.FormatFloat(math.Floor(o.Stage), 'f', -1, 64)
@@ -239,6 +263,21 @@ func NewTransactionStat(orders []*transaction.Order) (*TransactionStat, error) {
 	}
 
 	t.GainPMin, err = stats.Min(sliceGainP)
+	if err != nil {
+		return nil, err
+	}
+
+	t.GainDMean, err = stats.Mean(sliceGainD)
+	if err != nil {
+		return nil, err
+	}
+
+	t.GainDMax, err = stats.Max(sliceGainD)
+	if err != nil {
+		return nil, err
+	}
+
+	t.GainDMin, err = stats.Min(sliceGainD)
 	if err != nil {
 		return nil, err
 	}

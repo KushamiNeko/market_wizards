@@ -47,12 +47,18 @@
   color: white;
 }
 
+.statistic-color-display {
+  //background-color: $paper-cyan-a400;
+  background-color: $paper-green-a200;
+}
+
 .statistic-color-fantastic {
   background-color: $paper-light-blue-500;
   color: white;
 }
 
 .statistic-color-info {
+  //background-color: $paper-purple-a200;
   background-color: $paper-cyan-a400;
 }
 
@@ -62,6 +68,7 @@
 }
 
 .statistic-color-warning {
+  //background-color: $paper-pink-a100;
   background-color: $paper-amber-a200;
 }
 

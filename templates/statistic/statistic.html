@@ -41,7 +41,8 @@
 
     <input type="text"
       id="input-start-date"
-      class="form-control statistic-input">
+      class="form-control statistic-input"
+      value="{{.StartDate}}">
 
     <div id="validate-start-date"
       class="invalid-feedback statistic-validate">
@@ -55,11 +56,27 @@
 
     <input type="text"
       id="input-end-date"
-      class="form-control statistic-input">
+      class="form-control statistic-input"
+      value="{{.EndDate}}">
 
     <div id="validate-end-date"
       class="invalid-feedback statistic-validate">
       Invalid Date
+    </div>
+
+    <label for="input-threshold"
+      class="statistic-margin-top statistic-label">
+      Loss Threshold (%)
+    </label>
+
+    <input type="text"
+      id="input-threshold"
+      class="form-control statistic-input"
+      value="{{.LossThresholdP}}">
+
+    <div id="validate-threshold"
+      class="invalid-feedback statistic-validate">
+      Invalid Threshold
     </div>
 
     <button type="button"
@@ -99,13 +116,10 @@
         </div>
       </li>
 
-      <li class="list-group-item">
+      <li class="list-group-item statistic-color-display">
         <div class="statistic-list-item">
           <span>
-            Win Loss Ratio
-          </span>
-          <span>
-            {{.FormatFloat .WinLossRatio}}
+            (%)
           </span>
         </div>
       </li>
@@ -113,10 +127,81 @@
       <li class="list-group-item">
         <div class="statistic-list-item">
           <span>
-            Expectancy
+            <!--Win Loss Ratio (%)-->
+            Win Loss Ratio
           </span>
           <span>
-            {{.FormatFloat .Expectancy}}
+            {{.FormatFloat .WinLossRatioP}}
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item">
+        <div class="statistic-list-item">
+          <span>
+            <!--Expectancy-->
+            <!--Adjusted Win Loss Ratio (%)-->
+            Adjusted Win Loss Ratio
+          </span>
+          <span>
+            {{.FormatFloat .AdjustedWinLossRatioP}}
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item">
+        <div class="statistic-list-item">
+          <span>
+            <!--Expected Value (%)-->
+            Expected Value
+          </span>
+          <span>
+            {{.FormatFloat .ExpectedValueP}}
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item statistic-color-display">
+        <div class="statistic-list-item">
+          <span>
+            ($)
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item">
+        <div class="statistic-list-item">
+          <span>
+            <!--Win Loss Ratio ($)-->
+            Win Loss Ratio
+          </span>
+          <span>
+            {{.FormatFloat .WinLossRatioD}}
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item">
+        <div class="statistic-list-item">
+          <span>
+            <!--Expectancy-->
+            <!--Adjusted Win Loss Ratio ($)-->
+            Adjusted Win Loss Ratio
+          </span>
+          <span>
+            {{.FormatFloat .AdjustedWinLossRatioD}}
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item">
+        <div class="statistic-list-item">
+          <span>
+            <!--Expected Value ($)-->
+            Expected Value
+          </span>
+          <span>
+            {{.FormatFloat .ExpectedValueD}}
           </span>
         </div>
       </li>
@@ -176,6 +261,47 @@
           </span>
           <span>
             {{.FormatFloat .Gain.GainPMin}}
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item statistic-color-info">
+        <div class="statistic-list-item">
+          <span>
+            Gain ($)
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item">
+        <div class="statistic-list-item">
+          <span>
+            Mean
+          </span>
+          <span>
+            {{.FormatFloat .Gain.GainDMean}}
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item">
+        <div class="statistic-list-item">
+          <span>
+            Max
+          </span>
+          <span>
+            {{.FormatFloat .Gain.GainDMax}}
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item">
+        <div class="statistic-list-item">
+          <span>
+            Min
+          </span>
+          <span>
+            {{.FormatFloat .Gain.GainDMin}}
           </span>
         </div>
       </li>
@@ -345,6 +471,47 @@
           </span>
           <span>
             {{.FormatFloat .Loss.GainPMin}}
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item statistic-color-warning">
+        <div class="statistic-list-item">
+          <span>
+            Loss ($)
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item">
+        <div class="statistic-list-item">
+          <span>
+            Mean
+          </span>
+          <span>
+            {{.FormatFloat .Loss.GainDMean}}
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item">
+        <div class="statistic-list-item">
+          <span>
+            Max
+          </span>
+          <span>
+            {{.FormatFloat .Loss.GainDMax}}
+          </span>
+        </div>
+      </li>
+
+      <li class="list-group-item">
+        <div class="statistic-list-item">
+          <span>
+            Min
+          </span>
+          <span>
+            {{.FormatFloat .Loss.GainDMin}}
           </span>
         </div>
       </li>
