@@ -6,6 +6,37 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
+var infoIndex = 0;
+var infoType = ["Info General", "Chart General", "Chart IBD", "Chart MarketSmith"];
+var infoContainer = ["#info-general", "#chart-general", "#chart-ibd", "#chart-marketsmith"];
+
+buttonTypeUpdate();
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$("#button-type").click(function() {
+  infoIndex += 1;
+  infoIndex = infoIndex % infoType.length;
+
+  buttonTypeUpdate();
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function buttonTypeUpdate() {
+  $("#button-type").html(infoType[infoIndex]);
+
+  for (var i = 0; i < infoType.length; i++) {
+    if (i === infoIndex) {
+      $(infoContainer[i]).show();
+    } else {
+      $(infoContainer[i]).hide();
+    }
+  }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
 $("#input-start-date").focus();
 
 //$("#input-threshold").val("1.0");

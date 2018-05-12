@@ -3,6 +3,8 @@ package statistic
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import (
+	"charts"
+	"config"
 	"fmt"
 	"math"
 	"strconv"
@@ -14,12 +16,20 @@ import (
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const (
-	grpPrice  = 50
-	grpFormat = "%s ~ %s"
+//const (
+//grpPrice  = 50
+//grpFormat = "%s ~ %s"
 
-	LoserGainThreshold = 1.0
-)
+//LoserGainThreshold = 1.0
+//)
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//type Charts struct {
+//General     string
+//IBD         string
+//MarketSmith string
+//}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -27,6 +37,9 @@ type Statistic struct {
 	StartDate      string
 	EndDate        string
 	LossThresholdP float64
+
+	//Charts *Charts
+	ChartGeneral *charts.ChartGeneral
 
 	TotalTrade int
 
@@ -109,11 +122,11 @@ func (s *Statistic) FormatFloat(data float64) string {
 
 func FormatGrpPrice(price int) string {
 
-	grp := math.Floor(float64(price) / grpPrice)
-	grps := strconv.FormatFloat(grp*grpPrice, 'f', -1, 64)
-	grpe := strconv.FormatFloat((grp+1)*grpPrice, 'f', -1, 64)
+	grp := math.Floor(float64(price) / config.PriceInterval)
+	grps := strconv.FormatFloat(grp*config.PriceInterval, 'f', -1, 64)
+	grpe := strconv.FormatFloat((grp+1)*config.PriceInterval, 'f', -1, 64)
 
-	grpk := fmt.Sprintf(grpFormat, grps, grpe)
+	grpk := fmt.Sprintf(config.PriceIntervalFormat, grps, grpe)
 
 	return grpk
 }
@@ -192,9 +205,9 @@ func NewTransactionStat(orders []*transaction.Order) (*TransactionStat, error) {
 	for _, o := range orders {
 		//cost := o.Cost / float64(o.Share)
 
-		//cgrp := math.Floor(cost / grpPrice)
-		//cgrps := strconv.FormatFloat(cgrp*grpPrice, 'f', -1, 64)
-		//cgrpe := strconv.FormatFloat((cgrp+1)*grpPrice, 'f', -1, 64)
+		//cgrp := math.Floor(cost / config.PriceInterval)
+		//cgrps := strconv.FormatFloat(cgrp*config.PriceInterval, 'f', -1, 64)
+		//cgrpe := strconv.FormatFloat((cgrp+1)*config.PriceInterval, 'f', -1, 64)
 
 		//cgrpk := fmt.Sprintf(grpFormat, cgrps, cgrpe)
 
@@ -204,11 +217,11 @@ func NewTransactionStat(orders []*transaction.Order) (*TransactionStat, error) {
 		//dictCost[cgrpk] = 1
 		//}
 
-		grp := math.Floor(o.Price / grpPrice)
-		grps := int(grp * grpPrice)
+		grp := math.Floor(o.Price / config.PriceInterval)
+		grps := int(grp * config.PriceInterval)
 
-		//grps := strconv.FormatFloat(grp*grpPrice, 'f', -1, 64)
-		//grpe := strconv.FormatFloat((grp+1)*grpPrice, 'f', -1, 64)
+		//grps := strconv.FormatFloat(grp*config.PriceInterval, 'f', -1, 64)
+		//grpe := strconv.FormatFloat((grp+1)*config.PriceInterval, 'f', -1, 64)
 
 		//grpk := fmt.Sprintf(grpFormat, grps, grpe)
 

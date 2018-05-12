@@ -38,6 +38,21 @@ const (
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
+const (
+	PriceInterval       = 50
+	PriceIntervalFormat = "%s ~ %s"
+
+	StyleFormat = "color: %v; opacity: %v;"
+
+	WinnerColor = "#03A9F4"
+	LoserColor  = "#F44336"
+
+	WinnerOpacity = 0.5
+	LoserOpacity  = 0.5
+)
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
 var (
 	//WebFrontendOrigin string
 	AppEngineOrigin string

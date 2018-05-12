@@ -3,6 +3,8 @@ package datautils
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import (
+	"encoding/base64"
+	"encoding/json"
 	"io/ioutil"
 	"net/http"
 )
@@ -38,6 +40,19 @@ func JsonRequestBodyDecode(r *http.Request, decoder JsonBodyInterface) error {
 	}
 
 	return nil
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func JsonB64Encrypt(data interface{}) (string, error) {
+	body, err := json.Marshal(data)
+	if err != nil {
+		return "", err
+	}
+
+	encrypt := base64.StdEncoding.EncodeToString(body)
+
+	return encrypt, nil
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////

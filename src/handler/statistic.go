@@ -3,6 +3,7 @@ package handler
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import (
+	"charts"
 	"client"
 	"config"
 	"headerutils"
@@ -98,6 +99,15 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 	winner := make([]*transaction.Order, 0)
 	losser := make([]*transaction.Order, 0)
 
+	//chartGeneral := make([][]interface{}, 0)
+
+	//chartGeneral = append(chartGeneral, []interface{}{
+	//"DaysHeld",
+	//"Gain(%)",
+	//})
+
+	filterOrder := make([]*transaction.Order, 0)
+
 	for _, o := range orders {
 
 		if start > 0 && end > 0 && end > start {
@@ -106,6 +116,8 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
+		filterOrder = append(filterOrder, o)
+
 		//if o.GainP >= statistic.LoserGainThreshold {
 		if o.GainP >= threshold {
 			winner = append(winner, o)
@@ -113,19 +125,38 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 			losser = append(losser, o)
 		}
 
+		//chartGeneral = append(chartGeneral, []interface{}{
+		//o.DaysHeld,
+		//o.GainP,
+		//})
 	}
 
-	statistic, err := statistic.NewStatistic(winner, losser)
+	stat, err := statistic.NewStatistic(winner, losser)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	statistic.StartDate = starts
-	statistic.EndDate = ends
-	statistic.LossThresholdP = threshold
+	//jsonChartGeneral, err := datautils.JsonB64Encrypt(orders)
+	//if err != nil {
+	//http.Error(w, err.Error(), http.StatusInternalServerError)
+	//return
+	//}
 
-	writeTemplate(w, "Statistic", statistic, nil)
+	//charts := new(statistic.Charts)
+	//charts.General = jsonChartGeneral
+
+	stat.StartDate = starts
+	stat.EndDate = ends
+	stat.LossThresholdP = threshold
+
+	stat.ChartGeneral, err = charts.ChartGeneralNew(filterOrder, winner, losser)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	writeTemplate(w, "Statistic", stat, nil)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

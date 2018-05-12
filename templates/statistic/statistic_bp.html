@@ -1,0 +1,671 @@
+{{define "StatisticBP"}}
+
+<html lang="en">
+
+<head>
+
+  <!---->
+  {{template "IndexHead"}}
+  <!---->
+
+  <!---->
+  {{template "IndexIcon"}}
+  <!---->
+
+  <!---->
+  {{template "CDNCSS"}}
+  <!---->
+
+  <!---->
+  {{template "ShareCSS"}}
+  <!---->
+
+  <!---->
+  {{template "StatisticCSS"}}
+  <!---->
+
+</head>
+
+<body>
+
+  <!---->
+  {{template "ShareNavbar"}}
+  <!---->
+
+  <div class="statistic-container">
+
+    <label for="input-start-date"
+      class="statistic-margin-top statistic-label">
+      Start Date
+    </label>
+
+    <input type="text"
+      id="input-start-date"
+      class="form-control statistic-input"
+      value="{{.StartDate}}">
+
+    <div id="validate-start-date"
+      class="invalid-feedback statistic-validate">
+      Invalid Date
+    </div>
+
+    <label for="input-end-date"
+      class="statistic-margin-top statistic-label">
+      End Date
+    </label>
+
+    <input type="text"
+      id="input-end-date"
+      class="form-control statistic-input"
+      value="{{.EndDate}}">
+
+    <div id="validate-end-date"
+      class="invalid-feedback statistic-validate">
+      Invalid Date
+    </div>
+
+    <label for="input-threshold"
+      class="statistic-margin-top statistic-label">
+      Loss Threshold (%)
+    </label>
+
+    <input type="text"
+      id="input-threshold"
+      class="form-control statistic-input"
+      value="{{.LossThresholdP}}">
+
+    <div id="validate-threshold"
+      class="invalid-feedback statistic-validate">
+      Invalid Threshold
+    </div>
+
+    <button type="button"
+      id="button-query"
+      class="btn btn-lg btn-dark statistic-margin-top statistic-button">
+      <i class="material-icons statistic-button-icons">search</i>
+      Search
+    </button>
+
+    <!--<div class="statistic-separator">-->
+    <!--</div>-->
+
+    <div id="info-general">
+
+      <ul class="list-group statistic-margin-top">
+        <li class="list-group-item statistic-color-general">
+          General
+        </li>
+
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            Total Trade
+          </span>
+            <span>
+            {{.TotalTrade}}
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            Batting Average
+          </span>
+            <span>
+            {{.FormatFloat .BattingAverage}}
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item statistic-color-display">
+          <div class="statistic-list-item">
+            <span>
+            (%)
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            <!--Win Loss Ratio (%)-->
+            Win Loss Ratio
+          </span>
+            <span>
+            {{.FormatFloat .WinLossRatioP}}
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            <!--Expectancy-->
+            <!--Adjusted Win Loss Ratio (%)-->
+            Adjusted Win Loss Ratio
+          </span>
+            <span>
+            {{.FormatFloat .AdjustedWinLossRatioP}}
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            <!--Expected Value (%)-->
+            Expected Value
+          </span>
+            <span>
+            {{.FormatFloat .ExpectedValueP}}
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item statistic-color-display">
+          <div class="statistic-list-item">
+            <span>
+            ($)
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            <!--Win Loss Ratio ($)-->
+            Win Loss Ratio
+          </span>
+            <span>
+            {{.FormatFloat .WinLossRatioD}}
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            <!--Expectancy-->
+            <!--Adjusted Win Loss Ratio ($)-->
+            Adjusted Win Loss Ratio
+          </span>
+            <span>
+            {{.FormatFloat .AdjustedWinLossRatioD}}
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            <!--Expected Value ($)-->
+            Expected Value
+          </span>
+            <span>
+            {{.FormatFloat .ExpectedValueD}}
+          </span>
+          </div>
+        </li>
+
+      </ul>
+
+      <ul class="list-group statistic-margin-top">
+        <li class="list-group-item statistic-color-fantastic">
+          Win
+        </li>
+
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            Total Trade
+          </span>
+            <span>
+            {{.Gain.TotalTrade}}
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item statistic-color-info">
+          <div class="statistic-list-item">
+            <span>
+            Gain (%)
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            Mean
+          </span>
+            <span>
+            {{.FormatFloat .Gain.GainPMean}}
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            Max
+          </span>
+            <span>
+            {{.FormatFloat .Gain.GainPMax}}
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            Min
+          </span>
+            <span>
+            {{.FormatFloat .Gain.GainPMin}}
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item statistic-color-info">
+          <div class="statistic-list-item">
+            <span>
+            Gain ($)
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            Mean
+          </span>
+            <span>
+            {{.FormatFloat .Gain.GainDMean}}
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            Max
+          </span>
+            <span>
+            {{.FormatFloat .Gain.GainDMax}}
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            Min
+          </span>
+            <span>
+            {{.FormatFloat .Gain.GainDMin}}
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item statistic-color-info">
+          <div class="statistic-list-item">
+            <span>
+            Days Held
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            Mean
+          </span>
+            <span>
+            {{.FormatFloat .Gain.DaysHeldMean}}
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            Max
+          </span>
+            <span>
+            {{.FormatFloat .Gain.DaysHeldMax}}
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            Min
+          </span>
+            <span>
+            {{.FormatFloat .Gain.DaysHeldMin}}
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item statistic-color-info">
+          <div class="statistic-list-item">
+            <span>
+            Price
+          </span>
+          </div>
+        </li>
+
+        <!---->
+        {{range $k, $v := .Gain.Price}}
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            {{formatGrpPrice $k}}
+          </span>
+            <span>
+            {{$v}}
+          </span>
+          </div>
+        </li>
+        {{end}}
+        <!---->
+
+        <li class="list-group-item statistic-color-info">
+          <div class="statistic-list-item">
+            <span>
+            Stage
+          </span>
+          </div>
+        </li>
+
+        <!---->
+        {{range $k, $v := .Gain.Stage}}
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            {{$k}}
+          </span>
+            <span>
+            {{$v}}
+          </span>
+          </div>
+        </li>
+        {{end}}
+        <!---->
+
+        <li class="list-group-item statistic-color-info">
+          <div class="statistic-list-item">
+            <span>
+            Buy Point
+          </span>
+          </div>
+        </li>
+
+        <!---->
+        {{range $k, $v := .Gain.BuyPoint}}
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            {{$k}}
+          </span>
+            <span>
+            {{$v}}
+          </span>
+          </div>
+        </li>
+        {{end}}
+        <!---->
+
+      </ul>
+
+      <ul class="list-group statistic-margin-top">
+        <li class="list-group-item statistic-color-danger">
+          Loss
+        </li>
+
+        <li class="list-group-item ">
+          <div class="statistic-list-item">
+            <span>
+            Total Trade
+          </span>
+            <span>
+            {{.Loss.TotalTrade}}
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item statistic-color-warning">
+          <div class="statistic-list-item">
+            <span>
+            Loss (%)
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            Mean
+          </span>
+            <span>
+            {{.FormatFloat .Loss.GainPMean}}
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            Max
+          </span>
+            <span>
+            {{.FormatFloat .Loss.GainPMax}}
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            Min
+          </span>
+            <span>
+            {{.FormatFloat .Loss.GainPMin}}
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item statistic-color-warning">
+          <div class="statistic-list-item">
+            <span>
+            Loss ($)
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            Mean
+          </span>
+            <span>
+            {{.FormatFloat .Loss.GainDMean}}
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            Max
+          </span>
+            <span>
+            {{.FormatFloat .Loss.GainDMax}}
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            Min
+          </span>
+            <span>
+            {{.FormatFloat .Loss.GainDMin}}
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item statistic-color-warning">
+          <div class="statistic-list-item">
+            <span>
+            Days Held
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            Mean
+          </span>
+            <span>
+            {{.FormatFloat .Loss.DaysHeldMean}}
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            Max
+          </span>
+            <span>
+            {{.FormatFloat .Loss.DaysHeldMax}}
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            Min
+          </span>
+            <span>
+            {{.FormatFloat .Loss.DaysHeldMin}}
+          </span>
+          </div>
+        </li>
+
+        <li class="list-group-item statistic-color-warning">
+          <div class="statistic-list-item">
+            <span>
+            Price
+          </span>
+          </div>
+        </li>
+
+        <!---->
+        {{range $k, $v := .Loss.Price}}
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            {{formatGrpPrice $k}}
+          </span>
+            <span>
+            {{$v}}
+          </span>
+          </div>
+        </li>
+        {{end}}
+        <!---->
+
+        <li class="list-group-item statistic-color-warning">
+          <div class="statistic-list-item">
+            <span>
+            Stage
+          </span>
+          </div>
+        </li>
+
+        <!---->
+        {{range $k, $v := .Loss.Stage}}
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            {{$k}}
+          </span>
+            <span>
+            {{$v}}
+          </span>
+          </div>
+        </li>
+        {{end}}
+        <!---->
+
+        <li class="list-group-item statistic-color-warning">
+          <div class="statistic-list-item">
+            <span>
+            Buy Point
+          </span>
+          </div>
+        </li>
+
+        <!---->
+        {{range $k, $v := .Loss.BuyPoint}}
+        <li class="list-group-item">
+          <div class="statistic-list-item">
+            <span>
+            {{$k}}
+          </span>
+            <span>
+            {{$v}}
+          </span>
+          </div>
+        </li>
+        {{end}}
+        <!---->
+
+      </ul>
+
+    </div>
+
+    <!--<div class="statistic-separator">-->
+    <!--</div>-->
+
+    <button type="button"
+      id="button-back"
+      class="btn btn-lg btn-dark statistic-margin-top statistic-button">
+      <i class="material-icons statistic-button-icons">home</i>
+      Back to Action
+    </button>
+
+  </div>
+
+  <!---->
+  {{template "ShareFooter"}}
+  <!---->
+
+  <!---->
+  {{template "CDNJS"}}
+  <!---->
+
+  <!---->
+  {{template "ShareJS"}}
+  <!---->
+
+  <!---->
+  {{template "StatisticJS"}}
+  <!---->
+
+  <!---->
+  {{template "StatisticChartsJS"}}
+  <!---->
+
+</body>
+
+</html>
+
+{{end}}

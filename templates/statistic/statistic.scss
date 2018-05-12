@@ -28,6 +28,14 @@
   @extend %my-share-input;
 }
 
+//.statistic-charts {
+//@extend %my-share-label;
+//width: 100%;
+//}
+//.statistic-item {
+//@extend %my-share-label;
+//width: 100%;
+//}
 .statistic-validate {
   @extend %my-share-validate;
 }

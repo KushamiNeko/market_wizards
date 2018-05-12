@@ -4,42 +4,102 @@
 
 <script>
 
-// Load the Visualization API and the corechart package.
-//google.charts.load('current', {
-//'packages': ['corechart']
-//});
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Set a callback to run when the Google Visualization API is loaded.
-//google.charts.setOnLoadCallback(drawChart);
+var width = $("#button-type").width();
 
-// Callback that creates and populates a data table,
-// instantiates the pie chart, passes in the data and
-// draws it.
-//function drawChart() {
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Create the data table.
-//var data = new google.visualization.DataTable();
-//data.addColumn('string', 'Topping');
-//data.addColumn('number', 'Slices');
-//data.addRows([
-//['Mushrooms', 3],
-//['Onions', 1],
-//['Olives', 1],
-//['Zucchini', 1],
-//['Pepperoni', 2]
-//]);
+google.charts.load("current", {
+  "packages": ["corechart", "bar"]
+});
 
-// Set chart options
-//var options = {
-//'title': 'How Much Pizza I Ate Last Night',
-//'width': 400,
-//'height': 300
-//};
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Instantiate and draw our chart, passing in some options.
-//var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-//chart.draw(data, options);
-//}
+google.charts.setOnLoadCallback(drawGainVsDaysHeld);
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function drawGainVsDaysHeld() {
+
+  "use strict";
+
+  var raw = $("#gain-daysheld").data("ref");
+
+  var body = JSON.parse(atob(raw));
+
+  var data = google.visualization.arrayToDataTable(body);
+
+  var options = {
+    width: width,
+    height: width / 2,
+    title: "Gain(%) vs DaysHeld",
+    hAxis: {
+      title: "DaysHeld",
+    },
+    vAxis: {
+      title: "Gain(%)",
+    },
+    legend: "none"
+  };
+
+  var chart = new google.visualization.ScatterChart(document.getElementById("gain-daysheld"));
+
+  chart.draw(data, options);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+google.charts.setOnLoadCallback(drawBuyPoints);
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function drawBuyPoints() {
+
+  "use strict";
+
+  var raw = $("#buy-points").data("ref");
+
+  var body = JSON.parse(atob(raw));
+
+  var data = google.visualization.arrayToDataTable(body);
+
+  var options = {
+    width: width,
+    height: width / 2,
+    //chart: {
+    //title: "Buy Points"
+    //}
+    //width: 900,
+    series: {
+      0: {
+        targetAxisIndex: 0
+      },
+      1: {
+        targetAxisIndex: 1
+      }
+    },
+    title: 'Nearby galaxies - distance on the left, brightness on the right',
+    vAxes: {
+      // Adds titles to each axis.
+      0: {
+        title: 'parsecs'
+      },
+      1: {
+        title: 'apparent magnitude'
+      }
+    }
+  };
+
+  var classicChart = new google.visualization.ColumnChart(document.getElementById("buy-points"));
+  classicChart.draw(data, options);
+
+  //var chart = new google.charts.Bar(document.getElementById("buy-points"));
+
+  //chart.draw(data, google.charts.Bar.convertOptions(options));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 </script>
