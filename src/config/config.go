@@ -39,8 +39,9 @@ const (
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const (
-	PriceInterval       = 50
-	PriceIntervalFormat = "%s ~ %s"
+	PriceInterval = 50
+	//PriceIntervalFormat = "%s ~ %s"
+	PriceIntervalFormat = "%v ~ %v"
 
 	StyleFormat = "color: %v; opacity: %v;"
 

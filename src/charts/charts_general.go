@@ -7,7 +7,6 @@ import (
 	"datautils"
 	"fmt"
 	"math"
-	"strconv"
 	"strings"
 	"transaction"
 )
@@ -116,10 +115,13 @@ func (c *ChartGeneral) getBuyPoints() error {
 	g = append(g, []interface{}{
 		"BuyPoint",
 		"Winner",
+		map[string]string{
+			"role": "style",
+		},
 		"Loser",
-		//map[string]string{
-		//"role": "style",
-		//},
+		map[string]string{
+			"role": "style",
+		},
 	})
 
 	dictBuyPointW := make(map[string]int)
@@ -182,8 +184,9 @@ outer:
 		g = append(g, []interface{}{
 			c,
 			vw,
+			fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
 			vl,
-			//fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
+			fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
 		})
 	}
 
@@ -199,58 +202,19 @@ outer:
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//func (c *ChartGeneral) getBuyPointsL() error {
-//g := make([][]interface{}, 0)
-
-//g = append(g, []interface{}{
-//"Element",
-//"Density",
-////map[string]string{
-////"role": "style",
-////},
-//})
-
-//dictBuyPoint := make(map[string]int)
-
-//for _, o := range c.losers {
-//buyPoint := strings.TrimSpace(o.BuyPoint)
-
-//if val, ok := dictBuyPoint[buyPoint]; ok {
-//dictBuyPoint[buyPoint] = val + 1
-//} else {
-//dictBuyPoint[buyPoint] = 1
-//}
-//}
-
-//for k, v := range dictBuyPoint {
-//g = append(g, []interface{}{
-//k,
-//v,
-//})
-//}
-
-//jg, err := datautils.JsonB64Encrypt(g)
-//if err != nil {
-//return err
-//}
-
-//c.BuyPointsL = jg
-
-//return nil
-//}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 func (c *ChartGeneral) getPriceInterval() error {
 	g := make([][]interface{}, 0)
 
 	g = append(g, []interface{}{
 		"Price Interval",
 		"Winner",
+		map[string]string{
+			"role": "style",
+		},
 		"Loser",
-		//map[string]string{
-		//"role": "style",
-		//},
+		map[string]string{
+			"role": "style",
+		},
 	})
 
 	dictPriceW := make(map[int]int)
@@ -286,10 +250,11 @@ func (c *ChartGeneral) getPriceInterval() error {
 		ck = append(ck, k)
 	}
 
+outer:
 	for k, _ := range dictPriceL {
 		for _, c := range ck {
 			if c == k {
-				continue
+				continue outer
 			}
 		}
 
@@ -301,10 +266,8 @@ func (c *ChartGeneral) getPriceInterval() error {
 		var vw int
 		var vl int
 
-		grps := strconv.FormatFloat(float64(k)*config.PriceInterval, 'f', -1, 64)
-		grpe := strconv.FormatFloat((float64(k+1))*config.PriceInterval, 'f', -1, 64)
-
-		grpk := fmt.Sprintf(config.PriceIntervalFormat, grps, grpe)
+		grp := math.Floor(float64(k) / config.PriceInterval)
+		grpk := fmt.Sprintf(config.PriceIntervalFormat, int(grp*config.PriceInterval), int((grp+1)*config.PriceInterval))
 
 		if v, ok := dictPriceW[k]; ok {
 			vw = v
@@ -321,40 +284,11 @@ func (c *ChartGeneral) getPriceInterval() error {
 		g = append(g, []interface{}{
 			grpk,
 			vw,
+			fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
 			vl,
-			//fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
+			fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
 		})
 	}
-
-	//for k, v := range dictPrice {
-	//g = append(g, []interface{}{
-	//k,
-	//v,
-	////fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
-	//})
-	//}
-
-	//dictPrice = make(map[int]int)
-
-	//for _, o := range c.losers {
-
-	//grp := math.Floor(o.Price / config.PriceInterval)
-	//grps := int(grp * config.PriceInterval)
-
-	//if val, ok := dictPrice[grps]; ok {
-	//dictPrice[grps] = val + 1
-	//} else {
-	//dictPrice[grps] = 1
-	//}
-	//}
-
-	//for k, v := range dictPrice {
-	//g = append(g, []interface{}{
-	//k,
-	//v,
-	//fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
-	//})
-	//}
 
 	jg, err := datautils.JsonB64Encrypt(g)
 	if err != nil {
@@ -365,41 +299,5 @@ func (c *ChartGeneral) getPriceInterval() error {
 
 	return nil
 }
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//func (c *ChartGeneral) getPriceIntervalL() error {
-//g := make([][]interface{}, 0)
-
-//dictPrice := make(map[int]int)
-
-//for _, o := range c.losers {
-
-//grp := math.Floor(o.Price / config.PriceInterval)
-//grps := int(grp * config.PriceInterval)
-
-//if val, ok := dictPrice[grps]; ok {
-//dictPrice[grps] = val + 1
-//} else {
-//dictPrice[grps] = 1
-//}
-//}
-
-//for k, v := range dictPrice {
-//g = append(g, []interface{}{
-//k,
-//v,
-//})
-//}
-
-//jg, err := datautils.JsonB64Encrypt(g)
-//if err != nil {
-//return err
-//}
-
-//c.PriceIntervalL = jg
-
-//return nil
-//}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -65,9 +65,45 @@ function drawBuyPoints() {
       slantedText: true,
     },
     title: "Buy Points",
+    legend: {
+      position: "none",
+    }
   };
 
   var classicChart = new google.visualization.ColumnChart(document.getElementById("buy-points"));
+  classicChart.draw(data, classicOptions);
+
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+google.charts.setOnLoadCallback(drawPriceInterval);
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function drawPriceInterval() {
+
+  "use strict";
+
+  var raw = $("#price-interval").data("ref");
+
+  var body = JSON.parse(atob(raw));
+
+  var data = google.visualization.arrayToDataTable(body);
+
+  var classicOptions = {
+    width: width,
+    height: width / 2,
+    hAxis: {
+      slantedText: true,
+    },
+    title: "Price Interval",
+    legend: {
+      position: "none",
+    }
+  };
+
+  var classicChart = new google.visualization.ColumnChart(document.getElementById("price-interval"));
   classicChart.draw(data, classicOptions);
 
 }
