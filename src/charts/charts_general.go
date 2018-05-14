@@ -7,6 +7,7 @@ import (
 	"datautils"
 	"fmt"
 	"math"
+	"strconv"
 	"strings"
 	"transaction"
 )
@@ -21,9 +22,8 @@ type ChartGeneral struct {
 
 	GainVsDaysHeld string
 	BuyPoints      string
-	//BuyPointsL     string
-	PriceInterval string
-	//PriceIntervalL string
+	PriceInterval  string
+	Stage          string
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,20 +49,15 @@ func ChartGeneralNew(filterOrders, winners, losers []*transaction.Order) (*Chart
 		return nil, err
 	}
 
-	//err = c.getBuyPointsL()
-	//if err != nil {
-	//return nil, err
-	//}
-
 	err = c.getPriceInterval()
 	if err != nil {
 		return nil, err
 	}
 
-	//err = c.getPriceIntervalL()
-	//if err != nil {
-	//return nil, err
-	//}
+	err = c.getStage()
+	if err != nil {
+		return nil, err
+	}
 
 	return c, nil
 }
@@ -296,6 +291,112 @@ outer:
 	}
 
 	c.PriceInterval = jg
+
+	return nil
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (c *ChartGeneral) getStage() error {
+
+	g := make([][]interface{}, 0)
+
+	g = append(g, []interface{}{
+		"Stage",
+		"Winner",
+		map[string]string{
+			"role": "style",
+		},
+		"Loser",
+		map[string]string{
+			"role": "style",
+		},
+	})
+
+	dictStageW := make(map[string]int)
+	dictStageL := make(map[string]int)
+
+	for _, o := range c.winners {
+		//g = append(g, []interface{}{
+		//o.DaysHeld,
+		//o.GainP,
+		//fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
+		//})
+
+		stages := strconv.FormatFloat(math.Floor(o.Stage), 'f', -1, 64)
+
+		if val, ok := dictStageW[stages]; ok {
+			dictStageW[stages] = val + 1
+		} else {
+			dictStageW[stages] = 1
+		}
+	}
+
+	for _, o := range c.losers {
+		//g = append(g, []interface{}{
+		//o.DaysHeld,
+		//o.GainP,
+		//fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
+		//})
+
+		stages := strconv.FormatFloat(math.Floor(o.Stage), 'f', -1, 64)
+
+		if val, ok := dictStageL[stages]; ok {
+			dictStageL[stages] = val + 1
+		} else {
+			dictStageL[stages] = 1
+		}
+	}
+
+	ck := make([]string, 0)
+
+	for k, _ := range dictStageW {
+		ck = append(ck, k)
+	}
+
+outer:
+	for k, _ := range dictStageL {
+		for _, kk := range ck {
+			if kk == k {
+				continue outer
+			}
+		}
+
+		ck = append(ck, k)
+	}
+
+	for _, c := range ck {
+
+		var vw int
+		var vl int
+
+		if v, ok := dictStageW[c]; ok {
+			vw = v
+		} else {
+			vw = 0
+		}
+
+		if v, ok := dictStageL[c]; ok {
+			vl = v
+		} else {
+			vl = 0
+		}
+
+		g = append(g, []interface{}{
+			c,
+			vw,
+			fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
+			vl,
+			fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
+		})
+	}
+
+	jg, err := datautils.JsonB64Encrypt(g)
+	if err != nil {
+		return err
+	}
+
+	c.Stage = jg
 
 	return nil
 }

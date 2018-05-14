@@ -109,3 +109,36 @@ function drawPriceInterval() {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
+
+google.charts.setOnLoadCallback(drawStage);
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function drawStage() {
+
+  "use strict";
+
+  var raw = $("#stage").data("ref");
+
+  var body = JSON.parse(atob(raw));
+
+  var data = google.visualization.arrayToDataTable(body);
+
+  var classicOptions = {
+    width: width,
+    height: width / 2,
+    hAxis: {
+      slantedText: true,
+    },
+    title: "Stage",
+    legend: {
+      position: "none",
+    }
+  };
+
+  var classicChart = new google.visualization.ColumnChart(document.getElementById("stage"));
+  classicChart.draw(data, classicOptions);
+
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
