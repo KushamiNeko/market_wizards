@@ -64,39 +64,18 @@ function drawBuyPoints() {
 
   var data = google.visualization.arrayToDataTable(body);
 
-  var options = {
+  var classicOptions = {
     width: width,
     height: width / 2,
-    //chart: {
-    //title: "Buy Points"
-    //}
-    //width: 900,
-    series: {
-      0: {
-        targetAxisIndex: 0
-      },
-      1: {
-        targetAxisIndex: 1
-      }
+    hAxis: {
+      slantedText: true,
     },
-    title: 'Nearby galaxies - distance on the left, brightness on the right',
-    vAxes: {
-      // Adds titles to each axis.
-      0: {
-        title: 'parsecs'
-      },
-      1: {
-        title: 'apparent magnitude'
-      }
-    }
+    title: "Buy Points",
   };
 
   var classicChart = new google.visualization.ColumnChart(document.getElementById("buy-points"));
-  classicChart.draw(data, options);
+  classicChart.draw(data, classicOptions);
 
-  //var chart = new google.charts.Bar(document.getElementById("buy-points"));
-
-  //chart.draw(data, google.charts.Bar.convertOptions(options));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
