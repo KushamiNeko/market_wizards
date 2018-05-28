@@ -32,10 +32,16 @@
   width: 100%;
 }
 
-//.statistic-item {
-//@extend %my-share-label;
-//width: 100%;
-//}
+.statistic-menu {
+  @extend %my-share-label;
+  width: 100%;
+}
+
+.statistic-item {
+  @extend %my-share-label;
+  width: 100%;
+}
+
 .statistic-validate {
   @extend %my-share-validate;
 }

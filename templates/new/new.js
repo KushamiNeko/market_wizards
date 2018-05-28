@@ -407,7 +407,6 @@ function dropdownClick(target) {
 dropdownClick("#dropdown-vcp-early-entry");
 dropdownClick("#dropdown-earnings-report");
 dropdownClick("#dropdown-gap");
-//dropdownClick("#dropdown-po-so");
 dropdownClick("#dropdown-tennis-ball");
 dropdownClick("#dropdown-pullback");
 dropdownClick("#dropdown-trend-line");
@@ -423,5 +422,6 @@ dropdownClick("#dropdown-consolidation");
 dropdownClick("#dropdown-21d-pullback");
 dropdownClick("#dropdown-50d-pullback");
 dropdownClick("#dropdown-new-high");
+dropdownClick("#dropdown-old-entry");
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////

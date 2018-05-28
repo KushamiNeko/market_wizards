@@ -8,17 +8,40 @@ buttonTypeUpdate();
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-$("#button-type").click(function() {
-  infoIndex += 1;
-  infoIndex = infoIndex % infoType.length;
+$("#dropdown-info-general").click(function() {
+  infoIndex = 0;
+  buttonTypeUpdate();
+});
 
+$("#dropdown-chart-general").click(function() {
+  infoIndex = 1;
+  buttonTypeUpdate();
+});
+
+$("#dropdown-chart-ibd").click(function() {
+  infoIndex = 2;
+  buttonTypeUpdate();
+});
+
+$("#dropdown-chart-marketsmith").click(function() {
+  infoIndex = 3;
   buttonTypeUpdate();
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//$("#button-type").click(function() {
+//infoIndex += 1;
+//infoIndex = infoIndex % infoType.length;
+
+//buttonTypeUpdate();
+//});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
 function buttonTypeUpdate() {
-  $("#button-type").html(infoType[infoIndex]);
+  //$("#button-type").html(infoType[infoIndex]);
+  $("#dropdownMenu").html(infoType[infoIndex]);
 
   for (var i = 0; i < infoType.length; i++) {
     if (i === infoIndex) {
