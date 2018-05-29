@@ -24,7 +24,7 @@ const (
 	//KeyLengthStrong  = 256
 	//KeyLengthMax     = 512
 
-	//NamespaceIBD         = "--IBD-Checkup--"
+	NamespaceIBD         = "--IBD-Checkup--"
 	NamespaceTransaction = "--Transaction--"
 
 	StorageNamespaceIBDs   = "IBDCheckups"

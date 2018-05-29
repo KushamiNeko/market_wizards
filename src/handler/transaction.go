@@ -3,7 +3,6 @@ package handler
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import (
-	"bytes"
 	"client"
 	"config"
 	"datautils"
@@ -77,7 +76,7 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ibd, err := ibd.Parse(ibdBuffer)
+	ibdCheckup, err := ibd.Parse(ibdBuffer)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("IBD Checkup: %s\n", err.Error()), http.StatusBadRequest)
 		return
@@ -215,6 +214,14 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	ibdJson, err := json.Marshal(ibdCheckup)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	ibdDatastore := ibd.IBDCheckupDatastoreNew(t.Date, t.Symbol, ibdJson)
+
 	tx, err := client.DatastoreClient.NewTransaction(client.Context)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -224,10 +231,22 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 	tkey := datastore.IncompleteKey(cookie, nil)
 	tkey.Namespace = config.NamespaceTransaction
 
+	iKey, _, err := ibdGetKey(cookie, ibdDatastore.ID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	//ckey := datastore.IncompleteKey(cookie, nil)
 	//ckey.Namespace = config.NamespaceIBD
 
 	_, err = tx.Put(tkey, t)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	_, err = tx.Put(iKey, ibdDatastore)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -262,22 +281,26 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 	//return
 	//}
 
-	ibdJson, err := json.Marshal(ibd)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	//////////////////////////////////////////////////////////////////////////
 
-	ibdJsonBuffer := bytes.NewBuffer(ibdJson)
+	//ibdJson, err := json.Marshal(ibd)
+	//if err != nil {
+	//http.Error(w, err.Error(), http.StatusInternalServerError)
+	//return
+	//}
+
+	//ibdJsonBuffer := bytes.NewBuffer(ibdJson)
 
 	cookiePath := url.PathEscape(cookie)
 
-	err = writeStorageObject(
-		filepath.Join(cookiePath, config.StorageNamespaceIBDs, fmt.Sprintf("%d_%s", t.Date, t.Symbol)), ibdJsonBuffer)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	//err = writeStorageObject(
+	//filepath.Join(cookiePath, config.StorageNamespaceIBDs, fmt.Sprintf("%d_%s", t.Date, t.Symbol)), ibdJsonBuffer)
+	//if err != nil {
+	//http.Error(w, err.Error(), http.StatusInternalServerError)
+	//return
+	//}
+
+	//////////////////////////////////////////////////////////////////////////
 
 	//if t.JsonChartD == "" {
 	//http.Error(w, err.Error(), http.StatusBadRequest)

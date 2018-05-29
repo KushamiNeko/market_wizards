@@ -3,10 +3,12 @@ package handler
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import (
+	"bytes"
 	"charts"
 	"client"
 	"config"
 	"headerutils"
+	"ibd"
 	"net/http"
 	"statistic"
 	"strconv"
@@ -99,6 +101,9 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 	winner := make([]*transaction.Order, 0)
 	losser := make([]*transaction.Order, 0)
 
+	winnerIBD := make([]*bytes.Buffer, 0)
+	losserIBD := make([]*bytes.Buffer, 0)
+
 	//chartGeneral := make([][]interface{}, 0)
 
 	//chartGeneral = append(chartGeneral, []interface{}{
@@ -107,6 +112,10 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 	//})
 
 	filterOrder := make([]*transaction.Order, 0)
+
+	//cookiePath := url.PathEscape(cookie)
+
+	//filepath.Join(cookiePath, config.StorageNamespaceIBDs, fmt.Sprintf("%d_%s", t.Date, t.Symbol)), ibdJsonBuffer)
 
 	for _, o := range orders {
 
@@ -118,11 +127,49 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 
 		filterOrder = append(filterOrder, o)
 
+		//object := filepath.Join(cookiePath, config.StorageNamespaceIBDs, fmt.Sprintf("%d_%s", o.Date, o.Symbol))
+
+		//buffer, err := readStorageObject(object)
+		//if err != nil {
+		//http.Error(w, err.Error(), http.StatusInternalServerError)
+		//return
+		//}
+
+		ikey, exist, err := ibdGetKey(cookie, ibd.IBDCheckupDatastoreGetID(o.Date, o.Symbol))
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		var ibdDatestore *ibd.IBDCheckupDatastore = nil
+
+		if exist {
+			ibdDatestore = new(ibd.IBDCheckupDatastore)
+
+			err = client.DatastoreClient.Get(client.Context, ikey, ibdDatestore)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+		}
+
 		//if o.GainP >= statistic.LoserGainThreshold {
 		if o.GainP >= threshold {
 			winner = append(winner, o)
+
+			if exist {
+				winnerIBD = append(winnerIBD, bytes.NewBuffer(ibdDatestore.Data))
+			}
+
+			//winnerIBD = append(winnerIBD, buffer)
 		} else {
 			losser = append(losser, o)
+
+			if exist {
+				losserIBD = append(losserIBD, bytes.NewBuffer(ibdDatestore.Data))
+			}
+
+			//losserIBD = append(losserIBD, buffer)
 		}
 
 		//chartGeneral = append(chartGeneral, []interface{}{
