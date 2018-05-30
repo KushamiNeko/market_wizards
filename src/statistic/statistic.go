@@ -40,6 +40,8 @@ type Statistic struct {
 
 	//Charts *Charts
 	ChartGeneral *charts.ChartGeneral
+	ChartIBD     *charts.ChartIBD
+	//ChartMarketSmith *charts.ChartGeneral
 
 	TotalTrade int
 

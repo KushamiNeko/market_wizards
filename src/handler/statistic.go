@@ -79,6 +79,8 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 
 	//}
 
+	// get Transaction Orders from datastore
+
 	q := datastore.NewQuery(cookie).Namespace(config.NamespaceTransaction)
 	q = q.Filter("Order =", "sell")
 	q = q.KeysOnly()
@@ -98,18 +100,30 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// get IBD Checkups from datastore
+
+	q = datastore.NewQuery(cookie).Namespace(config.NamespaceIBD)
+	q = q.KeysOnly()
+
+	keys, err = client.DatastoreClient.GetAll(client.Context, q, &entities)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	ibdDatastore := make([]*ibd.IBDCheckupDatastore, len(keys))
+
+	err = client.DatastoreClient.GetMulti(client.Context, keys, ibdDatastore)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	winner := make([]*transaction.Order, 0)
 	losser := make([]*transaction.Order, 0)
 
 	winnerIBD := make([]*bytes.Buffer, 0)
 	losserIBD := make([]*bytes.Buffer, 0)
-
-	//chartGeneral := make([][]interface{}, 0)
-
-	//chartGeneral = append(chartGeneral, []interface{}{
-	//"DaysHeld",
-	//"Gain(%)",
-	//})
 
 	filterOrder := make([]*transaction.Order, 0)
 
@@ -135,21 +149,30 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 		//return
 		//}
 
-		ikey, exist, err := ibdGetKey(cookie, ibd.IBDCheckupDatastoreGetID(o.Date, o.Symbol))
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
+		//ikey, exist, err := ibdGetKey(cookie, ibd.IBDCheckupDatastoreGetID(o.Date, o.Symbol))
+		//if err != nil {
+		//http.Error(w, err.Error(), http.StatusInternalServerError)
+		//return
+		//}
 
-		var ibdDatestore *ibd.IBDCheckupDatastore = nil
+		//var ibdDatestore *ibd.IBDCheckupDatastore = nil
 
-		if exist {
-			ibdDatestore = new(ibd.IBDCheckupDatastore)
+		//if exist {
+		//ibdDatestore = new(ibd.IBDCheckupDatastore)
 
-			err = client.DatastoreClient.Get(client.Context, ikey, ibdDatestore)
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-				return
+		//err = client.DatastoreClient.Get(client.Context, ikey, ibdDatestore)
+		//if err != nil {
+		//http.Error(w, err.Error(), http.StatusInternalServerError)
+		//return
+		//}
+		//}
+
+		var ibdCheckup *ibd.IBDCheckupDatastore = nil
+
+		for _, c := range ibdDatastore {
+			if c.ID == ibd.IBDCheckupDatastoreGetID(o.Date, o.Symbol) {
+				ibdCheckup = c
+				break
 			}
 		}
 
@@ -157,16 +180,16 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 		if o.GainP >= threshold {
 			winner = append(winner, o)
 
-			if exist {
-				winnerIBD = append(winnerIBD, bytes.NewBuffer(ibdDatestore.Data))
+			if ibdCheckup != nil {
+				winnerIBD = append(winnerIBD, bytes.NewBuffer(ibdCheckup.Data))
 			}
 
 			//winnerIBD = append(winnerIBD, buffer)
 		} else {
 			losser = append(losser, o)
 
-			if exist {
-				losserIBD = append(losserIBD, bytes.NewBuffer(ibdDatestore.Data))
+			if ibdCheckup != nil {
+				losserIBD = append(losserIBD, bytes.NewBuffer(ibdCheckup.Data))
 			}
 
 			//losserIBD = append(losserIBD, buffer)
@@ -177,6 +200,9 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 		//o.GainP,
 		//})
 	}
+
+	//fmt.Println(winnerIBD)
+	//fmt.Println(losserIBD)
 
 	stat, err := statistic.NewStatistic(winner, losser)
 	if err != nil {
@@ -198,6 +224,12 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 	stat.LossThresholdP = threshold
 
 	stat.ChartGeneral, err = charts.ChartGeneralNew(filterOrder, winner, losser)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	stat.ChartIBD, err = charts.ChartIBDNew(filterOrder, winnerIBD, losserIBD)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
