@@ -71,7 +71,6 @@ func ibdGetKey(kind, id string) (*datastore.Key, bool, error) {
 	}
 
 	if len(keys) > 1 {
-		//errorlog.ArchitectureLogicalError("More than one entity for each IBD ID\n")
 		return nil, false, fmt.Errorf("More than one entity for each IBD ID\n")
 	}
 
@@ -106,16 +105,6 @@ func writeTemplate(w http.ResponseWriter, template string, data interface{}, cb 
 
 	w.Write(minify.Minify(buffer.Bytes()))
 }
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//func storagePath(userID, objectID string) string {
-//return filepath.Join(url.PathEscape(userID), url.PathEscape(objectID))
-//}
-
-//func storagePath(userID, folder, objectID string) string {
-//return filepath.Join(userID, folder, objectID)
-//}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

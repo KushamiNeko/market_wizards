@@ -17,136 +17,136 @@ google.charts.load("current", {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-google.charts.setOnLoadCallback(drawGainVsDaysHeld);
+//google.charts.setOnLoadCallback(drawGainVsDaysHeld);
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function drawGainVsDaysHeld() {
+//function drawGainVsDaysHeld() {
 
-  "use strict";
+//"use strict";
 
-  var raw = $("#gain-daysheld").data("ref");
+//var raw = $("#gain-daysheld").data("ref");
 
-  var body = JSON.parse(atob(raw));
+//var body = JSON.parse(atob(raw));
 
-  var data = google.visualization.arrayToDataTable(body);
+//var data = google.visualization.arrayToDataTable(body);
 
-  var options = {
-    width: width,
-    height: width / 2,
-    title: "Gain(%) vs DaysHeld",
-    hAxis: {
-      title: "DaysHeld",
-    },
-    vAxis: {
-      title: "Gain(%)",
-    },
-    legend: "none"
-  };
+//var options = {
+//width: width,
+//height: width / 2,
+//title: "Gain(%) vs DaysHeld",
+//hAxis: {
+//title: "DaysHeld",
+//},
+//vAxis: {
+//title: "Gain(%)",
+//},
+//legend: "none"
+//};
 
-  var chart = new google.visualization.ScatterChart(document.getElementById("gain-daysheld"));
+//var chart = new google.visualization.ScatterChart(document.getElementById("gain-daysheld"));
 
-  chart.draw(data, options);
-}
+//chart.draw(data, options);
+//}
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-google.charts.setOnLoadCallback(drawBuyPoints);
+//google.charts.setOnLoadCallback(drawBuyPoints);
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function drawBuyPoints() {
+//function drawBuyPoints() {
 
-  "use strict";
+//"use strict";
 
-  var raw = $("#buy-points").data("ref");
+//var raw = $("#buy-points").data("ref");
 
-  var body = JSON.parse(atob(raw));
+//var body = JSON.parse(atob(raw));
 
-  var data = google.visualization.arrayToDataTable(body);
+//var data = google.visualization.arrayToDataTable(body);
 
-  var classicOptions = {
-    width: width,
-    height: width / 2,
-    hAxis: {
-      slantedText: true,
-    },
-    title: "Buy Points",
-    legend: {
-      position: "none",
-    }
-  };
+//var classicOptions = {
+//width: width,
+//height: width / 2,
+//hAxis: {
+//slantedText: true,
+//},
+//title: "Buy Points",
+//legend: {
+//position: "none",
+//}
+//};
 
-  var classicChart = new google.visualization.ColumnChart(document.getElementById("buy-points"));
-  classicChart.draw(data, classicOptions);
+//var classicChart = new google.visualization.ColumnChart(document.getElementById("buy-points"));
+//classicChart.draw(data, classicOptions);
 
-}
+//}
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-google.charts.setOnLoadCallback(drawPriceInterval);
+//google.charts.setOnLoadCallback(drawPriceInterval);
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function drawPriceInterval() {
+//function drawPriceInterval() {
 
-  "use strict";
+//"use strict";
 
-  var raw = $("#price-interval").data("ref");
+//var raw = $("#price-interval").data("ref");
 
-  var body = JSON.parse(atob(raw));
+//var body = JSON.parse(atob(raw));
 
-  var data = google.visualization.arrayToDataTable(body);
+//var data = google.visualization.arrayToDataTable(body);
 
-  var classicOptions = {
-    width: width,
-    height: width / 2,
-    hAxis: {
-      slantedText: true,
-    },
-    title: "Price Interval",
-    legend: {
-      position: "none",
-    }
-  };
+//var classicOptions = {
+//width: width,
+//height: width / 2,
+//hAxis: {
+//slantedText: true,
+//},
+//title: "Price Interval",
+//legend: {
+//position: "none",
+//}
+//};
 
-  var classicChart = new google.visualization.ColumnChart(document.getElementById("price-interval"));
-  classicChart.draw(data, classicOptions);
+//var classicChart = new google.visualization.ColumnChart(document.getElementById("price-interval"));
+//classicChart.draw(data, classicOptions);
 
-}
+//}
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-google.charts.setOnLoadCallback(drawStage);
+//google.charts.setOnLoadCallback(drawStage);
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function drawStage() {
+//function drawStage() {
 
-  "use strict";
+//"use strict";
 
-  var raw = $("#stage").data("ref");
+//var raw = $("#stage").data("ref");
 
-  var body = JSON.parse(atob(raw));
+//var body = JSON.parse(atob(raw));
 
-  var data = google.visualization.arrayToDataTable(body);
+//var data = google.visualization.arrayToDataTable(body);
 
-  var classicOptions = {
-    width: width,
-    height: width / 2,
-    hAxis: {
-      slantedText: true,
-    },
-    title: "Stage",
-    legend: {
-      position: "none",
-    }
-  };
+//var classicOptions = {
+//width: width,
+//height: width / 2,
+//hAxis: {
+//slantedText: true,
+//},
+//title: "Stage",
+//legend: {
+//position: "none",
+//}
+//};
 
-  var classicChart = new google.visualization.ColumnChart(document.getElementById("stage"));
-  classicChart.draw(data, classicOptions);
+//var classicChart = new google.visualization.ColumnChart(document.getElementById("stage"));
+//classicChart.draw(data, classicOptions);
 
-}
+//}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 

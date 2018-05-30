@@ -9,6 +9,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"ibd"
+	"math"
+	"sort"
 	"strconv"
 	"strings"
 	"transaction"
@@ -26,9 +28,7 @@ type ChartIBD struct {
 	ibdCheckupsL []*ibd.IBDCheckup
 
 	MarketCapitalization string
-	//BuyPoints      string
-	//PriceInterval  string
-	//Stage          string
+	UpDownVolumeRatio    string
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,28 +69,15 @@ func ChartIBDNew(filterOrders []*transaction.Order, winnersIBD, losersIBD []*byt
 		c.ibdCheckupsL[i] = checkup
 	}
 
-	//fmt.Println(c.ibdCheckupsW[0])
-	//fmt.Println(c.ibdCheckupsL[0])
-
 	err = c.getMarketCapitalization()
 	if err != nil {
 		return nil, err
 	}
 
-	//err = c.getBuyPoints()
-	//if err != nil {
-	//return nil, err
-	//}
-
-	//err = c.getPriceInterval()
-	//if err != nil {
-	//return nil, err
-	//}
-
-	//err = c.getStage()
-	//if err != nil {
-	//return nil, err
-	//}
+	err = c.getUpDownVolumeRatio()
+	if err != nil {
+		return nil, err
+	}
 
 	return c, nil
 }
@@ -167,8 +154,6 @@ func (c *ChartIBD) getMarketCapitalization() error {
 		for _, f := range o.Contents {
 			if f.Label == "Market Capitalization" {
 
-				//fmt.Println(f.Value)
-
 				v := strings.Replace(f.Value, "$", "", -1)
 				vi, err := strconv.ParseInt(v, 10, 64)
 				if err != nil {
@@ -191,8 +176,6 @@ func (c *ChartIBD) getMarketCapitalization() error {
 	for _, o := range c.ibdCheckupsL {
 		for _, f := range o.Contents {
 			if f.Label == "Market Capitalization" {
-
-				//fmt.Println(f.Value)
 
 				v := strings.Replace(f.Value, "$", "", -1)
 				vi, err := strconv.ParseInt(v, 10, 64)
@@ -249,103 +232,127 @@ func (c *ChartIBD) getMarketCapitalization() error {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//func (c *ChartGeneral) getPriceInterval() error {
-//g := make([][]interface{}, 0)
+func (c *ChartIBD) getUpDownVolumeRatio() error {
+	g := make([][]interface{}, 0)
 
-//g = append(g, []interface{}{
-//"Price Interval",
-//"Winner",
-//map[string]string{
-//"role": "style",
-//},
-//"Loser",
-//map[string]string{
-//"role": "style",
-//},
-//})
+	g = append(g, []interface{}{
+		"Up/Down Volume Ratio",
+		"Winner",
+		map[string]string{
+			"role": "style",
+		},
+		"Loser",
+		map[string]string{
+			"role": "style",
+		},
+	})
 
-//dictPriceW := make(map[int]int)
-//dictPriceL := make(map[int]int)
+	var interval float64 = 0.5
 
-//for _, o := range c.winners {
+	intervalDictW := make(map[float64]int)
+	intervalDictL := make(map[float64]int)
 
-//grp := math.Floor(o.Price / config.PriceInterval)
-//grps := int(grp * config.PriceInterval)
+	for _, o := range c.ibdCheckupsW {
+		for _, f := range o.Contents {
+			if f.Label == "Up/Down Volume" {
+				vf, err := strconv.ParseFloat(f.Value, 64)
+				if err != nil {
+					return err
+				}
 
-//if val, ok := dictPriceW[grps]; ok {
-//dictPriceW[grps] = val + 1
-//} else {
-//dictPriceW[grps] = 1
-//}
-//}
+				grp := math.Floor(vf / interval)
+				grps := float64(grp * interval)
 
-//for _, o := range c.losers {
+				if val, ok := intervalDictW[grps]; ok {
+					intervalDictW[grps] = val + 1
+				} else {
+					intervalDictW[grps] = 1
+				}
 
-//grp := math.Floor(o.Price / config.PriceInterval)
-//grps := int(grp * config.PriceInterval)
+				break
+			}
+		}
+	}
 
-//if val, ok := dictPriceL[grps]; ok {
-//dictPriceL[grps] = val + 1
-//} else {
-//dictPriceL[grps] = 1
-//}
-//}
+	for _, o := range c.ibdCheckupsL {
+		for _, f := range o.Contents {
+			if f.Label == "Up/Down Volume" {
+				vf, err := strconv.ParseFloat(f.Value, 64)
+				if err != nil {
+					return err
+				}
 
-//ck := make([]int, 0)
+				grp := math.Floor(vf / interval)
+				grps := float64(grp * interval)
 
-//for k, _ := range dictPriceW {
-//ck = append(ck, k)
-//}
+				if val, ok := intervalDictL[grps]; ok {
+					intervalDictL[grps] = val + 1
+				} else {
+					intervalDictL[grps] = 1
+				}
 
-//outer:
-//for k, _ := range dictPriceL {
-//for _, c := range ck {
-//if c == k {
-//continue outer
-//}
-//}
+				break
+			}
+		}
+	}
 
-//ck = append(ck, k)
-//}
+	ck := make([]float64, 0)
 
-//for _, k := range ck {
+	for k, _ := range intervalDictW {
+		ck = append(ck, k)
+	}
 
-//var vw int
-//var vl int
+outer:
+	for k, _ := range intervalDictL {
+		for _, c := range ck {
+			if c == k {
+				continue outer
+			}
+		}
 
-//grp := math.Floor(float64(k) / config.PriceInterval)
-//grpk := fmt.Sprintf(config.PriceIntervalFormat, int(grp*config.PriceInterval), int((grp+1)*config.PriceInterval))
+		ck = append(ck, k)
+	}
 
-//if v, ok := dictPriceW[k]; ok {
-//vw = v
-//} else {
-//vw = 0
-//}
+	sort.Float64s(ck)
 
-//if v, ok := dictPriceL[k]; ok {
-//vl = v
-//} else {
-//vl = 0
-//}
+	for _, k := range ck {
 
-//g = append(g, []interface{}{
-//grpk,
-//vw,
-//fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
-//vl,
-//fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
-//})
-//}
+		var vw int
+		var vl int
 
-//jg, err := datautils.JsonB64Encrypt(g)
-//if err != nil {
-//return err
-//}
+		grp := math.Floor(float64(k) / interval)
+		grpk := fmt.Sprintf(config.PriceIntervalFormat, grp*interval, (grp+1)*interval)
 
-//c.PriceInterval = jg
+		if v, ok := intervalDictW[k]; ok {
+			vw = v
+		} else {
+			vw = 0
+		}
 
-//return nil
-//}
+		if v, ok := intervalDictL[k]; ok {
+			vl = v
+		} else {
+			vl = 0
+		}
+
+		g = append(g, []interface{}{
+			grpk,
+			vw,
+			fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
+			vl,
+			fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
+		})
+	}
+
+	jg, err := datautils.JsonB64Encrypt(g)
+	if err != nil {
+		return err
+	}
+
+	c.UpDownVolumeRatio = jg
+
+	return nil
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -7,6 +7,7 @@ import (
 	"datautils"
 	"fmt"
 	"math"
+	"sort"
 	"strconv"
 	"strings"
 	"transaction"
@@ -159,6 +160,8 @@ outer:
 		ck = append(ck, k)
 	}
 
+	sort.Strings(ck)
+
 	for _, c := range ck {
 
 		var vw int
@@ -256,6 +259,8 @@ outer:
 		ck = append(ck, k)
 	}
 
+	sort.Ints(ck)
+
 	for _, k := range ck {
 
 		var vw int
@@ -316,14 +321,12 @@ func (c *ChartGeneral) getStage() error {
 	dictStageW := make(map[string]int)
 	dictStageL := make(map[string]int)
 
-	for _, o := range c.winners {
-		//g = append(g, []interface{}{
-		//o.DaysHeld,
-		//o.GainP,
-		//fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
-		//})
+	//dictStageW := make(map[float64]int)
+	//dictStageL := make(map[float64]int)
 
+	for _, o := range c.winners {
 		stages := strconv.FormatFloat(math.Floor(o.Stage), 'f', -1, 64)
+		//stages := o.Stage
 
 		if val, ok := dictStageW[stages]; ok {
 			dictStageW[stages] = val + 1
@@ -333,13 +336,8 @@ func (c *ChartGeneral) getStage() error {
 	}
 
 	for _, o := range c.losers {
-		//g = append(g, []interface{}{
-		//o.DaysHeld,
-		//o.GainP,
-		//fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
-		//})
-
 		stages := strconv.FormatFloat(math.Floor(o.Stage), 'f', -1, 64)
+		//stages := o.Stage
 
 		if val, ok := dictStageL[stages]; ok {
 			dictStageL[stages] = val + 1
@@ -349,6 +347,7 @@ func (c *ChartGeneral) getStage() error {
 	}
 
 	ck := make([]string, 0)
+	//ck := make([]float64, 0)
 
 	for k, _ := range dictStageW {
 		ck = append(ck, k)
@@ -364,6 +363,8 @@ outer:
 
 		ck = append(ck, k)
 	}
+
+	sort.Strings(ck)
 
 	for _, c := range ck {
 

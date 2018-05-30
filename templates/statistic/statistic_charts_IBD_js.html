@@ -6,84 +6,6 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//var width = $("#button-type").width();
-//var width = $("#dropdownMenu").width();
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//google.charts.load("current", {
-//"packages": ["corechart", "bar"]
-//});
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//google.charts.setOnLoadCallback(drawGainVsDaysHeld);
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//function drawGainVsDaysHeld() {
-
-//"use strict";
-
-//var raw = $("#gain-daysheld").data("ref");
-
-//var body = JSON.parse(atob(raw));
-
-//var data = google.visualization.arrayToDataTable(body);
-
-//var options = {
-//width: width,
-//height: width / 2,
-//title: "Gain(%) vs DaysHeld",
-//hAxis: {
-//title: "DaysHeld",
-//},
-//vAxis: {
-//title: "Gain(%)",
-//},
-//legend: "none"
-//};
-
-//var chart = new google.visualization.ScatterChart(document.getElementById("gain-daysheld"));
-
-//chart.draw(data, options);
-//}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//google.charts.setOnLoadCallback(drawBuyPoints);
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//function drawBuyPoints() {
-
-//"use strict";
-
-//var raw = $("#buy-points").data("ref");
-
-//var body = JSON.parse(atob(raw));
-
-//var data = google.visualization.arrayToDataTable(body);
-
-//var classicOptions = {
-//width: width,
-//height: width / 2,
-//hAxis: {
-//slantedText: true,
-//},
-//title: "Buy Points",
-//legend: {
-//position: "none",
-//}
-//};
-
-//var classicChart = new google.visualization.ColumnChart(document.getElementById("buy-points"));
-//classicChart.draw(data, classicOptions);
-
-//}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-
 google.charts.setOnLoadCallback(drawMarketCapitalization);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -117,36 +39,36 @@ function drawMarketCapitalization() {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//google.charts.setOnLoadCallback(drawStage);
+google.charts.setOnLoadCallback(drawUpDownVolumeRatio);
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//function drawStage() {
+function drawUpDownVolumeRatio() {
 
-//"use strict";
+  "use strict";
 
-//var raw = $("#stage").data("ref");
+  var raw = $("#up-down-volume-ratio").data("ref");
 
-//var body = JSON.parse(atob(raw));
+  var body = JSON.parse(atob(raw));
 
-//var data = google.visualization.arrayToDataTable(body);
+  var data = google.visualization.arrayToDataTable(body);
 
-//var classicOptions = {
-//width: width,
-//height: width / 2,
-//hAxis: {
-//slantedText: true,
-//},
-//title: "Stage",
-//legend: {
-//position: "none",
-//}
-//};
+  var classicOptions = {
+    width: width,
+    height: width / 2,
+    hAxis: {
+      slantedText: true,
+    },
+    title: "Up Down Volume Ratio",
+    legend: {
+      position: "none",
+    }
+  };
 
-//var classicChart = new google.visualization.ColumnChart(document.getElementById("stage"));
-//classicChart.draw(data, classicOptions);
+  var classicChart = new google.visualization.ColumnChart(document.getElementById("up-down-volume-ratio"));
+  classicChart.draw(data, classicOptions);
 
-//}
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -46,8 +46,6 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 
 	var threshold float64 = 1.0
 
-	//if len(r.URL.Query()) > 0 {
-
 	starts := r.URL.Query().Get("start")
 	ends := r.URL.Query().Get("end")
 
@@ -76,8 +74,6 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-
-	//}
 
 	// get Transaction Orders from datastore
 
@@ -127,10 +123,6 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 
 	filterOrder := make([]*transaction.Order, 0)
 
-	//cookiePath := url.PathEscape(cookie)
-
-	//filepath.Join(cookiePath, config.StorageNamespaceIBDs, fmt.Sprintf("%d_%s", t.Date, t.Symbol)), ibdJsonBuffer)
-
 	for _, o := range orders {
 
 		if start > 0 && end > 0 && end > start {
@@ -141,32 +133,6 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 
 		filterOrder = append(filterOrder, o)
 
-		//object := filepath.Join(cookiePath, config.StorageNamespaceIBDs, fmt.Sprintf("%d_%s", o.Date, o.Symbol))
-
-		//buffer, err := readStorageObject(object)
-		//if err != nil {
-		//http.Error(w, err.Error(), http.StatusInternalServerError)
-		//return
-		//}
-
-		//ikey, exist, err := ibdGetKey(cookie, ibd.IBDCheckupDatastoreGetID(o.Date, o.Symbol))
-		//if err != nil {
-		//http.Error(w, err.Error(), http.StatusInternalServerError)
-		//return
-		//}
-
-		//var ibdDatestore *ibd.IBDCheckupDatastore = nil
-
-		//if exist {
-		//ibdDatestore = new(ibd.IBDCheckupDatastore)
-
-		//err = client.DatastoreClient.Get(client.Context, ikey, ibdDatestore)
-		//if err != nil {
-		//http.Error(w, err.Error(), http.StatusInternalServerError)
-		//return
-		//}
-		//}
-
 		var ibdCheckup *ibd.IBDCheckupDatastore = nil
 
 		for _, c := range ibdDatastore {
@@ -176,7 +142,6 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		//if o.GainP >= statistic.LoserGainThreshold {
 		if o.GainP >= threshold {
 			winner = append(winner, o)
 
@@ -184,7 +149,6 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 				winnerIBD = append(winnerIBD, bytes.NewBuffer(ibdCheckup.Data))
 			}
 
-			//winnerIBD = append(winnerIBD, buffer)
 		} else {
 			losser = append(losser, o)
 
@@ -192,32 +156,14 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 				losserIBD = append(losserIBD, bytes.NewBuffer(ibdCheckup.Data))
 			}
 
-			//losserIBD = append(losserIBD, buffer)
 		}
-
-		//chartGeneral = append(chartGeneral, []interface{}{
-		//o.DaysHeld,
-		//o.GainP,
-		//})
 	}
-
-	//fmt.Println(winnerIBD)
-	//fmt.Println(losserIBD)
 
 	stat, err := statistic.NewStatistic(winner, losser)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	//jsonChartGeneral, err := datautils.JsonB64Encrypt(orders)
-	//if err != nil {
-	//http.Error(w, err.Error(), http.StatusInternalServerError)
-	//return
-	//}
-
-	//charts := new(statistic.Charts)
-	//charts.General = jsonChartGeneral
 
 	stat.StartDate = starts
 	stat.EndDate = ends
@@ -239,47 +185,3 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//func FormatGrpPrice(price int) string {
-
-//grp := math.Floor(float64(price) / statistic.GrpPrice)
-//grps := strconv.FormatFloat(grp*statistic.GrpPrice, 'f', -1, 64)
-//grpe := strconv.FormatFloat((grp+1)*statistic.GrpPrice, 'f', -1, 64)
-
-//grpk := fmt.Sprintf(statistic.GrpFormat, grps, grpe)
-
-//return grpk
-//}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//type Transaction struct {
-//ID   string
-//Etag string
-
-//Order string
-
-//Date int
-
-//Symbol string
-
-//Price float64
-
-//Share int
-
-//BuyPoint string
-
-//Revenue float64 `datastore:",omitempty" json:",omitempty"`
-
-//Cost float64 `datastore:",omitempty" json:",omitempty"`
-
-//GainD float64 `datastore:",omitempty" json:",omitempty"`
-
-//GainP float64 `datastore:",omitempty" json:",omitempty"`
-
-//DayHold int `datastore:",omitempty" json:",omitempty"`
-
-//Stage float64
-
-//Note string `datastore:",noindex"`
-//}
