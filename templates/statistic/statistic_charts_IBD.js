@@ -263,3 +263,104 @@ function drawAccDisRating() {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//google.charts.setOnLoadCallback(drawEPSSalesChgLastQtr);
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//function drawEPSSalesChgLastQtr() {
+
+//"use strict";
+
+//var raw = $("#eps-sales-chg-last-qtr").data("ref");
+
+//var body = JSON.parse(atob(raw));
+
+//var data = google.visualization.arrayToDataTable(body);
+
+//var options = {
+//width: width,
+//height: width / 2,
+//title: "Sales % Chg vs EPS % Chg (Last Qtr)",
+//hAxis: {
+//title: "EPS % Chg (Last Qtr)",
+//},
+//vAxis: {
+//title: "Sales % Chg (Last Qtr)",
+//},
+//legend: "none"
+//};
+
+//var chart = new google.visualization.ScatterChart(document.getElementById("eps-sales-chg-last-qtr"));
+
+//chart.draw(data, options);
+//}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+google.charts.setOnLoadCallback(drawEPSChgLastQtr);
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function drawEPSChgLastQtr() {
+
+  "use strict";
+
+  var raw = $("#eps-chg-last-qtr").data("ref");
+
+  var body = JSON.parse(atob(raw));
+
+  var data = google.visualization.arrayToDataTable(body);
+
+  var classicOptions = {
+    width: width,
+    height: width / 2,
+    hAxis: {
+      slantedText: true,
+    },
+    title: "EPS % Chg (Last Qtr)",
+    legend: {
+      position: "none",
+    }
+  };
+
+  var classicChart = new google.visualization.ColumnChart(document.getElementById("eps-chg-last-qtr"));
+  classicChart.draw(data, classicOptions);
+
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+google.charts.setOnLoadCallback(drawLast3QtrsAvgEPSGrowth);
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function drawLast3QtrsAvgEPSGrowth() {
+
+  "use strict";
+
+  var raw = $("#last-3-qtrs-avg-eps-growth").data("ref");
+
+  var body = JSON.parse(atob(raw));
+
+  var data = google.visualization.arrayToDataTable(body);
+
+  var classicOptions = {
+    width: width,
+    height: width / 2,
+    hAxis: {
+      slantedText: true,
+    },
+    title: "Last 3 Qtrs Avg EPS Growth",
+    legend: {
+      position: "none",
+    }
+  };
+
+
+  var classicChart = new google.visualization.ColumnChart(document.getElementById("last-3-qtrs-avg-eps-growth"));
+  classicChart.draw(data, classicOptions);
+
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
