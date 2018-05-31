@@ -36,10 +36,12 @@ type ChartIBD struct {
 	SMRRating            string
 	AccDisRating         string
 
-	EPSChgLastQtr string
-	//EPSChgLastQtr         string
+	EPSChgLastQtr         string
 	Last3QtrsAvgEPSGrowth string
-	//EPSSalesChgLastQtr string
+	QtrsofEPSAcceleration string
+
+	LastQtrEarningsSurprise string
+	ThreeYrEPSGrowthRate    string
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -120,11 +122,6 @@ func ChartIBDNew(filterOrders []*transaction.Order, winnersIBD, losersIBD []*byt
 		return nil, err
 	}
 
-	//err = c.getEPSSalesChgLastQtr()
-	//if err != nil {
-	//return nil, err
-	//}
-
 	err = c.getEPSChgLastQtr()
 	if err != nil {
 		return nil, err
@@ -135,103 +132,23 @@ func ChartIBDNew(filterOrders []*transaction.Order, winnersIBD, losersIBD []*byt
 		return nil, err
 	}
 
+	err = c.getQtrsofEPSAcceleration()
+	if err != nil {
+		return nil, err
+	}
+
+	err = c.getLastQtrEarningsSurprise()
+	if err != nil {
+		return nil, err
+	}
+
+	err = c.getThreeYrEPSGrowthRate()
+	if err != nil {
+		return nil, err
+	}
+
 	return c, nil
 }
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//func (c *ChartIBD) getEPSSalesChgLastQtr() error {
-
-//g := make([][]interface{}, 0)
-
-//g = append(g, []interface{}{
-//"EPS % Chg (Last Qtr)",
-//"Sales % Chg (Last Qtr)",
-//map[string]string{
-//"role": "style",
-//},
-//})
-
-//for _, o := range c.ibdCheckupsW {
-//var ve float64
-//var vs float64
-//var err error
-
-//for _, f := range o.Contents {
-
-//if f.Label == "EPS % Chg (Last Qtr)" {
-//ve, err = strconv.ParseFloat(strings.Replace(f.Value, "%", "", -1), 64)
-//if err != nil {
-//return err
-//}
-
-//continue
-//}
-
-//if f.Label == "Sales % Chg (Last Qtr)" {
-//vs, err = strconv.ParseFloat(strings.Replace(f.Value, "%", "", -1), 64)
-//if err != nil {
-//return err
-//}
-
-//continue
-//}
-
-//if ve != 0.0 && vs != 0.0 {
-//g = append(g, []interface{}{
-//ve,
-//vs,
-//fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
-//})
-
-//break
-//}
-//}
-//}
-
-//for _, o := range c.ibdCheckupsL {
-
-//var ve float64
-//var vs float64
-//var err error
-
-//for _, f := range o.Contents {
-
-//if f.Label == "EPS % Chg (Last Qtr)" {
-//ve, err = strconv.ParseFloat(strings.Replace(f.Value, "%", "", -1), 64)
-//if err != nil {
-//return err
-//}
-//}
-
-//if f.Label == "Sales % Chg (Last Qtr)" {
-//vs, err = strconv.ParseFloat(strings.Replace(f.Value, "%", "", -1), 64)
-//if err != nil {
-//return err
-//}
-//}
-
-//if ve != 0.0 && vs != 0.0 {
-//g = append(g, []interface{}{
-//ve,
-//vs,
-//fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
-//})
-
-//break
-//}
-//}
-//}
-
-//jg, err := datautils.JsonB64Encrypt(g)
-//if err != nil {
-//return err
-//}
-
-//c.EPSSalesChgLastQtr = jg
-
-//return nil
-//}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -344,123 +261,14 @@ func (c *ChartIBD) getMarketCapitalization() error {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func (c *ChartIBD) getUpDownVolumeRatio() error {
-	g := make([][]interface{}, 0)
 
-	g = append(g, []interface{}{
-		"Up/Down Volume Ratio",
-		"Winner",
-		map[string]string{
-			"role": "style",
-		},
-		"Loser",
-		map[string]string{
-			"role": "style",
-		},
-	})
-
+	var err error
 	var interval float64 = 0.5
 
-	intervalDictW := make(map[float64]int)
-	intervalDictL := make(map[float64]int)
-
-	for _, o := range c.ibdCheckupsW {
-		for _, f := range o.Contents {
-			if f.Label == "Up/Down Volume" {
-				vf, err := strconv.ParseFloat(f.Value, 64)
-				if err != nil {
-					return err
-				}
-
-				grp := math.Floor(vf / interval)
-				grps := float64(grp * interval)
-
-				if val, ok := intervalDictW[grps]; ok {
-					intervalDictW[grps] = val + 1
-				} else {
-					intervalDictW[grps] = 1
-				}
-
-				break
-			}
-		}
-	}
-
-	for _, o := range c.ibdCheckupsL {
-		for _, f := range o.Contents {
-			if f.Label == "Up/Down Volume" {
-				vf, err := strconv.ParseFloat(f.Value, 64)
-				if err != nil {
-					return err
-				}
-
-				grp := math.Floor(vf / interval)
-				grps := float64(grp * interval)
-
-				if val, ok := intervalDictL[grps]; ok {
-					intervalDictL[grps] = val + 1
-				} else {
-					intervalDictL[grps] = 1
-				}
-
-				break
-			}
-		}
-	}
-
-	ck := make([]float64, 0)
-
-	for k, _ := range intervalDictW {
-		ck = append(ck, k)
-	}
-
-outer:
-	for k, _ := range intervalDictL {
-		for _, c := range ck {
-			if c == k {
-				continue outer
-			}
-		}
-
-		ck = append(ck, k)
-	}
-
-	sort.Float64s(ck)
-
-	for _, k := range ck {
-
-		var vw int
-		var vl int
-
-		grp := math.Floor(float64(k) / interval)
-		grpk := fmt.Sprintf(config.IntervalFormat, grp*interval, (grp+1)*interval)
-
-		if v, ok := intervalDictW[k]; ok {
-			vw = v
-		} else {
-			vw = 0
-		}
-
-		if v, ok := intervalDictL[k]; ok {
-			vl = v
-		} else {
-			vl = 0
-		}
-
-		g = append(g, []interface{}{
-			grpk,
-			vw,
-			fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
-			vl,
-			fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
-		})
-	}
-
-	jg, err := datautils.JsonB64Encrypt(g)
+	c.UpDownVolumeRatio, err = columnChartFloatInterval("Up/Down Volume", interval, c.ibdCheckupsW, c.ibdCheckupsL)
 	if err != nil {
 		return err
 	}
-
-	c.UpDownVolumeRatio = jg
 
 	return nil
 }
@@ -468,123 +276,14 @@ outer:
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func (c *ChartIBD) getRSRating() error {
-	g := make([][]interface{}, 0)
 
-	g = append(g, []interface{}{
-		"RS Rating",
-		"Winner",
-		map[string]string{
-			"role": "style",
-		},
-		"Loser",
-		map[string]string{
-			"role": "style",
-		},
-	})
-
+	var err error
 	var interval float64 = 10.0
 
-	intervalDictW := make(map[int]int)
-	intervalDictL := make(map[int]int)
-
-	for _, o := range c.ibdCheckupsW {
-		for _, f := range o.Contents {
-			if f.Label == "RS Rating" {
-				vf, err := strconv.ParseFloat(f.Value, 64)
-				if err != nil {
-					return err
-				}
-
-				grp := math.Floor(vf / interval)
-				grps := int(grp * interval)
-
-				if val, ok := intervalDictW[grps]; ok {
-					intervalDictW[grps] = val + 1
-				} else {
-					intervalDictW[grps] = 1
-				}
-
-				break
-			}
-		}
-	}
-
-	for _, o := range c.ibdCheckupsL {
-		for _, f := range o.Contents {
-			if f.Label == "RS Rating" {
-				vf, err := strconv.ParseFloat(f.Value, 64)
-				if err != nil {
-					return err
-				}
-
-				grp := math.Floor(vf / interval)
-				grps := int(grp * interval)
-
-				if val, ok := intervalDictL[grps]; ok {
-					intervalDictL[grps] = val + 1
-				} else {
-					intervalDictL[grps] = 1
-				}
-
-				break
-			}
-		}
-	}
-
-	ck := make([]int, 0)
-
-	for k, _ := range intervalDictW {
-		ck = append(ck, k)
-	}
-
-outer:
-	for k, _ := range intervalDictL {
-		for _, c := range ck {
-			if c == k {
-				continue outer
-			}
-		}
-
-		ck = append(ck, k)
-	}
-
-	sort.Ints(ck)
-
-	for _, k := range ck {
-
-		var vw int
-		var vl int
-
-		grp := math.Floor(float64(k) / interval)
-		grpk := fmt.Sprintf(config.IntervalFormat, int(grp*interval), int((grp+1)*interval))
-
-		if v, ok := intervalDictW[k]; ok {
-			vw = v
-		} else {
-			vw = 0
-		}
-
-		if v, ok := intervalDictL[k]; ok {
-			vl = v
-		} else {
-			vl = 0
-		}
-
-		g = append(g, []interface{}{
-			grpk,
-			vw,
-			fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
-			vl,
-			fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
-		})
-	}
-
-	jg, err := datautils.JsonB64Encrypt(g)
+	c.RSRating, err = columnChartIntInterval("RS Rating", interval, c.ibdCheckupsW, c.ibdCheckupsL)
 	if err != nil {
 		return err
 	}
-
-	c.RSRating = jg
 
 	return nil
 }
@@ -592,123 +291,14 @@ outer:
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func (c *ChartIBD) getIndustryGroupRank() error {
-	g := make([][]interface{}, 0)
 
-	g = append(g, []interface{}{
-		"Industry Group Rank (1 to 197)",
-		"Winner",
-		map[string]string{
-			"role": "style",
-		},
-		"Loser",
-		map[string]string{
-			"role": "style",
-		},
-	})
-
+	var err error
 	var interval float64 = 20.0
 
-	intervalDictW := make(map[int]int)
-	intervalDictL := make(map[int]int)
-
-	for _, o := range c.ibdCheckupsW {
-		for _, f := range o.Contents {
-			if f.Label == "Industry Group Rank (1 to 197)" {
-				vf, err := strconv.ParseFloat(f.Value, 64)
-				if err != nil {
-					return err
-				}
-
-				grp := math.Floor(vf / interval)
-				grps := int(grp * interval)
-
-				if val, ok := intervalDictW[grps]; ok {
-					intervalDictW[grps] = val + 1
-				} else {
-					intervalDictW[grps] = 1
-				}
-
-				break
-			}
-		}
-	}
-
-	for _, o := range c.ibdCheckupsL {
-		for _, f := range o.Contents {
-			if f.Label == "Industry Group Rank (1 to 197)" {
-				vf, err := strconv.ParseFloat(f.Value, 64)
-				if err != nil {
-					return err
-				}
-
-				grp := math.Floor(vf / interval)
-				grps := int(grp * interval)
-
-				if val, ok := intervalDictL[grps]; ok {
-					intervalDictL[grps] = val + 1
-				} else {
-					intervalDictL[grps] = 1
-				}
-
-				break
-			}
-		}
-	}
-
-	ck := make([]int, 0)
-
-	for k, _ := range intervalDictW {
-		ck = append(ck, k)
-	}
-
-outer:
-	for k, _ := range intervalDictL {
-		for _, c := range ck {
-			if c == k {
-				continue outer
-			}
-		}
-
-		ck = append(ck, k)
-	}
-
-	sort.Ints(ck)
-
-	for _, k := range ck {
-
-		var vw int
-		var vl int
-
-		grp := math.Floor(float64(k) / interval)
-		grpk := fmt.Sprintf(config.IntervalFormat, int(grp*interval), int((grp+1)*interval))
-
-		if v, ok := intervalDictW[k]; ok {
-			vw = v
-		} else {
-			vw = 0
-		}
-
-		if v, ok := intervalDictL[k]; ok {
-			vl = v
-		} else {
-			vl = 0
-		}
-
-		g = append(g, []interface{}{
-			grpk,
-			vw,
-			fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
-			vl,
-			fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
-		})
-	}
-
-	jg, err := datautils.JsonB64Encrypt(g)
+	c.IndustryGroupRank, err = columnChartIntInterval("Industry Group Rank (1 to 197)", interval, c.ibdCheckupsW, c.ibdCheckupsL)
 	if err != nil {
 		return err
 	}
-
-	c.IndustryGroupRank = jg
 
 	return nil
 }
@@ -716,123 +306,14 @@ outer:
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func (c *ChartIBD) getCompositeRating() error {
-	g := make([][]interface{}, 0)
 
-	g = append(g, []interface{}{
-		"Composite Rating",
-		"Winner",
-		map[string]string{
-			"role": "style",
-		},
-		"Loser",
-		map[string]string{
-			"role": "style",
-		},
-	})
-
+	var err error
 	var interval float64 = 10.0
 
-	intervalDictW := make(map[int]int)
-	intervalDictL := make(map[int]int)
-
-	for _, o := range c.ibdCheckupsW {
-		for _, f := range o.Contents {
-			if f.Label == "Composite Rating" {
-				vf, err := strconv.ParseFloat(f.Value, 64)
-				if err != nil {
-					return err
-				}
-
-				grp := math.Floor(vf / interval)
-				grps := int(grp * interval)
-
-				if val, ok := intervalDictW[grps]; ok {
-					intervalDictW[grps] = val + 1
-				} else {
-					intervalDictW[grps] = 1
-				}
-
-				break
-			}
-		}
-	}
-
-	for _, o := range c.ibdCheckupsL {
-		for _, f := range o.Contents {
-			if f.Label == "Composite Rating" {
-				vf, err := strconv.ParseFloat(f.Value, 64)
-				if err != nil {
-					return err
-				}
-
-				grp := math.Floor(vf / interval)
-				grps := int(grp * interval)
-
-				if val, ok := intervalDictL[grps]; ok {
-					intervalDictL[grps] = val + 1
-				} else {
-					intervalDictL[grps] = 1
-				}
-
-				break
-			}
-		}
-	}
-
-	ck := make([]int, 0)
-
-	for k, _ := range intervalDictW {
-		ck = append(ck, k)
-	}
-
-outer:
-	for k, _ := range intervalDictL {
-		for _, c := range ck {
-			if c == k {
-				continue outer
-			}
-		}
-
-		ck = append(ck, k)
-	}
-
-	sort.Ints(ck)
-
-	for _, k := range ck {
-
-		var vw int
-		var vl int
-
-		grp := math.Floor(float64(k) / interval)
-		grpk := fmt.Sprintf(config.IntervalFormat, int(grp*interval), int((grp+1)*interval))
-
-		if v, ok := intervalDictW[k]; ok {
-			vw = v
-		} else {
-			vw = 0
-		}
-
-		if v, ok := intervalDictL[k]; ok {
-			vl = v
-		} else {
-			vl = 0
-		}
-
-		g = append(g, []interface{}{
-			grpk,
-			vw,
-			fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
-			vl,
-			fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
-		})
-	}
-
-	jg, err := datautils.JsonB64Encrypt(g)
+	c.CompositeRating, err = columnChartIntInterval("Composite Rating", interval, c.ibdCheckupsW, c.ibdCheckupsL)
 	if err != nil {
 		return err
 	}
-
-	c.CompositeRating = jg
 
 	return nil
 }
@@ -840,123 +321,14 @@ outer:
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func (c *ChartIBD) getEPSRating() error {
-	g := make([][]interface{}, 0)
 
-	g = append(g, []interface{}{
-		"EPS Rating",
-		"Winner",
-		map[string]string{
-			"role": "style",
-		},
-		"Loser",
-		map[string]string{
-			"role": "style",
-		},
-	})
-
+	var err error
 	var interval float64 = 10.0
 
-	intervalDictW := make(map[int]int)
-	intervalDictL := make(map[int]int)
-
-	for _, o := range c.ibdCheckupsW {
-		for _, f := range o.Contents {
-			if f.Label == "EPS Rating" {
-				vf, err := strconv.ParseFloat(f.Value, 64)
-				if err != nil {
-					return err
-				}
-
-				grp := math.Floor(vf / interval)
-				grps := int(grp * interval)
-
-				if val, ok := intervalDictW[grps]; ok {
-					intervalDictW[grps] = val + 1
-				} else {
-					intervalDictW[grps] = 1
-				}
-
-				break
-			}
-		}
-	}
-
-	for _, o := range c.ibdCheckupsL {
-		for _, f := range o.Contents {
-			if f.Label == "EPS Rating" {
-				vf, err := strconv.ParseFloat(f.Value, 64)
-				if err != nil {
-					return err
-				}
-
-				grp := math.Floor(vf / interval)
-				grps := int(grp * interval)
-
-				if val, ok := intervalDictL[grps]; ok {
-					intervalDictL[grps] = val + 1
-				} else {
-					intervalDictL[grps] = 1
-				}
-
-				break
-			}
-		}
-	}
-
-	ck := make([]int, 0)
-
-	for k, _ := range intervalDictW {
-		ck = append(ck, k)
-	}
-
-outer:
-	for k, _ := range intervalDictL {
-		for _, c := range ck {
-			if c == k {
-				continue outer
-			}
-		}
-
-		ck = append(ck, k)
-	}
-
-	sort.Ints(ck)
-
-	for _, k := range ck {
-
-		var vw int
-		var vl int
-
-		grp := math.Floor(float64(k) / interval)
-		grpk := fmt.Sprintf(config.IntervalFormat, int(grp*interval), int((grp+1)*interval))
-
-		if v, ok := intervalDictW[k]; ok {
-			vw = v
-		} else {
-			vw = 0
-		}
-
-		if v, ok := intervalDictL[k]; ok {
-			vl = v
-		} else {
-			vl = 0
-		}
-
-		g = append(g, []interface{}{
-			grpk,
-			vw,
-			fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
-			vl,
-			fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
-		})
-	}
-
-	jg, err := datautils.JsonB64Encrypt(g)
+	c.EPSRating, err = columnChartIntInterval("EPS Rating", interval, c.ibdCheckupsW, c.ibdCheckupsL)
 	if err != nil {
 		return err
 	}
-
-	c.EPSRating = jg
 
 	return nil
 }
@@ -964,106 +336,13 @@ outer:
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func (c *ChartIBD) getSMRRating() error {
-	g := make([][]interface{}, 0)
 
-	g = append(g, []interface{}{
-		"SMR Rating",
-		"Winner",
-		map[string]string{
-			"role": "style",
-		},
-		"Loser",
-		map[string]string{
-			"role": "style",
-		},
-	})
+	var err error
 
-	intervalDictW := make(map[string]int)
-	intervalDictL := make(map[string]int)
-
-	for _, o := range c.ibdCheckupsW {
-		for _, f := range o.Contents {
-			if f.Label == "SMR Rating" {
-				grps := f.Value
-
-				if val, ok := intervalDictW[grps]; ok {
-					intervalDictW[grps] = val + 1
-				} else {
-					intervalDictW[grps] = 1
-				}
-
-				break
-			}
-		}
-	}
-
-	for _, o := range c.ibdCheckupsL {
-		for _, f := range o.Contents {
-			if f.Label == "SMR Rating" {
-				grps := f.Value
-
-				if val, ok := intervalDictL[grps]; ok {
-					intervalDictL[grps] = val + 1
-				} else {
-					intervalDictL[grps] = 1
-				}
-
-				break
-			}
-		}
-	}
-
-	ck := make([]string, 0)
-
-	for k, _ := range intervalDictW {
-		ck = append(ck, k)
-	}
-
-outer:
-	for k, _ := range intervalDictL {
-		for _, c := range ck {
-			if c == k {
-				continue outer
-			}
-		}
-
-		ck = append(ck, k)
-	}
-
-	sort.Strings(ck)
-
-	for _, k := range ck {
-
-		var vw int
-		var vl int
-
-		if v, ok := intervalDictW[k]; ok {
-			vw = v
-		} else {
-			vw = 0
-		}
-
-		if v, ok := intervalDictL[k]; ok {
-			vl = v
-		} else {
-			vl = 0
-		}
-
-		g = append(g, []interface{}{
-			k,
-			vw,
-			fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
-			vl,
-			fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
-		})
-	}
-
-	jg, err := datautils.JsonB64Encrypt(g)
+	c.SMRRating, err = columnChartStringRank("SMR Rating", c.ibdCheckupsW, c.ibdCheckupsL)
 	if err != nil {
 		return err
 	}
-
-	c.SMRRating = jg
 
 	return nil
 }
@@ -1071,114 +350,13 @@ outer:
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func (c *ChartIBD) getAccDisRating() error {
-	g := make([][]interface{}, 0)
 
-	g = append(g, []interface{}{
-		"Accumulation/Distribution Rating",
-		"Winner",
-		map[string]string{
-			"role": "style",
-		},
-		"Loser",
-		map[string]string{
-			"role": "style",
-		},
-	})
+	var err error
 
-	intervalDictW := make(map[string]int)
-	intervalDictL := make(map[string]int)
-
-	for _, o := range c.ibdCheckupsW {
-		for _, f := range o.Contents {
-			if f.Label == "Accumulation/Distribution Rating" {
-
-				var grps string
-				grps = f.Value
-				grps = strings.Replace(grps, "+", "", -1)
-				grps = strings.Replace(grps, "-", "", -1)
-
-				if val, ok := intervalDictW[grps]; ok {
-					intervalDictW[grps] = val + 1
-				} else {
-					intervalDictW[grps] = 1
-				}
-
-				break
-			}
-		}
-	}
-
-	for _, o := range c.ibdCheckupsL {
-		for _, f := range o.Contents {
-			if f.Label == "Accumulation/Distribution Rating" {
-
-				var grps string
-				grps = f.Value
-				grps = strings.Replace(grps, "+", "", -1)
-				grps = strings.Replace(grps, "-", "", -1)
-
-				if val, ok := intervalDictL[grps]; ok {
-					intervalDictL[grps] = val + 1
-				} else {
-					intervalDictL[grps] = 1
-				}
-
-				break
-			}
-		}
-	}
-
-	ck := make([]string, 0)
-
-	for k, _ := range intervalDictW {
-		ck = append(ck, k)
-	}
-
-outer:
-	for k, _ := range intervalDictL {
-		for _, c := range ck {
-			if c == k {
-				continue outer
-			}
-		}
-
-		ck = append(ck, k)
-	}
-
-	sort.Strings(ck)
-
-	for _, k := range ck {
-
-		var vw int
-		var vl int
-
-		if v, ok := intervalDictW[k]; ok {
-			vw = v
-		} else {
-			vw = 0
-		}
-
-		if v, ok := intervalDictL[k]; ok {
-			vl = v
-		} else {
-			vl = 0
-		}
-
-		g = append(g, []interface{}{
-			k,
-			vw,
-			fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
-			vl,
-			fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
-		})
-	}
-
-	jg, err := datautils.JsonB64Encrypt(g)
+	c.AccDisRating, err = columnChartStringRank("Accumulation/Distribution Rating", c.ibdCheckupsW, c.ibdCheckupsL)
 	if err != nil {
 		return err
 	}
-
-	c.AccDisRating = jg
 
 	return nil
 }
@@ -1186,158 +364,13 @@ outer:
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func (c *ChartIBD) getEPSChgLastQtr() error {
-	g := make([][]interface{}, 0)
 
-	g = append(g, []interface{}{
-		"EPS % Chg (Last Qtr)",
-		"Winner",
-		map[string]string{
-			"role": "style",
-		},
-		"Loser",
-		map[string]string{
-			"role": "style",
-		},
-	})
+	var err error
 
-	var interval float64 = 5.0
-
-	intervalDictW := make(map[int]int)
-	intervalDictL := make(map[int]int)
-
-	for _, o := range c.ibdCheckupsW {
-		for _, f := range o.Contents {
-			if f.Label == "EPS % Chg (Last Qtr)" {
-
-				if f.Value == config.NullValue {
-					grps := math.MaxInt32
-
-					if val, ok := intervalDictW[grps]; ok {
-						intervalDictW[grps] = val + 1
-					} else {
-						intervalDictW[grps] = 1
-					}
-
-					break
-				} else {
-
-					vf, err := strconv.ParseFloat(strings.Replace(f.Value, "%", "", -1), 64)
-					if err != nil {
-						return err
-					}
-
-					grp := math.Floor(vf / interval)
-					grps := int(grp * interval)
-
-					if val, ok := intervalDictW[grps]; ok {
-						intervalDictW[grps] = val + 1
-					} else {
-						intervalDictW[grps] = 1
-					}
-
-					break
-				}
-			}
-		}
-	}
-
-	for _, o := range c.ibdCheckupsL {
-		for _, f := range o.Contents {
-			if f.Label == "EPS % Chg (Last Qtr)" {
-
-				if f.Value == config.NullValue {
-					grps := math.MaxInt32
-
-					if val, ok := intervalDictL[grps]; ok {
-						intervalDictL[grps] = val + 1
-					} else {
-						intervalDictL[grps] = 1
-					}
-
-					break
-				} else {
-
-					vf, err := strconv.ParseFloat(strings.Replace(f.Value, "%", "", -1), 64)
-					if err != nil {
-						return err
-					}
-
-					grp := math.Floor(vf / interval)
-					grps := int(grp * interval)
-
-					if val, ok := intervalDictL[grps]; ok {
-						intervalDictL[grps] = val + 1
-					} else {
-						intervalDictL[grps] = 1
-					}
-
-					break
-
-				}
-			}
-		}
-	}
-
-	ck := make([]int, 0)
-
-	for k, _ := range intervalDictW {
-		ck = append(ck, k)
-	}
-
-outer:
-	for k, _ := range intervalDictL {
-		for _, c := range ck {
-			if c == k {
-				continue outer
-			}
-		}
-
-		ck = append(ck, k)
-	}
-
-	sort.Ints(ck)
-
-	for _, k := range ck {
-
-		var vw int
-		var vl int
-
-		var grpk string
-
-		if k == math.MaxInt32 {
-			grpk = config.NullValue
-		} else {
-			grp := math.Floor(float64(k) / interval)
-			grpk = fmt.Sprintf(config.PercentIntervalFormat, int(grp*interval), int((grp+1)*interval))
-		}
-
-		if v, ok := intervalDictW[k]; ok {
-			vw = v
-		} else {
-			vw = 0
-		}
-
-		if v, ok := intervalDictL[k]; ok {
-			vl = v
-		} else {
-			vl = 0
-		}
-
-		g = append(g, []interface{}{
-			grpk,
-			vw,
-			fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
-			vl,
-			fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
-		})
-	}
-
-	jg, err := datautils.JsonB64Encrypt(g)
+	c.EPSChgLastQtr, err = columnChartPercent("EPS % Chg (Last Qtr)", c.ibdCheckupsW, c.ibdCheckupsL)
 	if err != nil {
 		return err
 	}
-
-	c.EPSChgLastQtr = jg
 
 	return nil
 }
@@ -1345,10 +378,25 @@ outer:
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func (c *ChartIBD) getLast3QtrsAvgEPSGrowth() error {
+
+	var err error
+
+	c.Last3QtrsAvgEPSGrowth, err = columnChartPercent("Last 3 Qtrs Avg EPS Growth", c.ibdCheckupsW, c.ibdCheckupsL)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (c *ChartIBD) getQtrsofEPSAcceleration() error {
+
 	g := make([][]interface{}, 0)
 
 	g = append(g, []interface{}{
-		"Last 3 Qtrs Avg EPS Growth",
+		"# Qtrs of EPS Acceleration",
 		"Winner",
 		map[string]string{
 			"role": "style",
@@ -1359,14 +407,12 @@ func (c *ChartIBD) getLast3QtrsAvgEPSGrowth() error {
 		},
 	})
 
-	var interval float64 = 5.0
-
 	intervalDictW := make(map[int]int)
 	intervalDictL := make(map[int]int)
 
 	for _, o := range c.ibdCheckupsW {
 		for _, f := range o.Contents {
-			if f.Label == "Last 3 Qtrs Avg EPS Growth" {
+			if f.Label == "# Qtrs of EPS Acceleration" {
 
 				if f.Value == config.NullValue {
 					grps := math.MaxInt32
@@ -1379,13 +425,12 @@ func (c *ChartIBD) getLast3QtrsAvgEPSGrowth() error {
 
 					break
 				} else {
-					vf, err := strconv.ParseFloat(strings.Replace(f.Value, "%", "", -1), 64)
+					vf, err := strconv.ParseFloat(f.Value, 64)
 					if err != nil {
 						return err
 					}
 
-					grp := math.Floor(vf / interval)
-					grps := int(grp * interval)
+					grps := int(vf)
 
 					if val, ok := intervalDictW[grps]; ok {
 						intervalDictW[grps] = val + 1
@@ -1402,7 +447,7 @@ func (c *ChartIBD) getLast3QtrsAvgEPSGrowth() error {
 
 	for _, o := range c.ibdCheckupsL {
 		for _, f := range o.Contents {
-			if f.Label == "Last 3 Qtrs Avg EPS Growth" {
+			if f.Label == "# Qtrs of EPS Acceleration" {
 
 				if f.Value == config.NullValue {
 					grps := math.MaxInt32
@@ -1416,13 +461,12 @@ func (c *ChartIBD) getLast3QtrsAvgEPSGrowth() error {
 					break
 				} else {
 
-					vf, err := strconv.ParseFloat(strings.Replace(f.Value, "%", "", -1), 64)
+					vf, err := strconv.ParseFloat(f.Value, 64)
 					if err != nil {
 						return err
 					}
 
-					grp := math.Floor(vf / interval)
-					grps := int(grp * interval)
+					grps := int(vf)
 
 					if val, ok := intervalDictL[grps]; ok {
 						intervalDictL[grps] = val + 1
@@ -1466,8 +510,7 @@ outer:
 		if k == math.MaxInt32 {
 			grpk = config.NullValue
 		} else {
-			grp := math.Floor(float64(k) / interval)
-			grpk = fmt.Sprintf(config.PercentIntervalFormat, int(grp*interval), int((grp+1)*interval))
+			grpk = fmt.Sprintf("%v", k)
 		}
 
 		if v, ok := intervalDictW[k]; ok {
@@ -1496,7 +539,35 @@ outer:
 		return err
 	}
 
-	c.Last3QtrsAvgEPSGrowth = jg
+	c.QtrsofEPSAcceleration = jg
+
+	return nil
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (c *ChartIBD) getLastQtrEarningsSurprise() error {
+
+	var err error
+
+	c.LastQtrEarningsSurprise, err = columnChartPercent("Last Quarter % Earnings Surprise", c.ibdCheckupsW, c.ibdCheckupsL)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (c *ChartIBD) getThreeYrEPSGrowthRate() error {
+
+	var err error
+
+	c.ThreeYrEPSGrowthRate, err = columnChartPercent("3 Yr EPS Growth Rate", c.ibdCheckupsW, c.ibdCheckupsL)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

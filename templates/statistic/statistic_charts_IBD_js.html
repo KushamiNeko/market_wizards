@@ -371,6 +371,108 @@ function drawLast3QtrsAvgEPSGrowth() {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
+google.charts.setOnLoadCallback(drawQtrsofEPSAcceleration);
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function drawQtrsofEPSAcceleration() {
+
+  "use strict";
+
+  var raw = $("#qtrs-of-eps-acceleration").data("ref");
+
+  var body = JSON.parse(atob(raw));
+
+  var data = google.visualization.arrayToDataTable(body);
+
+  var classicOptions = {
+    width: width,
+    height: width / 2,
+    hAxis: {
+      slantedText: true,
+    },
+    title: "# Qtrs of EPS Acceleration",
+    legend: {
+      position: "none",
+    }
+  };
+
+
+  var classicChart = new google.visualization.ColumnChart(document.getElementById("qtrs-of-eps-acceleration"));
+  classicChart.draw(data, classicOptions);
+
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+google.charts.setOnLoadCallback(drawLastQtrEarningsSurprise);
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function drawLastQtrEarningsSurprise() {
+
+  "use strict";
+
+  var raw = $("#last-qtr-earnings-surprise").data("ref");
+
+  var body = JSON.parse(atob(raw));
+
+  var data = google.visualization.arrayToDataTable(body);
+
+  var classicOptions = {
+    width: width,
+    height: width / 2,
+    hAxis: {
+      slantedText: true,
+    },
+    title: "Last Quarter % Earnings Surprise",
+    legend: {
+      position: "none",
+    }
+  };
+
+
+  var classicChart = new google.visualization.ColumnChart(document.getElementById("last-qtr-earnings-surprise"));
+  classicChart.draw(data, classicOptions);
+
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+google.charts.setOnLoadCallback(drawThreeYrEPSGrowthRate);
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function drawThreeYrEPSGrowthRate() {
+
+  "use strict";
+
+  var raw = $("#three-yr-eps-growth-rate").data("ref");
+
+  var body = JSON.parse(atob(raw));
+
+  var data = google.visualization.arrayToDataTable(body);
+
+  var classicOptions = {
+    width: width,
+    height: width / 2,
+    hAxis: {
+      slantedText: true,
+    },
+    title: "3 Yr EPS Growth Rate",
+    legend: {
+      position: "none",
+    }
+  };
+
+
+  var classicChart = new google.visualization.ColumnChart(document.getElementById("three-yr-eps-growth-rate"));
+  classicChart.draw(data, classicOptions);
+
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 </script>
 
