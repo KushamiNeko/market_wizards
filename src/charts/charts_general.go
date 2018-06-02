@@ -321,12 +321,8 @@ func (c *ChartGeneral) getStage() error {
 	dictStageW := make(map[string]int)
 	dictStageL := make(map[string]int)
 
-	//dictStageW := make(map[float64]int)
-	//dictStageL := make(map[float64]int)
-
 	for _, o := range c.winners {
 		stages := strconv.FormatFloat(math.Floor(o.Stage), 'f', -1, 64)
-		//stages := o.Stage
 
 		if val, ok := dictStageW[stages]; ok {
 			dictStageW[stages] = val + 1
@@ -337,7 +333,6 @@ func (c *ChartGeneral) getStage() error {
 
 	for _, o := range c.losers {
 		stages := strconv.FormatFloat(math.Floor(o.Stage), 'f', -1, 64)
-		//stages := o.Stage
 
 		if val, ok := dictStageL[stages]; ok {
 			dictStageL[stages] = val + 1
@@ -347,7 +342,6 @@ func (c *ChartGeneral) getStage() error {
 	}
 
 	ck := make([]string, 0)
-	//ck := make([]float64, 0)
 
 	for k, _ := range dictStageW {
 		ck = append(ck, k)

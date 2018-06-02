@@ -9,8 +9,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"ibd"
-	"math"
-	"sort"
 	"strconv"
 	"strings"
 	"transaction"
@@ -36,12 +34,30 @@ type ChartIBD struct {
 	SMRRating            string
 	AccDisRating         string
 
-	EPSChgLastQtr         string
-	Last3QtrsAvgEPSGrowth string
-	QtrsofEPSAcceleration string
-
+	EPSChgLastQtr           string
+	Last3QtrsAvgEPSGrowth   string
+	QtrsofEPSAcceleration   string
+	EPSEstChgCurrentQtr     string
+	EstimateRevisions       string
 	LastQtrEarningsSurprise string
-	ThreeYrEPSGrowthRate    string
+
+	ThreeYrEPSGrowthRate            string
+	ConsecutiveYrsofAnnualEPSGrowth string
+	EPSEstChgforCurrentYear         string
+
+	SalesChgLastQtr        string
+	ThreeYrSalesGrowthRate string
+
+	AnnualPreTaxMargin string
+	AnnualROE          string
+	DebtEquityRatio    string
+
+	Off52WeekHigh             string
+	Pricevs50DayMovingAverage string
+	FiftyDayAverageVolume     string
+
+	ChangeInFundsOwningStock      string
+	QtrsOfIncreasingFundOwnership string
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -137,12 +153,82 @@ func ChartIBDNew(filterOrders []*transaction.Order, winnersIBD, losersIBD []*byt
 		return nil, err
 	}
 
+	err = c.getEPSEstChgCurrentQtr()
+	if err != nil {
+		return nil, err
+	}
+
+	err = c.getEstimateRevisions()
+	if err != nil {
+		return nil, err
+	}
+
 	err = c.getLastQtrEarningsSurprise()
 	if err != nil {
 		return nil, err
 	}
 
 	err = c.getThreeYrEPSGrowthRate()
+	if err != nil {
+		return nil, err
+	}
+
+	err = c.getConsecutiveYrsofAnnualEPSGrowth()
+	if err != nil {
+		return nil, err
+	}
+
+	err = c.getEPSEstChgforCurrentYear()
+	if err != nil {
+		return nil, err
+	}
+
+	err = c.getSalesChgLastQtr()
+	if err != nil {
+		return nil, err
+	}
+
+	err = c.getThreeYrSalesGrowthRate()
+	if err != nil {
+		return nil, err
+	}
+
+	err = c.getAnnualPreTaxMargin()
+	if err != nil {
+		return nil, err
+	}
+
+	err = c.getAnnualROE()
+	if err != nil {
+		return nil, err
+	}
+
+	err = c.getDebtEquityRatio()
+	if err != nil {
+		return nil, err
+	}
+
+	err = c.getOff52WeekHigh()
+	if err != nil {
+		return nil, err
+	}
+
+	err = c.getPricevs50DayMovingAverage()
+	if err != nil {
+		return nil, err
+	}
+
+	err = c.getFiftyDayAverageVolume()
+	if err != nil {
+		return nil, err
+	}
+
+	err = c.getChangeInFundsOwningStock()
+	if err != nil {
+		return nil, err
+	}
+
+	err = c.getQtrsOfIncreasingFundOwnership()
 	if err != nil {
 		return nil, err
 	}
@@ -366,8 +452,9 @@ func (c *ChartIBD) getAccDisRating() error {
 func (c *ChartIBD) getEPSChgLastQtr() error {
 
 	var err error
+	var interval float64 = 20.0
 
-	c.EPSChgLastQtr, err = columnChartPercent("EPS % Chg (Last Qtr)", c.ibdCheckupsW, c.ibdCheckupsL)
+	c.EPSChgLastQtr, err = columnChartPercent("EPS % Chg (Last Qtr)", interval, c.ibdCheckupsW, c.ibdCheckupsL)
 	if err != nil {
 		return err
 	}
@@ -380,8 +467,9 @@ func (c *ChartIBD) getEPSChgLastQtr() error {
 func (c *ChartIBD) getLast3QtrsAvgEPSGrowth() error {
 
 	var err error
+	var interval float64 = 20.0
 
-	c.Last3QtrsAvgEPSGrowth, err = columnChartPercent("Last 3 Qtrs Avg EPS Growth", c.ibdCheckupsW, c.ibdCheckupsL)
+	c.Last3QtrsAvgEPSGrowth, err = columnChartPercent("Last 3 Qtrs Avg EPS Growth", interval, c.ibdCheckupsW, c.ibdCheckupsL)
 	if err != nil {
 		return err
 	}
@@ -393,153 +481,41 @@ func (c *ChartIBD) getLast3QtrsAvgEPSGrowth() error {
 
 func (c *ChartIBD) getQtrsofEPSAcceleration() error {
 
-	g := make([][]interface{}, 0)
+	var err error
 
-	g = append(g, []interface{}{
-		"# Qtrs of EPS Acceleration",
-		"Winner",
-		map[string]string{
-			"role": "style",
-		},
-		"Loser",
-		map[string]string{
-			"role": "style",
-		},
-	})
-
-	intervalDictW := make(map[int]int)
-	intervalDictL := make(map[int]int)
-
-	for _, o := range c.ibdCheckupsW {
-		for _, f := range o.Contents {
-			if f.Label == "# Qtrs of EPS Acceleration" {
-
-				if f.Value == config.NullValue {
-					grps := math.MaxInt32
-
-					if val, ok := intervalDictW[grps]; ok {
-						intervalDictW[grps] = val + 1
-					} else {
-						intervalDictW[grps] = 1
-					}
-
-					break
-				} else {
-					vf, err := strconv.ParseFloat(f.Value, 64)
-					if err != nil {
-						return err
-					}
-
-					grps := int(vf)
-
-					if val, ok := intervalDictW[grps]; ok {
-						intervalDictW[grps] = val + 1
-					} else {
-						intervalDictW[grps] = 1
-					}
-
-					break
-
-				}
-			}
-		}
-	}
-
-	for _, o := range c.ibdCheckupsL {
-		for _, f := range o.Contents {
-			if f.Label == "# Qtrs of EPS Acceleration" {
-
-				if f.Value == config.NullValue {
-					grps := math.MaxInt32
-
-					if val, ok := intervalDictL[grps]; ok {
-						intervalDictL[grps] = val + 1
-					} else {
-						intervalDictL[grps] = 1
-					}
-
-					break
-				} else {
-
-					vf, err := strconv.ParseFloat(f.Value, 64)
-					if err != nil {
-						return err
-					}
-
-					grps := int(vf)
-
-					if val, ok := intervalDictL[grps]; ok {
-						intervalDictL[grps] = val + 1
-					} else {
-						intervalDictL[grps] = 1
-					}
-
-					break
-
-				}
-			}
-		}
-	}
-
-	ck := make([]int, 0)
-
-	for k, _ := range intervalDictW {
-		ck = append(ck, k)
-	}
-
-outer:
-	for k, _ := range intervalDictL {
-		for _, c := range ck {
-			if c == k {
-				continue outer
-			}
-		}
-
-		ck = append(ck, k)
-	}
-
-	sort.Ints(ck)
-
-	for _, k := range ck {
-
-		var vw int
-		var vl int
-
-		var grpk string
-
-		if k == math.MaxInt32 {
-			grpk = config.NullValue
-		} else {
-			grpk = fmt.Sprintf("%v", k)
-		}
-
-		if v, ok := intervalDictW[k]; ok {
-			vw = v
-		} else {
-			vw = 0
-		}
-
-		if v, ok := intervalDictL[k]; ok {
-			vl = v
-		} else {
-			vl = 0
-		}
-
-		g = append(g, []interface{}{
-			grpk,
-			vw,
-			fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
-			vl,
-			fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
-		})
-	}
-
-	jg, err := datautils.JsonB64Encrypt(g)
+	c.QtrsofEPSAcceleration, err = columnChartString("# Qtrs of EPS Acceleration", c.ibdCheckupsW, c.ibdCheckupsL)
 	if err != nil {
 		return err
 	}
 
-	c.QtrsofEPSAcceleration = jg
+	return nil
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (c *ChartIBD) getEPSEstChgCurrentQtr() error {
+
+	var err error
+	var interval float64 = 20.0
+
+	c.EPSEstChgCurrentQtr, err = columnChartPercent("EPS Est % Chg (Current Qtr)", interval, c.ibdCheckupsW, c.ibdCheckupsL)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (c *ChartIBD) getEstimateRevisions() error {
+
+	var err error
+
+	c.EstimateRevisions, err = columnChartString("Estimate Revisions", c.ibdCheckupsW, c.ibdCheckupsL)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -549,8 +525,9 @@ outer:
 func (c *ChartIBD) getLastQtrEarningsSurprise() error {
 
 	var err error
+	var interval float64 = 20.0
 
-	c.LastQtrEarningsSurprise, err = columnChartPercent("Last Quarter % Earnings Surprise", c.ibdCheckupsW, c.ibdCheckupsL)
+	c.LastQtrEarningsSurprise, err = columnChartPercent("Last Quarter % Earnings Surprise", interval, c.ibdCheckupsW, c.ibdCheckupsL)
 	if err != nil {
 		return err
 	}
@@ -563,8 +540,9 @@ func (c *ChartIBD) getLastQtrEarningsSurprise() error {
 func (c *ChartIBD) getThreeYrEPSGrowthRate() error {
 
 	var err error
+	var interval float64 = 20.0
 
-	c.ThreeYrEPSGrowthRate, err = columnChartPercent("3 Yr EPS Growth Rate", c.ibdCheckupsW, c.ibdCheckupsL)
+	c.ThreeYrEPSGrowthRate, err = columnChartPercent("3 Yr EPS Growth Rate", interval, c.ibdCheckupsW, c.ibdCheckupsL)
 	if err != nil {
 		return err
 	}
@@ -573,3 +551,181 @@ func (c *ChartIBD) getThreeYrEPSGrowthRate() error {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (c *ChartIBD) getConsecutiveYrsofAnnualEPSGrowth() error {
+
+	var err error
+
+	c.ConsecutiveYrsofAnnualEPSGrowth, err = columnChartString("Consecutive Yrs of Annual EPS Growth", c.ibdCheckupsW, c.ibdCheckupsL)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (c *ChartIBD) getEPSEstChgforCurrentYear() error {
+
+	var err error
+	var interval float64 = 20.0
+
+	c.EPSEstChgforCurrentYear, err = columnChartPercent("EPS Est % Chg for Current Year", interval, c.ibdCheckupsW, c.ibdCheckupsL)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (c *ChartIBD) getSalesChgLastQtr() error {
+
+	var err error
+	var interval float64 = 20.0
+
+	c.SalesChgLastQtr, err = columnChartPercent("Sales % Chg (Last Qtr)", interval, c.ibdCheckupsW, c.ibdCheckupsL)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (c *ChartIBD) getThreeYrSalesGrowthRate() error {
+
+	var err error
+	var interval float64 = 20.0
+
+	c.ThreeYrSalesGrowthRate, err = columnChartPercent("3 Yr Sales Growth Rate", interval, c.ibdCheckupsW, c.ibdCheckupsL)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (c *ChartIBD) getAnnualPreTaxMargin() error {
+
+	var err error
+	var interval float64 = 5.0
+
+	c.AnnualPreTaxMargin, err = columnChartPercent("Annual Pre-Tax Margin", interval, c.ibdCheckupsW, c.ibdCheckupsL)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (c *ChartIBD) getAnnualROE() error {
+
+	var err error
+	var interval float64 = 5.0
+
+	c.AnnualROE, err = columnChartPercent("Annual ROE", interval, c.ibdCheckupsW, c.ibdCheckupsL)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (c *ChartIBD) getDebtEquityRatio() error {
+
+	var err error
+	var interval float64 = 5.0
+
+	c.DebtEquityRatio, err = columnChartPercent("Debt/Equity Ratio", interval, c.ibdCheckupsW, c.ibdCheckupsL)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (c *ChartIBD) getOff52WeekHigh() error {
+
+	var err error
+	var interval float64 = 5.0
+
+	c.Off52WeekHigh, err = columnChartPercent("% Off 52 Week High", interval, c.ibdCheckupsW, c.ibdCheckupsL)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (c *ChartIBD) getPricevs50DayMovingAverage() error {
+
+	var err error
+	var interval float64 = 5.0
+
+	c.Pricevs50DayMovingAverage, err = columnChartPercent("Price vs. 50-Day Moving Average", interval, c.ibdCheckupsW, c.ibdCheckupsL)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (c *ChartIBD) getFiftyDayAverageVolume() error {
+
+	var err error
+	var interval float64 = 200000.0
+
+	c.FiftyDayAverageVolume, err = columnChartIntInterval("50-Day Average Volume", interval, c.ibdCheckupsW, c.ibdCheckupsL)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (c *ChartIBD) getChangeInFundsOwningStock() error {
+
+	var err error
+	var interval float64 = 5.0
+
+	c.ChangeInFundsOwningStock, err = columnChartPercent("% Change In Funds Owning Stock", interval, c.ibdCheckupsW, c.ibdCheckupsL)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (c *ChartIBD) getQtrsOfIncreasingFundOwnership() error {
+
+	var err error
+
+	c.QtrsOfIncreasingFundOwnership, err = columnChartString("Qtrs Of Increasing Fund Ownership", c.ibdCheckupsW, c.ibdCheckupsL)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
