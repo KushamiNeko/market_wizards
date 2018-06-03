@@ -10,29 +10,6 @@ import (
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//func cleanup(results [][]string, row, col int) string {
-//return strings.TrimSpace(results[row][col])
-//}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//func cleanupL(results [][]string, label string, col int) string {
-//for _, r := range results {
-//match := reLabel.FindStringSubmatch(r[0])
-//if len(match) == 0 {
-//return ""
-//}
-
-//if strings.Compare(strings.TrimSpace(match[1]), strings.TrimSpace(label)) == 0 {
-//return strings.TrimSpace(r[col])
-//}
-//}
-
-//return ""
-//}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 func parseArrow(str string) (string, error) {
 	if strings.Compare(str, none) == 0 {
 		return "", fmt.Errorf("The value is N/A\n")
@@ -154,45 +131,5 @@ func parseMktCap(str string) (int64, error) {
 
 	return cap, nil
 }
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//func parseInt(str string) (int, error) {
-//if strings.Compare(str, none) == 0 {
-////return math.MaxInt32, nil
-//return 0, fmt.Errorf("The value is N/A\n")
-//}
-
-////if !reInt.MatchString(str) {
-////return 0, fmt.Errorf("No Match for Int\n")
-////}
-
-//i, err := strconv.ParseInt(str, 10, 32)
-//if err != nil {
-//return 0, err
-//}
-
-//return int(i), nil
-//}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//func parseFloat(str string) (float64, error) {
-//if strings.Compare(str, none) == 0 {
-////return math.MaxFloat64, nil
-//return 0.0, fmt.Errorf("The value is N/A\n")
-//}
-
-////if !reFloat.MatchString(str) {
-////return 0, fmt.Errorf("No Match for Float\n")
-////}
-
-//f, err := strconv.ParseFloat(str, 64)
-//if err != nil {
-//return 0.0, err
-//}
-
-//return f, nil
-//}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -3,11 +3,16 @@ package main
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import (
+	"bytes"
 	"client"
 	"config"
+	"fmt"
 	"handler"
+	"io"
 	"log"
+	"marketsmith"
 	"net/http"
+	"os"
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -18,7 +23,8 @@ const (
 	//TestFile = "test_files/ibd_checkup_extr.html"
 	//TestFile = "test_files/ibd_checkup_ebsb.html"
 
-	TestFile = "test_files/ibd_checkup_cacc.html"
+	//TestFile = "test_files/ibd_checkup_cacc.html"
+	TestFile = "test_files/20180601_MarketSmith_SCVL_W.html"
 	//TestFile = "test_files/ibd_checkup_sgh.html"
 )
 
@@ -36,40 +42,24 @@ func init() {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func main() {
-	//buffer := new(bytes.Buffer)
+	buffer := new(bytes.Buffer)
 
-	//f, err := os.Open(TestFile)
-	//if err != nil {
-	//panic(err)
-	//}
-	//defer f.Close()
+	f, err := os.Open(TestFile)
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
 
-	//io.Copy(buffer, f)
+	io.Copy(buffer, f)
 
-	////ibd, err := ibd.Parse(buffer)
-	//_, err = ibd.Parse(buffer)
-	//if err != nil {
-	//panic(err)
-	//}
+	m, err := marketsmith.Parse(buffer)
+	if err != nil {
+		panic(err)
+	}
 
-	////fmt.Println(ibd)
+	fmt.Println(m)
 
-	////jsonBuffer, err := json.Marshal(ibd)
-	////if err != nil {
-	////panic(err)
-	////}
-
-	////storageBucket := client.StorageClient.Bucket(config.ProjectBucket)
-
-	////storageObject := storageBucket.Object("test")
-
-	////storageWriter := storageObject.NewWriter(client.Context)
-
-	////storageWriter.Write(jsonBuffer)
-
-	////storageWriter.Close()
-
-	//return
+	return
 
 	mux := http.NewServeMux()
 
