@@ -3,16 +3,11 @@ package main
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import (
-	"bytes"
 	"client"
 	"config"
-	"fmt"
 	"handler"
-	"io"
 	"log"
-	"marketsmith"
 	"net/http"
-	"os"
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -42,24 +37,24 @@ func init() {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func main() {
-	buffer := new(bytes.Buffer)
+	//buffer := new(bytes.Buffer)
 
-	f, err := os.Open(TestFile)
-	if err != nil {
-		panic(err)
-	}
-	defer f.Close()
+	//f, err := os.Open(TestFile)
+	//if err != nil {
+	//panic(err)
+	//}
+	//defer f.Close()
 
-	io.Copy(buffer, f)
+	//io.Copy(buffer, f)
 
-	m, err := marketsmith.Parse(buffer)
-	if err != nil {
-		panic(err)
-	}
+	//m, err := marketsmith.Parse(buffer)
+	//if err != nil {
+	//panic(err)
+	//}
 
-	fmt.Println(m)
+	//fmt.Println(m)
 
-	return
+	//return
 
 	mux := http.NewServeMux()
 

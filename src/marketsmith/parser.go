@@ -4,6 +4,7 @@ package marketsmith
 
 import (
 	"bytes"
+	"config"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -26,6 +27,8 @@ const (
 	regexQuarterlyResults = `\s*<div\s*class="cell"\s*style="display:\s*block;">\s*<div\s*class="quarterly\s*\w*">[^<]+<span\s*[^>]+>\s*[^<]*\s*<\/span>\s*<\/div>\s*<div\s*class="eps\s*\w*">\s*([^<]+)\s*<\/div>\s*<div\s*class="epsChg\s*\w*">([^<]+)<\/div>\s*<div\s*class="sales\s*\w*">([^<]+)<\/div>\s*<div\s*class="salesChg\s*\w*">([^<]+)<\/div>\s*<\/div>\s*`
 
 	regexFunds = `\s*<div\s*class="cell">\s*<span>[^<]+<\/span>\s*<span>(\d+)<\/span>\s*<\/div>\s*`
+
+	regexPercent = `\s*[+]*([-0-9.]+)%\s*`
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -40,6 +43,8 @@ var (
 	reQuarterlyResults *regexp.Regexp
 
 	reFunds *regexp.Regexp
+
+	rePercent *regexp.Regexp
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -54,6 +59,8 @@ func init() {
 	reQuarterlyResults = regexp.MustCompile(regexQuarterlyResults)
 
 	reFunds = regexp.MustCompile(regexFunds)
+
+	rePercent = regexp.MustCompile(regexPercent)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -135,10 +142,10 @@ func Parse(buffer *bytes.Buffer) (*MarketSmith, error) {
 		return nil, err
 	}
 
-	err = m.getFunds(buffer)
-	if err != nil {
-		return nil, err
-	}
+	_ = m.getFunds(buffer)
+	//if err != nil {
+	//return nil, err
+	//}
 
 	return m, nil
 }
@@ -257,28 +264,110 @@ func (m *MarketSmith) getFloatShare(buffer *bytes.Buffer) error {
 
 func (m *MarketSmith) getQuarterlyResults(buffer *bytes.Buffer) error {
 
-	//var results [][]string
+	var results [][]string
 
-	//results = reQuarterlyResults.FindAllStringSubmatch(buffer.String(), -1)
-	//if results == nil {
-	//return fmt.Errorf("no matching found in the Quarterly Results\n")
-	//}
+	results = reQuarterlyResults.FindAllStringSubmatch(buffer.String(), -1)
+	if results == nil {
+		return fmt.Errorf("no matching found in the Quarterly Results\n")
+	}
 
-	//for _, r := range results {
-	//fmt.Println(len(r))
-	//if len(r) < 5 {
-	//return fmt.Errorf("problems occur while parsing Quarterly Results \n")
-	//}
+	epss := make([]string, len(results))
+	saless := make([]string, len(results))
 
-	//fmt.Println(r)
+	for i, r := range results {
+		if len(r) < 5 {
+			return fmt.Errorf("problems occur while parsing Quarterly Results \n")
+		}
 
-	////m.Contents = append(m.Contents, field{
-	////"Industry Group",
-	////r[1],
-	////})
-	//}
+		epss[i] = strings.TrimSpace(r[2])
+		saless[i] = strings.TrimSpace(r[4])
+	}
+
+	m.Contents = append(m.Contents, field{
+		"Avg EPS % Chg 2Q",
+		m.getQuarterlyMean(epss[5:]),
+	})
+
+	m.Contents = append(m.Contents, field{
+		"Avg EPS % Chg 3Q",
+		m.getQuarterlyMean(epss[4:]),
+	})
+
+	m.Contents = append(m.Contents, field{
+		"Avg EPS % Chg 4Q",
+		m.getQuarterlyMean(epss[3:]),
+	})
+
+	m.Contents = append(m.Contents, field{
+		"Avg EPS % Chg 5Q",
+		m.getQuarterlyMean(epss[2:]),
+	})
+
+	m.Contents = append(m.Contents, field{
+		"Avg EPS % Chg 6Q",
+		m.getQuarterlyMean(epss[1:]),
+	})
+
+	m.Contents = append(m.Contents, field{
+		"Avg Sales % Chg 2Q",
+		m.getQuarterlyMean(saless[5:]),
+	})
+
+	m.Contents = append(m.Contents, field{
+		"Avg Sales % Chg 3Q",
+		m.getQuarterlyMean(saless[4:]),
+	})
+
+	m.Contents = append(m.Contents, field{
+		"Avg Sales % Chg 4Q",
+		m.getQuarterlyMean(saless[3:]),
+	})
+
+	m.Contents = append(m.Contents, field{
+		"Avg Sales % Chg 5Q",
+		m.getQuarterlyMean(saless[2:]),
+	})
+
+	m.Contents = append(m.Contents, field{
+		"Avg Sales % Chg 6Q",
+		m.getQuarterlyMean(saless[1:]),
+	})
 
 	return nil
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (m *MarketSmith) getQuarterlyMean(list []string) string {
+
+	eps := make([]float64, len(list))
+
+	for i, e := range list {
+		if strings.Compare(e, config.NullValue) == 0 {
+			return config.NullValue
+		}
+
+		es := rePercent.FindStringSubmatch(e)
+		if es == nil {
+			fmt.Println("Problesm in Regex for Parsing Quarterly Earnings")
+			return config.NullValue
+		}
+
+		f, err := strconv.ParseFloat(es[1], 64)
+		if err != nil {
+			fmt.Println("Problesm in Regex for Parsing Quarterly Earnings")
+			return config.NullValue
+		}
+
+		eps[i] = f
+	}
+
+	mean, err := stats.Mean(eps)
+	if err != nil {
+		return err.Error()
+	}
+
+	return fmt.Sprintf("%v", mean)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -313,7 +402,7 @@ func (m *MarketSmith) getFunds(buffer *bytes.Buffer) error {
 	}
 
 	m.Contents = append(m.Contents, field{
-		"# Funds Holding in Average for 4 Quarters",
+		"Avg Funds Holding 4Q",
 		fmt.Sprintf("%v", int(mean)),
 	})
 
