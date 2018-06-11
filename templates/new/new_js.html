@@ -10,6 +10,10 @@ $(".invalid-feedback").hide();
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
+buyOrderInputs();
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
 $("#button-back").click(function() {
   if (isProcessing()) {
     return;
@@ -48,14 +52,12 @@ $("#button-type").click(function() {
 
   if (buy) {
     $("#button-type").html("BUY");
-    $("#input-revenue").attr("disabled", "disabled");
-    $("#input-daysheld").attr("disabled", "disabled");
+    buyOrderInputs();
   }
 
   if (sell) {
     $("#button-type").html("SELL");
-    $("#input-revenue").removeAttr("disabled");
-    $("#input-daysheld").removeAttr("disabled");
+    sellOrderInputs();
   }
 
   $("#input-revenue").val("");
@@ -63,9 +65,37 @@ $("#button-type").click(function() {
   $("#input-gainD").val("");
   $("#input-gainP").val("");
   $("#input-daysheld").val("");
+  $("#input-date-of-purchase").val("");
+
+  $("#dropdownMenu").html("Buy Point");
+  buyPoint = "";
 
   calculate();
 });
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function buyOrderInputs() {
+  $("#input-revenue").attr("disabled", "disabled");
+  $("#input-daysheld").attr("disabled", "disabled");
+  $("#input-date-of-purchase").attr("disabled", "disabled");
+
+  $("#input-cost").removeAttr("disabled");
+  $("#input-stage").removeAttr("disabled");
+  $("#dropdownMenu").removeAttr("disabled");
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function sellOrderInputs() {
+  $("#input-cost").attr("disabled", "disabled");
+  $("#input-stage").attr("disabled", "disabled");
+  $("#dropdownMenu").attr("disabled", "disabled");
+
+  $("#input-revenue").removeAttr("disabled");
+  $("#input-daysheld").removeAttr("disabled");
+  $("#input-date-of-purchase").removeAttr("disabled");
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -118,22 +148,81 @@ function inputPasteCleanup(jqueryID) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $("#input-price").change(function() {
-  //$("#input-price").val($("#input-price").val().replace(",", ""));
   inputPasteCleanup("#input-price");
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $("#input-revenue").change(function() {
-  //$("#input-revenue").val($("#input-revenue").val().replace(",", ""));
   inputPasteCleanup("#input-revenue");
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $("#input-cost").change(function() {
-  //$("#input-cost").val($("#input-cost").val().replace(",", ""));
   inputPasteCleanup("#input-cost");
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$("#input-share").change(function() {
+  $("#input-date-of-purchase").trigger("change");
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$("#input-date-of-purchase").change(function() {
+  $(".invalid-feedback").hide();
+
+  if ($("#input-date-of-purchase").val().match(/^\d{8}$/) === null) {
+    $("#validate-date-of-purchase").show();
+    $("#input-date-of-purchase").focus();
+    return;
+  }
+
+  var dateOfPurchase = $("#input-date-of-purchase").val();
+
+  if ($("#input-symbol").val().toUpperCase().match(/^[A-Z]+$/) === null) {
+    $("#validate-symbol").show();
+    $("#input-symbol").focus();
+    return;
+  }
+
+  var symbol = $("#input-symbol").val().toUpperCase();
+
+  if ($("#input-share").val().match(/^\d+$/) === null) {
+    $("#validate-share").show();
+    $("#input-share").focus();
+    return;
+  }
+
+  var shareSold = parseInt($("#input-share").val());
+
+  $.ajax({
+    type: "Get",
+    url: "/transaction?DateOfPurchase=" + encodeURIComponent(dateOfPurchase) + "&Symbol=" + encodeURIComponent(symbol),
+    success: function(data) {
+
+      var cost = parseFloat(data.Cost);
+
+      var sharePurchase = parseFloat(data.Share);
+
+      var newCost = cost * (shareSold / sharePurchase);
+
+      newCost = newCost.toFixed(decimal);
+
+      $("#input-cost").val(newCost);
+
+      $("#input-stage").val(data.Stage);
+      $("#dropdownMenu").html(data.BuyPoint);
+
+      calculate();
+    },
+    error: function(xhr, err) {
+      $("#new-modal-body").val(xhr.responseText);
+      $("#new-modal").modal("show");
+    },
+  });
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -177,6 +266,14 @@ $("#button-create").click(function() {
 
   var share = parseInt($("#input-share").val());
 
+  if (buy) {
+    if (buyPoint === "") {
+      $("#validate-buypoint").show();
+      $("#dropdownMenu").focus();
+      return;
+    }
+  }
+
   if (sell) {
     if ($("#input-revenue").val().match(/^[0-9.]+$/) === null) {
       $("#validate-revenue").show();
@@ -185,13 +282,17 @@ $("#button-create").click(function() {
     }
   }
 
-  if (buyPoint === "") {
-    $("#validate-buypoint").show();
-    $("#dropdownMenu").focus();
-    return;
+  var revenue = parseFloat($("#input-revenue").val());
+
+  if (sell) {
+    if ($("#input-date-of-purchase").val().match(/^\d{8}$/) === null) {
+      $("#validate-date-of-purchase").show();
+      $("#input-date-of-purchase").focus();
+      return;
+    }
   }
 
-  var revenue = parseFloat($("#input-revenue").val());
+  var dateOfPurchase = parseInt($("#input-date-of-purchase").val());
 
   if ($("#input-cost").val().match(/^[0-9.]+$/) === null) {
     $("#validate-cost").show();
@@ -231,107 +332,115 @@ $("#button-create").click(function() {
     return;
   }
 
-  if ($("#img-d").attr("src") === undefined) {
-    $("#validate-img-d").show();
-    $("#button-img-d").focus();
-    return;
-  }
+  //if ($("#img-d").attr("src") === undefined) {
+  //$("#validate-img-d").show();
+  //$("#button-img-d").focus();
+  //return;
+  //}
 
-  if ($("#img-w").attr("src") === undefined) {
-    $("#validate-img-w").show();
-    $("#button-img-w").focus();
-    return;
-  }
+  //if ($("#img-w").attr("src") === undefined) {
+  //$("#validate-img-w").show();
+  //$("#button-img-w").focus();
+  //return;
+  //}
 
-  if ($("#img-ndqc-d").attr("src") === undefined) {
-    $("#validate-img-ndqc-d").show();
-    $("#button-img-ndqc-d").focus();
-    return;
-  }
+  //if ($("#img-ndqc-d").attr("src") === undefined) {
+  //$("#validate-img-ndqc-d").show();
+  //$("#button-img-ndqc-d").focus();
+  //return;
+  //}
 
-  if ($("#img-ndqc-w").attr("src") === undefined) {
-    $("#validate-img-ndqc-w").show();
-    $("#button-img-ndqc-w").focus();
-    return;
-  }
+  //if ($("#img-ndqc-w").attr("src") === undefined) {
+  //$("#validate-img-ndqc-w").show();
+  //$("#button-img-ndqc-w").focus();
+  //return;
+  //}
 
-  if ($("#img-sp5-d").attr("src") === undefined) {
-    $("#validate-img-sp5-d").show();
-    $("#button-img-sp5-d").focus();
-    return;
-  }
+  //if ($("#img-sp5-d").attr("src") === undefined) {
+  //$("#validate-img-sp5-d").show();
+  //$("#button-img-sp5-d").focus();
+  //return;
+  //}
 
-  if ($("#img-sp5-w").attr("src") === undefined) {
-    $("#validate-img-sp5-w").show();
-    $("#button-img-sp5-w").focus();
-    return;
-  }
+  //if ($("#img-sp5-w").attr("src") === undefined) {
+  //$("#validate-img-sp5-w").show();
+  //$("#button-img-sp5-w").focus();
+  //return;
+  //}
 
-  if ($("#img-nyc-d").attr("src") === undefined) {
-    $("#validate-img-nyc-d").show();
-    $("#button-img-nyc-d").focus();
-    return;
-  }
+  //if ($("#img-nyc-d").attr("src") === undefined) {
+  //$("#validate-img-nyc-d").show();
+  //$("#button-img-nyc-d").focus();
+  //return;
+  //}
 
-  if ($("#img-nyc-w").attr("src") === undefined) {
-    $("#validate-img-nyc-w").show();
-    $("#button-img-nyc-w").focus();
-    return;
-  }
+  //if ($("#img-nyc-w").attr("src") === undefined) {
+  //$("#validate-img-nyc-w").show();
+  //$("#button-img-nyc-w").focus();
+  //return;
+  //}
 
-  if ($("#img-djia-d").attr("src") === undefined) {
-    $("#validate-img-djia-d").show();
-    $("#button-img-djia-d").focus();
-    return;
-  }
+  //if ($("#img-djia-d").attr("src") === undefined) {
+  //$("#validate-img-djia-d").show();
+  //$("#button-img-djia-d").focus();
+  //return;
+  //}
 
-  if ($("#img-djia-w").attr("src") === undefined) {
-    $("#validate-img-djia-w").show();
-    $("#button-img-djia-w").focus();
-    return;
-  }
+  //if ($("#img-djia-w").attr("src") === undefined) {
+  //$("#validate-img-djia-w").show();
+  //$("#button-img-djia-w").focus();
+  //return;
+  //}
 
-  if ($("#img-rus-d").attr("src") === undefined) {
-    $("#validate-img-rus-d").show();
-    $("#button-img-rus-d").focus();
-    return;
-  }
+  //if ($("#img-rus-d").attr("src") === undefined) {
+  //$("#validate-img-rus-d").show();
+  //$("#button-img-rus-d").focus();
+  //return;
+  //}
 
-  if ($("#img-rus-w").attr("src") === undefined) {
-    $("#validate-img-rus-w").show();
-    $("#button-img-rus-w").focus();
-    return;
-  }
+  //if ($("#img-rus-w").attr("src") === undefined) {
+  //$("#validate-img-rus-w").show();
+  //$("#button-img-rus-w").focus();
+  //return;
+  //}
 
   inProcess("#button-create");
 
   var data = {
+    //"Order": "buy",
     "Date": date,
     "Symbol": symbol,
-    "Order": "buy",
     "Price": price,
     "Share": share,
-    "BuyPoint": buyPoint,
-    "Cost": cost,
-    "Stage": stage,
+    //"BuyPoint": buyPoint,
+    //"Cost": cost,
+    //"Stage": stage,
     "Note": note,
-    "JsonChartD": $("#img-d").attr("src"),
-    "JsonChartW": $("#img-w").attr("src"),
-    "JsonChartNDQCD": $("#img-ndqc-d").attr("src"),
-    "JsonChartNDQCW": $("#img-ndqc-w").attr("src"),
-    "JsonChartSP5D": $("#img-sp5-d").attr("src"),
-    "JsonChartSP5W": $("#img-sp5-w").attr("src"),
-    "JsonChartNYCD": $("#img-nyc-d").attr("src"),
-    "JsonChartNYCW": $("#img-nyc-w").attr("src"),
-    "JsonChartDJIAD": $("#img-djia-d").attr("src"),
-    "JsonChartDJIAW": $("#img-djia-w").attr("src"),
-    "JsonChartRUSD": $("#img-rus-d").attr("src"),
-    "JsonChartRUSW": $("#img-rus-w").attr("src"),
     "JsonIBDCheckup": $("#img-ibd").attr("src"),
+    //"JsonChartD": $("#img-d").attr("src"),
+    //"JsonChartW": $("#img-w").attr("src"),
+    //"JsonChartNDQCD": $("#img-ndqc-d").attr("src"),
+    //"JsonChartNDQCW": $("#img-ndqc-w").attr("src"),
+    //"JsonChartSP5D": $("#img-sp5-d").attr("src"),
+    //"JsonChartSP5W": $("#img-sp5-w").attr("src"),
+    //"JsonChartNYCD": $("#img-nyc-d").attr("src"),
+    //"JsonChartNYCW": $("#img-nyc-w").attr("src"),
+    //"JsonChartDJIAD": $("#img-djia-d").attr("src"),
+    //"JsonChartDJIAW": $("#img-djia-w").attr("src"),
+    //"JsonChartRUSD": $("#img-rus-d").attr("src"),
+    //"JsonChartRUSW": $("#img-rus-w").attr("src"),
   };
+
+  if (buy) {
+    data.Order = "buy";
+    data.BuyPoint = buyPoint;
+    data.Cost = cost;
+    data.Stage = stage;
+  }
 
   if (sell) {
     data.Order = "sell";
+    data.DateOfPurchase = dateOfPurchase;
     data.Revenue = revenue;
     data.GainD = gainD;
     data.GainP = gainP;
@@ -340,7 +449,11 @@ $("#button-create").click(function() {
 
   var jsonBody = JSON.stringify(data);
 
-  processing = true;
+  console.log(data);
+  outProcess();
+  //return;
+
+  //processing = true;
 
   $.ajax({
     type: "POST",
@@ -379,23 +492,23 @@ function imgChange(target) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-imgChange("d");
-imgChange("w");
+//imgChange("d");
+//imgChange("w");
 
-imgChange("ndqc-d");
-imgChange("ndqc-w");
+//imgChange("ndqc-d");
+//imgChange("ndqc-w");
 
-imgChange("sp5-d");
-imgChange("sp5-w");
+//imgChange("sp5-d");
+//imgChange("sp5-w");
 
-imgChange("nyc-d");
-imgChange("nyc-w");
+//imgChange("nyc-d");
+//imgChange("nyc-w");
 
-imgChange("djia-d");
-imgChange("djia-w");
+//imgChange("djia-d");
+//imgChange("djia-w");
 
-imgChange("rus-d");
-imgChange("rus-w");
+//imgChange("rus-d");
+//imgChange("rus-w");
 
 imgChange("ibd");
 

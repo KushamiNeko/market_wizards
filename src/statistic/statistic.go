@@ -53,11 +53,15 @@ type Statistic struct {
 
 	ExpectedValueP float64
 
+	KellyCriterionP float64
+
 	WinLossRatioD float64
 
 	AdjustedWinLossRatioD float64
 
 	ExpectedValueD float64
+
+	KellyCriterionD float64
 
 	//Expectancy float64
 
@@ -105,11 +109,15 @@ func NewStatistic(winner []*transaction.Order, loser []*transaction.Order) (*Sta
 
 	s.ExpectedValueP = s.Gain.GainPMean*s.BattingAverage + s.Loss.GainPMean*(1.0-s.BattingAverage)
 
+	s.KellyCriterionP = s.BattingAverage - ((1 - s.BattingAverage) / s.WinLossRatioP)
+
 	s.WinLossRatioD = s.Gain.GainDMean / math.Abs(s.Loss.GainDMean)
 
 	s.AdjustedWinLossRatioD = s.Gain.GainDMean * s.BattingAverage / math.Abs(s.Loss.GainDMean) * (1.0 - s.BattingAverage)
 
 	s.ExpectedValueD = s.Gain.GainDMean*s.BattingAverage + s.Loss.GainDMean*(1.0-s.BattingAverage)
+
+	s.KellyCriterionD = s.BattingAverage - ((1 - s.BattingAverage) / s.WinLossRatioD)
 
 	return s, nil
 }
