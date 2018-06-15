@@ -4,12 +4,15 @@ package handler
 
 import (
 	"client"
+	"config"
+	"context"
 	"datautils"
-	"errorlog"
 	"hashutils"
 	"headerutils"
 	"net/http"
 	"user"
+
+	"github.com/mongodb/mongo-go-driver/bson"
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,27 +52,37 @@ func loginPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	keys, exist, err := emailExist(u.Email)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	//keys, exist, err := emailExist(u.Email)
+	//if err != nil {
+	//http.Error(w, err.Error(), http.StatusInternalServerError)
+	//return
+	//}
 
-	if !exist {
-		http.Error(w, "Email does not exist", http.StatusBadRequest)
-		return
-	}
+	//if !exist {
+	//http.Error(w, "Email does not exist", http.StatusBadRequest)
+	//return
+	//}
 
-	if len(keys) > 1 {
-		http.Error(w, "Multiple Keys for unique email", http.StatusInternalServerError)
-		errorlog.ArchitectureLogicalError("Multiple keys for unique email")
-		return
-	}
+	//if len(keys) > 1 {
+	//http.Error(w, "Multiple Keys for unique email", http.StatusInternalServerError)
+	//errorlog.ArchitectureLogicalError("Multiple keys for unique email")
+	//return
+	//}
 
-	key := keys[0]
+	//key := keys[0]
 
 	ud := new(user.User)
-	err = client.DatastoreClient.Get(client.Context, key, ud)
+
+	//err = client.DatastoreClient.Get(client.Context, key, ud)
+	//if err != nil {
+	//http.Error(w, err.Error(), http.StatusInternalServerError)
+	//return
+	//}
+
+	collection := client.MongoClient.Database(config.NamespaceAdmin).Collection(config.CollectionUser)
+
+	filter := bson.NewDocument(bson.EC.Interface("email", u.Email))
+	err = collection.FindOne(context.Background(), filter).Decode(ud)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

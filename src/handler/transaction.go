@@ -5,6 +5,7 @@ package handler
 import (
 	"client"
 	"config"
+	"context"
 	"datautils"
 	"encoding/json"
 	"fmt"
@@ -14,7 +15,8 @@ import (
 	"strconv"
 	"transaction"
 
-	"cloud.google.com/go/datastore"
+	"github.com/mongodb/mongo-go-driver/bson"
+	"github.com/mongodb/mongo-go-driver/mongo"
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -68,94 +70,121 @@ func transactionSearch(w http.ResponseWriter, r *http.Request) {
 	dateOfPurchase := r.URL.Query().Get("DateOfPurchase")
 	symbol := r.URL.Query().Get("Symbol")
 
-	var q *datastore.Query
-	var entities []datastore.PropertyList
-
-	q = datastore.NewQuery(cookie).Namespace(config.NamespaceTransaction)
-	q = q.Filter("Order =", "buy")
-	q = q.KeysOnly()
-
-	orderKeys, err := client.DatastoreClient.GetAll(client.Context, q, &entities)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	if len(orderKeys) <= 0 {
-		http.Error(w, "No orders keys", http.StatusBadRequest)
-		return
-	}
-
-	d, err := strconv.ParseInt(dateOfPurchase, 10, 32)
+	dateOfPurchaseI, err := strconv.ParseInt(dateOfPurchase, 10, 32)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	q = datastore.NewQuery(cookie).Namespace(config.NamespaceTransaction)
-	q = q.Filter("Date =", int(d))
-	q = q.KeysOnly()
+	collection := client.MongoClient.Database(config.NamespaceTransaction).Collection(cookie)
 
-	dateKeys, err := client.DatastoreClient.GetAll(client.Context, q, &entities)
+	filter := bson.NewDocument(
+		bson.EC.Interface("order", "buy"),
+		bson.EC.Interface("date", int(dateOfPurchaseI)),
+		bson.EC.Interface("symbol", symbol),
+	)
+
+	t := new(transaction.BuyOrder)
+
+	err = collection.FindOne(context.Background(), filter).Decode(t)
+	if err == mongo.ErrNoDocuments {
+		http.Error(w, "No Document Found", http.StatusBadRequest)
+		return
+	}
+
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	if len(dateKeys) <= 0 {
-		http.Error(w, "No date keys", http.StatusBadRequest)
-		return
-	}
+	//var q *datastore.Query
+	//var entities []datastore.PropertyList
 
-	q = datastore.NewQuery(cookie).Namespace(config.NamespaceTransaction)
-	q = q.Filter("Symbol =", symbol)
-	q = q.KeysOnly()
+	//q = datastore.NewQuery(cookie).Namespace(config.NamespaceTransaction)
+	//q = q.Filter("Order =", "buy")
+	//q = q.KeysOnly()
 
-	symbolKeys, err := client.DatastoreClient.GetAll(client.Context, q, &entities)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	//orderKeys, err := client.DatastoreClient.GetAll(client.Context, q, &entities)
+	//if err != nil {
+	//http.Error(w, err.Error(), http.StatusInternalServerError)
+	//return
+	//}
 
-	if len(symbol) <= 0 {
-		http.Error(w, "No symbol keys", http.StatusBadRequest)
-		return
-	}
+	//if len(orderKeys) <= 0 {
+	//http.Error(w, "No orders keys", http.StatusBadRequest)
+	//return
+	//}
 
-	var key *datastore.Key
+	//d, err := strconv.ParseInt(dateOfPurchase, 10, 32)
+	//if err != nil {
+	//http.Error(w, err.Error(), http.StatusBadRequest)
+	//return
+	//}
 
-	for _, ok := range orderKeys {
+	//q = datastore.NewQuery(cookie).Namespace(config.NamespaceTransaction)
+	//q = q.Filter("Date =", int(d))
+	//q = q.KeysOnly()
 
-		matchDate := false
-		matchSymbol := false
+	//dateKeys, err := client.DatastoreClient.GetAll(client.Context, q, &entities)
+	//if err != nil {
+	//http.Error(w, err.Error(), http.StatusInternalServerError)
+	//return
+	//}
 
-		for _, dk := range dateKeys {
-			if ok.Equal(dk) {
-				matchDate = true
-				break
-			}
-		}
+	//if len(dateKeys) <= 0 {
+	//http.Error(w, "No date keys", http.StatusBadRequest)
+	//return
+	//}
 
-		for _, sk := range symbolKeys {
-			if ok.Equal(sk) {
-				matchSymbol = true
-				break
-			}
-		}
+	//q = datastore.NewQuery(cookie).Namespace(config.NamespaceTransaction)
+	//q = q.Filter("Symbol =", symbol)
+	//q = q.KeysOnly()
 
-		if matchDate && matchSymbol {
-			key = ok
-			break
-		}
-	}
+	//symbolKeys, err := client.DatastoreClient.GetAll(client.Context, q, &entities)
+	//if err != nil {
+	//http.Error(w, err.Error(), http.StatusInternalServerError)
+	//return
+	//}
 
-	t := new(transaction.Order)
+	//if len(symbol) <= 0 {
+	//http.Error(w, "No symbol keys", http.StatusBadRequest)
+	//return
+	//}
 
-	err = client.DatastoreClient.Get(client.Context, key, t)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	//var key *datastore.Key
+
+	//for _, ok := range orderKeys {
+
+	//matchDate := false
+	//matchSymbol := false
+
+	//for _, dk := range dateKeys {
+	//if ok.Equal(dk) {
+	//matchDate = true
+	//break
+	//}
+	//}
+
+	//for _, sk := range symbolKeys {
+	//if ok.Equal(sk) {
+	//matchSymbol = true
+	//break
+	//}
+	//}
+
+	//if matchDate && matchSymbol {
+	//key = ok
+	//break
+	//}
+	//}
+
+	//t := new(transaction.Order)
+
+	//err = client.DatastoreClient.Get(client.Context, key, t)
+	//if err != nil {
+	//http.Error(w, err.Error(), http.StatusInternalServerError)
+	//return
+	//}
 
 	jsonData, err := json.Marshal(t)
 	if err != nil {
@@ -173,25 +202,41 @@ func transactionSearch(w http.ResponseWriter, r *http.Request) {
 
 func transactionPost(w http.ResponseWriter, r *http.Request) {
 
+	order := r.URL.Query().Get("Order")
+	if order == "" {
+		http.Error(w, "Invalid Order Type", http.StatusBadRequest)
+		return
+	}
+
 	cookie, err := headerutils.GetCookie(r, headerutils.CookieName)
 	if err != nil {
 		http.Redirect(w, r, Root, http.StatusTemporaryRedirect)
 		return
 	}
 
-	t := new(transaction.Order)
+	var t transaction.Order
+
+	if order == "buy" {
+		t = new(transaction.BuyOrder)
+	}
+
+	if order == "sell" {
+		t = new(transaction.SellOrder)
+	}
+
+	//t := new(transaction.Order)
 	err = datautils.JsonRequestBodyDecode(r, t)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	if t.JsonIBDCheckup == "" {
+	if t.GetJsonIBDCheckup() == "" {
 		http.Error(w, "Missing IBD Checkup File", http.StatusBadRequest)
 		return
 	}
 
-	ibdBuffer, err := datautils.FileReaderExtract(t.JsonIBDCheckup)
+	ibdBuffer, err := datautils.FileReaderExtract(t.GetJsonIBDCheckup())
 	if err != nil {
 		http.Error(w, fmt.Sprintf("IBD Checkup: %s\n", err.Error()), http.StatusBadRequest)
 		return
@@ -341,40 +386,56 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ibdDatastore := ibd.IBDCheckupDatastoreNew(t.Date, t.Symbol, ibdJson)
+	ibdDatastore := ibd.IBDCheckupDatastoreNew(t.GetDate(), t.GetSymbol(), ibdJson)
 
-	tx, err := client.DatastoreClient.NewTransaction(client.Context)
+	collection := client.MongoClient.Database(config.NamespaceTransaction).Collection(cookie)
+
+	_, err = collection.InsertOne(context.Background(), t)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	tkey := datastore.IncompleteKey(cookie, nil)
-	tkey.Namespace = config.NamespaceTransaction
+	collection = client.MongoClient.Database(config.NamespaceIBD).Collection(cookie)
 
-	iKey, _, err := ibdGetKey(cookie, ibdDatastore.ID)
+	_, err = collection.InsertOne(context.Background(), ibdDatastore)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	_, err = tx.Put(tkey, t)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	//tx, err := client.DatastoreClient.NewTransaction(client.Context)
+	//if err != nil {
+	//http.Error(w, err.Error(), http.StatusInternalServerError)
+	//return
+	//}
 
-	_, err = tx.Put(iKey, ibdDatastore)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	//tkey := datastore.IncompleteKey(cookie, nil)
+	//tkey.Namespace = config.NamespaceTransaction
 
-	_, err = tx.Commit()
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusPreconditionFailed)
-		return
-	}
+	//iKey, _, err := ibdGetKey(cookie, ibdDatastore.ID)
+	//if err != nil {
+	//http.Error(w, err.Error(), http.StatusInternalServerError)
+	//return
+	//}
+
+	//_, err = tx.Put(tkey, t)
+	//if err != nil {
+	//http.Error(w, err.Error(), http.StatusInternalServerError)
+	//return
+	//}
+
+	//_, err = tx.Put(iKey, ibdDatastore)
+	//if err != nil {
+	//http.Error(w, err.Error(), http.StatusInternalServerError)
+	//return
+	//}
+
+	//_, err = tx.Commit()
+	//if err != nil {
+	//http.Error(w, err.Error(), http.StatusPreconditionFailed)
+	//return
+	//}
 
 	//cookiePath := url.PathEscape(cookie)
 

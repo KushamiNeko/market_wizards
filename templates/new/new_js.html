@@ -166,7 +166,9 @@ $("#input-cost").change(function() {
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $("#input-share").change(function() {
-  $("#input-date-of-purchase").trigger("change");
+  if (sell) {
+    $("#input-date-of-purchase").trigger("change");
+  }
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -442,6 +444,7 @@ $("#button-create").click(function() {
     data.Order = "sell";
     data.DateOfPurchase = dateOfPurchase;
     data.Revenue = revenue;
+    data.Cost = cost;
     data.GainD = gainD;
     data.GainP = gainP;
     data.DaysHeld = daysheld;
@@ -449,15 +452,15 @@ $("#button-create").click(function() {
 
   var jsonBody = JSON.stringify(data);
 
-  console.log(data);
-  outProcess();
-  //return;
+  var order = "buy";
 
-  //processing = true;
+  if (sell) {
+    order = "sell";
+  }
 
   $.ajax({
     type: "POST",
-    url: "/transaction",
+    url: "/transaction?Order=" + encodeURIComponent(order),
     data: jsonBody,
     success: function(data) {
       window.location = data;

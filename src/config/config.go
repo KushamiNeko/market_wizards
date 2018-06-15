@@ -1,11 +1,11 @@
 package config
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-
 import (
 	"os"
 	"strings"
 )
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -24,16 +24,21 @@ const (
 	//KeyLengthStrong  = 256
 	//KeyLengthMax     = 512
 
-	NamespaceIBD         = "--IBD-Checkup--"
-	NamespaceTransaction = "--Transaction--"
+	NamespaceIBD         = "--ibd-checkup--"
+	NamespaceTransaction = "--transaction--"
+	NamespaceAdmin       = "--admin--"
+	CollectionUser       = "--user--"
 
-	StorageNamespaceIBDs   = "IBDCheckups"
-	StorageNamespaceCharts = "Charts"
+	//KindUser      = "--user--"
 
-	NamespaceUser = "--User--"
-	KindUser      = "--user--"
+	//StorageNamespaceIBDs   = "IBDCheckups"
+	//StorageNamespaceCharts = "Charts"
 
 	ImageQuality = 100
+
+	MongoURL = "mongodb://localhost:27017"
+
+	//UIDSecret = "426592B26163B15AD5AB64838EA4B7A91C57BC9AB33A92CD24F92295EB49DFE06F38D6EB1350512CCE023CE73FAB2228008A28C3122323AE6F36D35841058B73"
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -63,10 +68,10 @@ const (
 
 var (
 	//WebFrontendOrigin string
-	AppEngineOrigin string
+	//AppEngineOrigin string
 
-	ProjectID     string
-	ProjectBucket string
+	//ProjectID     string
+	//ProjectBucket string
 
 	UIDSecret string
 
@@ -81,20 +86,20 @@ func Init() {
 	//panic("NO ENV VARIABLE for GCP_WEB_FRONTEND_ORIGIN")
 	//}
 
-	AppEngineOrigin = os.Getenv("GCP_APP_ENGINE_ORIGIN")
-	if AppEngineOrigin == "" {
-		panic("NO ENV VARIABLE for GCP_APP_ENGINE_ORIGIN")
-	}
+	//AppEngineOrigin = os.Getenv("GCP_APP_ENGINE_ORIGIN")
+	//if AppEngineOrigin == "" {
+	//panic("NO ENV VARIABLE for GCP_APP_ENGINE_ORIGIN")
+	//}
 
-	ProjectID = os.Getenv("GCP_PROJECT_ID")
-	if ProjectID == "" {
-		panic("NO ENV VARIABLE for GCP_PROJECT_ID")
-	}
+	//ProjectID = os.Getenv("GCP_PROJECT_ID")
+	//if ProjectID == "" {
+	//panic("NO ENV VARIABLE for GCP_PROJECT_ID")
+	//}
 
-	ProjectBucket = os.Getenv("GCP_STORAGE_BUCKET")
-	if ProjectBucket == "" {
-		panic("NO ENV VARIABLE for GCP_STORAGE_BUCKET")
-	}
+	//ProjectBucket = os.Getenv("GCP_STORAGE_BUCKET")
+	//if ProjectBucket == "" {
+	//panic("NO ENV VARIABLE for GCP_STORAGE_BUCKET")
+	//}
 
 	UIDSecret = os.Getenv("GCP_UID_SECRET")
 	if UIDSecret == "" {

@@ -160,7 +160,9 @@ $("#input-cost").change(function() {
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $("#input-share").change(function() {
-  $("#input-date-of-purchase").trigger("change");
+  if (sell) {
+    $("#input-date-of-purchase").trigger("change");
+  }
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -444,11 +446,15 @@ $("#button-create").click(function() {
 
   var jsonBody = JSON.stringify(data);
 
-  outProcess();
+  var order = "buy";
+
+  if (sell) {
+    order = "sell";
+  }
 
   $.ajax({
     type: "POST",
-    url: "/transaction",
+    url: "/transaction?Order=" + encodeURIComponent(order),
     data: jsonBody,
     success: function(data) {
       window.location = data;

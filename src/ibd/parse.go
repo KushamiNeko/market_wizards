@@ -4,6 +4,7 @@ package ibd
 
 import (
 	"bytes"
+	"encoding/base64"
 	"fmt"
 	"regexp"
 	"strings"
@@ -83,8 +84,9 @@ func init() {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 type IBDCheckupDatastore struct {
-	ID   string
-	Data []byte `datastore:",noindex"`
+	ID string
+	//Data []byte `datastore:",noindex"`
+	Data string
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -93,7 +95,7 @@ func IBDCheckupDatastoreNew(date int, symbol string, data []byte) *IBDCheckupDat
 	ibd := new(IBDCheckupDatastore)
 
 	ibd.ID = IBDCheckupDatastoreGetID(date, symbol)
-	ibd.Data = data
+	ibd.Data = base64.StdEncoding.EncodeToString(data)
 
 	return ibd
 }

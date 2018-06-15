@@ -16,10 +16,10 @@ import (
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 type ChartGeneral struct {
-	filterOrders []*transaction.Order
+	filterOrders []*transaction.Transaction
 
-	winners []*transaction.Order
-	losers  []*transaction.Order
+	winners []*transaction.Transaction
+	losers  []*transaction.Transaction
 
 	GainVsDaysHeld string
 	BuyPoints      string
@@ -29,7 +29,7 @@ type ChartGeneral struct {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func ChartGeneralNew(filterOrders, winners, losers []*transaction.Order) (*ChartGeneral, error) {
+func ChartGeneralNew(filterOrders, winners, losers []*transaction.Transaction) (*ChartGeneral, error) {
 
 	c := new(ChartGeneral)
 
@@ -79,16 +79,16 @@ func (c *ChartGeneral) getGainVsDaysHeld() error {
 
 	for _, o := range c.winners {
 		g = append(g, []interface{}{
-			o.DaysHeld,
-			o.GainP,
+			o.Sell.DaysHeld,
+			o.Sell.GainP,
 			fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
 		})
 	}
 
 	for _, o := range c.losers {
 		g = append(g, []interface{}{
-			o.DaysHeld,
-			o.GainP,
+			o.Sell.DaysHeld,
+			o.Sell.GainP,
 			fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
 		})
 	}
@@ -124,7 +124,7 @@ func (c *ChartGeneral) getBuyPoints() error {
 	dictBuyPointL := make(map[string]int)
 
 	for _, o := range c.winners {
-		buyPoint := strings.TrimSpace(o.BuyPoint)
+		buyPoint := strings.TrimSpace(o.Buy.BuyPoint)
 
 		if val, ok := dictBuyPointW[buyPoint]; ok {
 			dictBuyPointW[buyPoint] = val + 1
@@ -134,7 +134,7 @@ func (c *ChartGeneral) getBuyPoints() error {
 	}
 
 	for _, o := range c.losers {
-		buyPoint := strings.TrimSpace(o.BuyPoint)
+		buyPoint := strings.TrimSpace(o.Buy.BuyPoint)
 
 		if val, ok := dictBuyPointL[buyPoint]; ok {
 			dictBuyPointL[buyPoint] = val + 1
@@ -220,7 +220,7 @@ func (c *ChartGeneral) getPriceInterval() error {
 
 	for _, o := range c.winners {
 
-		grp := math.Floor(o.Price / config.PriceInterval)
+		grp := math.Floor(o.Buy.Price / config.PriceInterval)
 		grps := int(grp * config.PriceInterval)
 
 		if val, ok := dictPriceW[grps]; ok {
@@ -232,7 +232,7 @@ func (c *ChartGeneral) getPriceInterval() error {
 
 	for _, o := range c.losers {
 
-		grp := math.Floor(o.Price / config.PriceInterval)
+		grp := math.Floor(o.Buy.Price / config.PriceInterval)
 		grps := int(grp * config.PriceInterval)
 
 		if val, ok := dictPriceL[grps]; ok {
@@ -322,7 +322,7 @@ func (c *ChartGeneral) getStage() error {
 	dictStageL := make(map[string]int)
 
 	for _, o := range c.winners {
-		stages := strconv.FormatFloat(math.Floor(o.Stage), 'f', -1, 64)
+		stages := strconv.FormatFloat(math.Floor(o.Buy.Stage), 'f', -1, 64)
 
 		if val, ok := dictStageW[stages]; ok {
 			dictStageW[stages] = val + 1
@@ -332,7 +332,7 @@ func (c *ChartGeneral) getStage() error {
 	}
 
 	for _, o := range c.losers {
-		stages := strconv.FormatFloat(math.Floor(o.Stage), 'f', -1, 64)
+		stages := strconv.FormatFloat(math.Floor(o.Buy.Stage), 'f', -1, 64)
 
 		if val, ok := dictStageL[stages]; ok {
 			dictStageL[stages] = val + 1

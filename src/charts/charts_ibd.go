@@ -17,7 +17,7 @@ import (
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 type ChartIBD struct {
-	filterOrders []*transaction.Order
+	filterOrders []*transaction.Transaction
 
 	winnersIBD []*bytes.Buffer
 	losersIBD  []*bytes.Buffer
@@ -62,7 +62,7 @@ type ChartIBD struct {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func ChartIBDNew(filterOrders []*transaction.Order, winnersIBD, losersIBD []*bytes.Buffer) (*ChartIBD, error) {
+func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD []*bytes.Buffer) (*ChartIBD, error) {
 
 	c := new(ChartIBD)
 

@@ -71,14 +71,14 @@ type Statistic struct {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func NewStatistic(winner []*transaction.Order, loser []*transaction.Order) (*Statistic, error) {
+func NewStatistic(winners []*transaction.Transaction, losers []*transaction.Transaction) (*Statistic, error) {
 	s := new(Statistic)
 
 	var stat *TransactionStat
 	var err error
 
-	if winner != nil && len(winner) != 0 {
-		stat, err = NewTransactionStat(winner)
+	if winners != nil && len(winners) != 0 {
+		stat, err = NewTransactionStat(winners)
 		if err != nil {
 			return nil, err
 		}
@@ -88,9 +88,9 @@ func NewStatistic(winner []*transaction.Order, loser []*transaction.Order) (*Sta
 		s.Gain = new(TransactionStat)
 	}
 
-	if loser != nil && len(loser) != 0 {
+	if losers != nil && len(losers) != 0 {
 
-		stat, err = NewTransactionStat(loser)
+		stat, err = NewTransactionStat(losers)
 		if err != nil {
 			return nil, err
 		}
@@ -195,7 +195,7 @@ type TransactionStat struct {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func NewTransactionStat(orders []*transaction.Order) (*TransactionStat, error) {
+func NewTransactionStat(orders []*transaction.Transaction) (*TransactionStat, error) {
 
 	//grpPrice := 10.0
 	//grpFormat := "%s ~ %s"
@@ -227,7 +227,7 @@ func NewTransactionStat(orders []*transaction.Order) (*TransactionStat, error) {
 		//dictCost[cgrpk] = 1
 		//}
 
-		grp := math.Floor(o.Price / config.PriceInterval)
+		grp := math.Floor(o.Buy.Price / config.PriceInterval)
 		grps := int(grp * config.PriceInterval)
 
 		//grps := strconv.FormatFloat(grp*config.PriceInterval, 'f', -1, 64)
@@ -244,7 +244,7 @@ func NewTransactionStat(orders []*transaction.Order) (*TransactionStat, error) {
 			dictPrice[grps] = 1
 		}
 
-		buyPoint := strings.TrimSpace(o.BuyPoint)
+		buyPoint := strings.TrimSpace(o.Buy.BuyPoint)
 
 		if val, ok := dictBuyPoint[buyPoint]; ok {
 			dictBuyPoint[buyPoint] = val + 1
@@ -252,11 +252,11 @@ func NewTransactionStat(orders []*transaction.Order) (*TransactionStat, error) {
 			dictBuyPoint[buyPoint] = 1
 		}
 
-		sliceGainP = append(sliceGainP, o.GainP)
-		sliceGainD = append(sliceGainD, o.GainD)
-		sliceDaysHeld = append(sliceDaysHeld, float64(o.DaysHeld))
+		sliceGainP = append(sliceGainP, o.Sell.GainP)
+		sliceGainD = append(sliceGainD, o.Sell.GainD)
+		sliceDaysHeld = append(sliceDaysHeld, float64(o.Sell.DaysHeld))
 
-		stages := strconv.FormatFloat(math.Floor(o.Stage), 'f', -1, 64)
+		stages := strconv.FormatFloat(math.Floor(o.Buy.Stage), 'f', -1, 64)
 
 		if val, ok := dictStage[stages]; ok {
 			dictStage[stages] = val + 1
