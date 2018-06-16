@@ -221,8 +221,10 @@ $("#input-date-of-purchase").change(function() {
       calculate();
     },
     error: function(xhr, err) {
-      $("#new-modal-body").val(xhr.responseText);
-      $("#new-modal").modal("show");
+      //$("#new-modal-body").val(xhr.responseText);
+      //$("#new-modal").modal("show");
+
+      alert(xhr.responseText);
     },
   });
 });
@@ -408,6 +410,32 @@ $("#button-create").click(function() {
 
   inProcess("#button-create");
 
+  var ibdData = {
+    "Date": date,
+    "Symbol": symbol,
+    "Object": $("#img-ibd").attr("src"),
+  };
+
+  var ibdJsonBody = JSON.stringify(ibdData);
+
+  $.ajax({
+    type: "POST",
+    url: "/ibd",
+    data: ibdJsonBody,
+    success: function(data) {
+      //outProcess();
+    },
+    error: function(xhr, err) {
+      //$("#new-modal-body").val(xhr.responseText);
+      //$("#new-modal").modal("show");
+
+      //outProcess("#button-create");
+
+      alert(xhr.responseText);
+    },
+  });
+
+
   var data = {
     //"Order": "buy",
     "Date": date,
@@ -418,7 +446,7 @@ $("#button-create").click(function() {
     //"Cost": cost,
     //"Stage": stage,
     "Note": note,
-    "JsonIBDCheckup": $("#img-ibd").attr("src"),
+    //"JsonIBDCheckup": $("#img-ibd").attr("src"),
     //"JsonChartD": $("#img-d").attr("src"),
     //"JsonChartW": $("#img-w").attr("src"),
     //"JsonChartNDQCD": $("#img-ndqc-d").attr("src"),
@@ -468,8 +496,10 @@ $("#button-create").click(function() {
       outProcess();
     },
     error: function(xhr, err) {
-      $("#new-modal-body").val(xhr.responseText);
-      $("#new-modal").modal("show");
+      //$("#new-modal-body").val(xhr.responseText);
+      //$("#new-modal").modal("show");
+
+      alert(xhr.responseText);
 
       outProcess("#button-create");
     },

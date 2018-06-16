@@ -1,8 +1,0 @@
-@import "../_common_scss/material_design_style/layout";
-
-.my-list-item {
-  //display: flex;
-  //flex-direction: row;
-  @extend %layout-horizontal;
-  justify-content: space-between;
-}

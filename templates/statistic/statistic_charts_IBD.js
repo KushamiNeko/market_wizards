@@ -264,40 +264,6 @@ function drawAccDisRating() {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//google.charts.setOnLoadCallback(drawEPSSalesChgLastQtr);
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//function drawEPSSalesChgLastQtr() {
-
-//"use strict";
-
-//var raw = $("#eps-sales-chg-last-qtr").data("ref");
-
-//var body = JSON.parse(atob(raw));
-
-//var data = google.visualization.arrayToDataTable(body);
-
-//var options = {
-//width: width,
-//height: width / 2,
-//title: "Sales % Chg vs EPS % Chg (Last Qtr)",
-//hAxis: {
-//title: "EPS % Chg (Last Qtr)",
-//},
-//vAxis: {
-//title: "Sales % Chg (Last Qtr)",
-//},
-//legend: "none"
-//};
-
-//var chart = new google.visualization.ScatterChart(document.getElementById("eps-sales-chg-last-qtr"));
-
-//chart.draw(data, options);
-//}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-
 google.charts.setOnLoadCallback(drawEPSChgLastQtr);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////

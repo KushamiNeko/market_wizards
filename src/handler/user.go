@@ -48,31 +48,7 @@ func userGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//keys, exist, err := uidExist(uid)
-	//if err != nil {
-	//http.Error(w, err.Error(), http.StatusInternalServerError)
-	//return
-	//}
-
-	//if !exist {
-	//http.Error(w, "UID does not exist", http.StatusBadRequest)
-	//return
-	//}
-
-	//if len(keys) > 1 {
-	//http.Error(w, "Multiple Keys for unique uid", http.StatusInternalServerError)
-	//errorlog.ArchitectureLogicalError("Multiple keys for unique uid")
-	//return
-	//}
-
-	//key := keys[0]
-
 	ud := new(user.User)
-	//err = client.DatastoreClient.Get(client.Context, key, ud)
-	//if err != nil {
-	//http.Error(w, err.Error(), http.StatusInternalServerError)
-	//return
-	//}
 
 	collection := client.MongoClient.Database(config.NamespaceAdmin).Collection(config.CollectionUser)
 
@@ -102,17 +78,6 @@ func userPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//_, exist, err := emailExist(u.Email)
-	//if err != nil {
-	//http.Error(w, err.Error(), http.StatusInternalServerError)
-	//return
-	//}
-
-	//if exist {
-	//http.Error(w, "Email has been used", http.StatusConflict)
-	//return
-	//}
-
 	collection := client.MongoClient.Database(config.NamespaceAdmin).Collection(config.CollectionUser)
 
 	ud := new(user.User)
@@ -140,27 +105,6 @@ func userPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//tx, err := client.DatastoreClient.NewTransaction(client.Context)
-	//if err != nil {
-	//http.Error(w, err.Error(), http.StatusInternalServerError)
-	//return
-	//}
-
-	//key := datastore.IncompleteKey(config.KindUser, nil)
-	//key.Namespace = config.NamespaceUser
-
-	//_, err = tx.Put(key, u)
-	//if err != nil {
-	//http.Error(w, err.Error(), http.StatusPreconditionFailed)
-	//return
-	//}
-
-	//_, err = tx.Commit()
-	//if err != nil {
-	//http.Error(w, err.Error(), http.StatusPreconditionFailed)
-	//return
-	//}
-
 	headerutils.SetCookie(w, headerutils.CookieName, u.UID, headerutils.CookiePathRoot)
 
 	w.WriteHeader(http.StatusOK)
@@ -185,17 +129,6 @@ func userPut(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//keys, exist, err := emailExist(u.Email)
-	//if err != nil {
-	//http.Error(w, err.Error(), http.StatusInternalServerError)
-	//return
-	//}
-
-	//if !exist {
-	//http.Error(w, "Email does not exist", http.StatusBadRequest)
-	//return
-	//}
-
 	collection := client.MongoClient.Database(config.NamespaceAdmin).Collection(config.CollectionUser)
 
 	ud := new(user.User)
@@ -217,15 +150,6 @@ func userPut(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//key := keys[0]
-
-	//ud = new(user.User)
-	//err = client.DatastoreClient.Get(client.Context, key, ud)
-	//if err != nil {
-	//http.Error(w, err.Error(), http.StatusInternalServerError)
-	//return
-	//}
-
 	if ud.UID != cookie {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
@@ -233,29 +157,11 @@ func userPut(w http.ResponseWriter, r *http.Request) {
 
 	ud.Password = u.Password
 
-	err = collection.FindOneAndReplace(context.Background(), filter, ud).Decode(&map[string]interface{}{})
+	err = collection.FindOneAndReplace(context.Background(), filter, ud).Decode(&user.User{})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	//tx, err := client.DatastoreClient.NewTransaction(client.Context)
-	//if err != nil {
-	//http.Error(w, err.Error(), http.StatusInternalServerError)
-	//return
-	//}
-
-	//_, err = tx.Put(key, ud)
-	//if err != nil {
-	//http.Error(w, err.Error(), http.StatusPreconditionFailed)
-	//return
-	//}
-
-	//_, err = tx.Commit()
-	//if err != nil {
-	//http.Error(w, err.Error(), http.StatusPreconditionFailed)
-	//return
-	//}
 
 	headerutils.SetCookie(w, headerutils.CookieName, ud.UID, headerutils.CookiePathRoot)
 
@@ -296,59 +202,16 @@ func userDelete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//keys, exist, err := emailExist(u.Email)
-	//if err != nil {
-	//http.Error(w, err.Error(), http.StatusInternalServerError)
-	//return
-	//}
-
-	//if !exist {
-	//http.Error(w, "Email does not exist", http.StatusBadRequest)
-	//return
-	//}
-
-	//if len(keys) > 1 {
-	//http.Error(w, "Multiple Keys for unique email", http.StatusInternalServerError)
-	//return
-	//}
-
-	//key := keys[0]
-
-	//ud := new(user.User)
-	//err = client.DatastoreClient.Get(client.Context, key, ud)
-	//if err != nil {
-	//http.Error(w, err.Error(), http.StatusInternalServerError)
-	//return
-	//}
-
 	if ud.UID != cookie {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
 	}
 
-	err = collection.FindOneAndDelete(context.Background(), filter).Decode(nil)
+	err = collection.FindOneAndDelete(context.Background(), filter).Decode(&user.User{})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	//tx, err := client.DatastoreClient.NewTransaction(client.Context)
-	//if err != nil {
-	//http.Error(w, err.Error(), http.StatusInternalServerError)
-	//return
-	//}
-
-	//err = tx.Delete(key)
-	//if err != nil {
-	//http.Error(w, err.Error(), http.StatusInternalServerError)
-	//return
-	//}
-
-	//_, err = tx.Commit()
-	//if err != nil {
-	//http.Error(w, err.Error(), http.StatusPreconditionFailed)
-	//return
-	//}
 
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("/"))

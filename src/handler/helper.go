@@ -4,79 +4,57 @@ package handler
 
 import (
 	"bytes"
+	"encoding/json"
+	"fmt"
 	"minify"
 	"net/http"
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//func emailExist(email string) ([]*datastore.Key, bool, error) {
+type ObjectRequestBody struct {
+	Date      int
+	Symbol    string
+	ChartType string
 
-//q := datastore.NewQuery(config.KindUser).Namespace(config.NamespaceUser)
-//q = q.Filter("Email =", email)
-//q = q.KeysOnly()
-
-//var entities []datastore.PropertyList
-//keys, err := client.DatastoreClient.GetAll(client.Context, q, &entities)
-//if err != nil {
-//return nil, false, err
-//}
-
-//if len(keys) > 0 {
-//return keys, true, nil
-//}
-
-//return nil, false, nil
-//}
+	Object string
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//func uidExist(uid string) ([]*datastore.Key, bool, error) {
-
-//q := datastore.NewQuery(config.KindUser).Namespace(config.NamespaceUser)
-//q = q.Filter("UID =", uid)
-//q = q.KeysOnly()
-
-//var entities []datastore.PropertyList
-//keys, err := client.DatastoreClient.GetAll(client.Context, q, &entities)
-//if err != nil {
-//return nil, false, err
-//}
-
-//if len(keys) > 0 {
-//return keys, true, nil
-//}
-
-//return nil, false, nil
-//}
+func (o *ObjectRequestBody) DateSymbolChartID() string {
+	return fmt.Sprintf("%d_%v_%v", o.Date, o.Symbol, o.ChartType)
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//func ibdGetKey(kind, id string) (*datastore.Key, bool, error) {
+func (o *ObjectRequestBody) DateSymbolID() string {
+	return fmt.Sprintf("%d_%v", o.Date, o.Symbol)
+}
 
-//q := datastore.NewQuery(kind).Namespace(config.NamespaceIBD)
-//q = q.Filter("ID =", id)
-//q = q.KeysOnly()
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//var entities []datastore.PropertyList
-//keys, err := client.DatastoreClient.GetAll(client.Context, q, &entities)
-//if err != nil {
-//return nil, false, err
-//}
+func (o *ObjectRequestBody) JsonDecode(buffer []byte) error {
 
-//if len(keys) > 1 {
-//return nil, false, fmt.Errorf("More than one entity for each IBD ID\n")
-//}
+	err := json.Unmarshal(buffer, o)
+	if err != nil {
+		return err
+	}
 
-//if len(keys) > 0 {
-//return keys[0], true, nil
-//}
+	if o.Date == 0 {
+		return fmt.Errorf("Date Cannot Be Empty")
+	}
 
-//key := datastore.IncompleteKey(kind, nil)
-//key.Namespace = config.NamespaceIBD
+	if o.Symbol == "" {
+		return fmt.Errorf("Symbol Cannot Be Empty")
+	}
 
-//return key, false, nil
-//}
+	if o.Object == "" {
+		return fmt.Errorf("Object Cannot Be Empty")
+	}
+
+	return nil
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -99,50 +77,5 @@ func writeTemplate(w http.ResponseWriter, template string, data interface{}, cb 
 
 	w.Write(minify.Minify(buffer.Bytes()))
 }
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//func writeStorageObject(object string, buffer io.Reader) error {
-
-//storageBucket := client.StorageClient.Bucket(config.ProjectBucket)
-
-//storageObject := storageBucket.Object(object)
-
-//storageWriter := storageObject.NewWriter(client.Context)
-
-//_, err := io.Copy(storageWriter, buffer)
-//if err != nil {
-//return err
-//}
-
-//storageWriter.Close()
-
-//return nil
-//}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//func readStorageObject(object string) (*bytes.Buffer, error) {
-
-//storageBucket := client.StorageClient.Bucket(config.ProjectBucket)
-//storageObject := storageBucket.Object(object)
-
-//storageReader, err := storageObject.NewReader(client.Context)
-//if err != nil {
-//return nil, err
-//}
-
-//buffer := new(bytes.Buffer)
-
-//_, err = io.Copy(buffer, storageReader)
-//if err != nil {
-//return nil, err
-//}
-
-//storageReader.Close()
-
-//return buffer, nil
-
-//}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

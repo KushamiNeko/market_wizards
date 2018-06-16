@@ -8,9 +8,9 @@ import (
 	"client"
 	"config"
 	"context"
+	"datautils"
 	"encoding/base64"
 	"headerutils"
-	"ibd"
 	"net/http"
 	"statistic"
 	"strconv"
@@ -78,28 +78,11 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// get Transaction Orders from datastore
-
 	collection := client.MongoClient.Database(config.NamespaceTransaction).Collection(cookie)
 
 	filter := bson.NewDocument(
 		bson.EC.Interface("order", "sell"),
-		//bson.EC.ArrayFromElements(
-		//"$and",
-		//bson.VC.DocumentFromElements(
-		//bson.EC.SubDocumentFromElements("date",
-		//bson.EC.Interface("$gte", start),
-		//),
-		//),
-		//bson.VC.DocumentFromElements(
-		//bson.EC.SubDocumentFromElements("date",
-		//bson.EC.Interface("$lte", end),
-		//),
-		//),
-		//),
 	)
-
-	//t := new(transaction.Order)
 
 	cursor, err := collection.Find(context.Background(), filter)
 	if err != nil {
@@ -135,44 +118,6 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//q := datastore.NewQuery(cookie).Namespace(config.NamespaceTransaction)
-	//q = q.Filter("Order =", "sell")
-	//q = q.KeysOnly()
-
-	//var entities []datastore.PropertyList
-	//keys, err := client.DatastoreClient.GetAll(client.Context, q, &entities)
-	//if err != nil {
-	//http.Error(w, err.Error(), http.StatusInternalServerError)
-	//return
-	//}
-
-	//orders := make([]*transaction.Order, len(keys))
-
-	//err = client.DatastoreClient.GetMulti(client.Context, keys, orders)
-	//if err != nil {
-	//http.Error(w, err.Error(), http.StatusInternalServerError)
-	//return
-	//}
-
-	// get IBD Checkups from datastore
-
-	//q = datastore.NewQuery(cookie).Namespace(config.NamespaceIBD)
-	//q = q.KeysOnly()
-
-	//keys, err = client.DatastoreClient.GetAll(client.Context, q, &entities)
-	//if err != nil {
-	//http.Error(w, err.Error(), http.StatusInternalServerError)
-	//return
-	//}
-
-	//ibdDatastore := make([]*ibd.IBDCheckupDatastore, len(keys))
-
-	//err = client.DatastoreClient.GetMulti(client.Context, keys, ibdDatastore)
-	//if err != nil {
-	//http.Error(w, err.Error(), http.StatusInternalServerError)
-	//return
-	//}
-
 	orders := make([]*transaction.Transaction, len(sellOrders))
 
 	winner := make([]*transaction.Transaction, 0)
@@ -181,26 +126,7 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 	winnerIBD := make([]*bytes.Buffer, 0)
 	losserIBD := make([]*bytes.Buffer, 0)
 
-	//filterOrder := make([]*transaction.Order, 0)
-
 	for i, sellOrder := range sellOrders {
-
-		//if start > 0 && end > 0 && end > start {
-		//if o.Date < int(start) || o.Date > int(end) {
-		//continue
-		//}
-		//}
-
-		//filterOrder = append(filterOrder, o)
-
-		//var ibdCheckup *ibd.IBDCheckupDatastore = nil
-
-		//for _, c := range ibdDatastore {
-		//if c.ID == ibd.IBDCheckupDatastoreGetID(o.Date, o.Symbol) {
-		//ibdCheckup = c
-		//break
-		//}
-		//}
 
 		collection := client.MongoClient.Database(config.NamespaceTransaction).Collection(cookie)
 
@@ -227,10 +153,12 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 		collection = client.MongoClient.Database(config.NamespaceIBD).Collection(cookie)
 
 		filter = bson.NewDocument(
-			bson.EC.Interface("id", ibd.IBDCheckupDatastoreGetID(sellOrder.DateOfPurchase, sellOrder.Symbol)),
+			//bson.EC.Interface("id", ibd.IBDCheckupDatastoreGetID(sellOrder.DateOfPurchase, sellOrder.Symbol)),
+			bson.EC.Interface("id", sellOrder.GetPurchaseIBDCheckupID()),
 		)
 
-		ibdCheckup := new(ibd.IBDCheckupDatastore)
+		//ibdCheckup := new(ibd.IBDCheckupDatastore)
+		ibdCheckup := new(datautils.DataIDStorage)
 
 		err = collection.FindOne(context.Background(), filter).Decode(ibdCheckup)
 		if err != nil {
@@ -262,10 +190,6 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 				winnerIBD = append(winnerIBD, bytes.NewBuffer(data))
 			}
 
-			//if ibdCheckup != nil {
-			//winnerIBD = append(winnerIBD, bytes.NewBuffer(ibdCheckup.Data))
-			//}
-
 		} else {
 			t := new(transaction.Transaction)
 			t.Buy = buyOrder
@@ -289,10 +213,6 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 
 				losserIBD = append(losserIBD, bytes.NewBuffer(data))
 			}
-
-			//if ibdCheckup != nil {
-			//losserIBD = append(losserIBD, bytes.NewBuffer(ibdCheckup.Data))
-			//}
 
 		}
 	}
