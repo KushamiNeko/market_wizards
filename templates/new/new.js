@@ -330,6 +330,12 @@ $("#button-create").click(function() {
     return;
   }
 
+  if ($("#img-marketsmith").attr("src") === undefined) {
+    $("#validate-img-marketsmith").show();
+    $("#button-img-marketsmith").focus();
+    return;
+  }
+
   //if ($("#img-d").attr("src") === undefined) {
   //$("#validate-img-d").show();
   //$("#button-img-d").focus();
@@ -429,6 +435,31 @@ $("#button-create").click(function() {
     },
   });
 
+  var marketsmithData = {
+    "Date": date,
+    "Symbol": symbol,
+    "Object": $("#img-marketsmith").attr("src"),
+  };
+
+  var marketsmithJsonBody = JSON.stringify(marketsmithData);
+
+  $.ajax({
+    type: "POST",
+    url: "/marketsmith",
+    data: marketsmithJsonBody,
+    success: function(data) {
+      //outProcess();
+    },
+    error: function(xhr, err) {
+      //$("#new-modal-body").val(xhr.responseText);
+      //$("#new-modal").modal("show");
+
+      //outProcess("#button-create");
+
+      alert(xhr.responseText);
+    },
+  });
+
 
   var data = {
     //"Order": "buy",
@@ -485,6 +516,7 @@ $("#button-create").click(function() {
     url: "/transaction?Order=" + encodeURIComponent(order),
     data: jsonBody,
     success: function(data) {
+
       window.location = data;
 
       outProcess();
@@ -538,6 +570,7 @@ function imgChange(target) {
 //imgChange("rus-w");
 
 imgChange("ibd");
+imgChange("marketsmith");
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 

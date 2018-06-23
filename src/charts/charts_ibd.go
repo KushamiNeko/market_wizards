@@ -22,8 +22,11 @@ type ChartIBD struct {
 	winnersIBD []*bytes.Buffer
 	losersIBD  []*bytes.Buffer
 
-	ibdCheckupsW []*ibd.IBDCheckup
-	ibdCheckupsL []*ibd.IBDCheckup
+	//ibdCheckupsW []*ibd.IBDCheckup
+	//ibdCheckupsL []*ibd.IBDCheckup
+
+	ibdCheckupsW []datautils.Contents
+	ibdCheckupsL []datautils.Contents
 
 	MarketCapitalization string
 	UpDownVolumeRatio    string
@@ -71,8 +74,11 @@ func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD 
 	c.winnersIBD = winnersIBD
 	c.losersIBD = losersIBD
 
-	c.ibdCheckupsW = make([]*ibd.IBDCheckup, len(c.winnersIBD))
-	c.ibdCheckupsL = make([]*ibd.IBDCheckup, len(c.losersIBD))
+	//c.ibdCheckupsW = make([]*ibd.IBDCheckup, len(c.winnersIBD))
+	//c.ibdCheckupsL = make([]*ibd.IBDCheckup, len(c.losersIBD))
+
+	c.ibdCheckupsW = make([]datautils.Contents, len(c.winnersIBD))
+	c.ibdCheckupsL = make([]datautils.Contents, len(c.losersIBD))
 
 	var err error
 
@@ -265,10 +271,10 @@ func (c *ChartIBD) getMarketCapitalization() error {
 	largeCapL := 0
 
 	for _, o := range c.ibdCheckupsW {
-		for _, f := range o.Contents {
-			if f.Label == "Market Capitalization" {
+		for _, f := range o.GetContents() {
+			if f.GetLabel() == "Market Capitalization" {
 
-				v := strings.Replace(f.Value, "$", "", -1)
+				v := strings.Replace(f.GetValue(), "$", "", -1)
 				vi, err := strconv.ParseInt(v, 10, 64)
 				if err != nil {
 					return err
@@ -288,10 +294,10 @@ func (c *ChartIBD) getMarketCapitalization() error {
 	}
 
 	for _, o := range c.ibdCheckupsL {
-		for _, f := range o.Contents {
-			if f.Label == "Market Capitalization" {
+		for _, f := range o.GetContents() {
+			if f.GetLabel() == "Market Capitalization" {
 
-				v := strings.Replace(f.Value, "$", "", -1)
+				v := strings.Replace(f.GetValue(), "$", "", -1)
 				vi, err := strconv.ParseInt(v, 10, 64)
 				if err != nil {
 					return err

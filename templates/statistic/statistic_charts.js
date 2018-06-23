@@ -9,3 +9,32 @@ google.charts.load("current", {
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function drawWinLoseColumnChart(jqueryID, chartTitle) {
+
+  "use strict";
+
+  var raw = $(jqueryID).data("ref");
+
+  var body = JSON.parse(atob(raw));
+
+  var data = google.visualization.arrayToDataTable(body);
+
+  var classicOptions = {
+    width: width,
+    height: width / 2,
+    hAxis: {
+      slantedText: true,
+    },
+    title: chartTitle,
+    legend: {
+      position: "none",
+    }
+  };
+
+  var classicChart = new google.visualization.ColumnChart(document.getElementById(jqueryID.replace("#", "")));
+  classicChart.draw(data, classicOptions);
+
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////

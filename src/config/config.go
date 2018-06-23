@@ -25,9 +25,16 @@ const (
 	//KeyLengthMax     = 512
 
 	NamespaceIBD         = "--ibd-checkup--"
+	NamespaceMarketSmith = "--marketsmith--"
 	NamespaceTransaction = "--transaction--"
 	NamespaceAdmin       = "--admin--"
-	CollectionUser       = "--user--"
+
+	NamespaceWatchList    = "--watch-list--"
+	NamespacePostAnalysis = "--post-analysis--"
+	NamespaceChartsStudy  = "--charts-study--"
+	NamespaceExperience   = "--experience--"
+
+	CollectionUser = "--user--"
 
 	//KindUser      = "--user--"
 
@@ -56,6 +63,12 @@ const (
 
 	WinnerOpacity = 0.5
 	LoserOpacity  = 0.5
+)
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var (
+	WatchListPosition []float64 = []float64{0.05, 0.08, 0.1, 0.12, 0.13, 0.15, 0.2, 0.25, 0.3, 0.35}
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////

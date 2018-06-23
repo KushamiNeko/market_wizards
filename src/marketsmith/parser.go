@@ -5,6 +5,7 @@ package marketsmith
 import (
 	"bytes"
 	"config"
+	"datautils"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -29,6 +30,8 @@ const (
 	regexFunds = `\s*<div\s*class="cell">\s*<span>[^<]+<\/span>\s*<span>(\d+)<\/span>\s*<\/div>\s*`
 
 	regexPercent = `\s*[+]*([-0-9.]+)%\s*`
+
+	regexRSRating = `\s*<g\s*stroke="none"\s*stroke-width="[\d.]+"\s*fill="rgb\(\d+,\d+,\d+\)"\s*font-family="Arial"\s*font-size="11pt"\s*clip-path="url\(#RSView_ClipPath\)">\s*<text\s*x="[\d.]+"\s*y="[\d.]+"\s*text-anchor="start">\s*(\d+)\s*<\/text>\s*<\/g>\s*`
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -45,6 +48,8 @@ var (
 	reFunds *regexp.Regexp
 
 	rePercent *regexp.Regexp
+
+	reRSRating *regexp.Regexp
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,43 +66,38 @@ func init() {
 	reFunds = regexp.MustCompile(regexFunds)
 
 	rePercent = regexp.MustCompile(regexPercent)
+
+	reRSRating = regexp.MustCompile(regexRSRating)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-type MarketSmithDatastore struct {
-	ID   string
-	Data []byte `datastore:",noindex"`
-}
+//type MarketSmithDatastore struct {
+//ID   string
+//Data []byte `datastore:",noindex"`
+//}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func MarketSmithDatastoreNew(date int, symbol, chartType string, data []byte) *MarketSmithDatastore {
-	m := new(MarketSmithDatastore)
+//func MarketSmithDatastoreNew(date int, symbol, chartType string, data []byte) *MarketSmithDatastore {
+//m := new(MarketSmithDatastore)
 
-	m.ID = MarketSmithDatastoreGetID(date, symbol, chartType)
-	m.Data = data
+//m.ID = MarketSmithDatastoreGetID(date, symbol, chartType)
+//m.Data = data
 
-	return m
-}
+//return m
+//}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func MarketSmithDatastoreGetID(date int, symbol, chartType string) string {
-	return fmt.Sprintf("%d_%v_%v", date, symbol, chartType)
-}
+//func MarketSmithDatastoreGetID(date int, symbol, chartType string) string {
+//return fmt.Sprintf("%d_%v_%v", date, symbol, chartType)
+//}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 type MarketSmith struct {
 	Contents []field
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-type field struct {
-	Label string
-	Value string
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -111,11 +111,48 @@ func MarketSmithNew() *MarketSmith {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+func (m *MarketSmith) GetContents() []datautils.Fields {
+
+	f := make([]datautils.Fields, len(m.Contents))
+
+	for i, c := range m.Contents {
+		f[i] = c
+	}
+
+	return f
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+type field struct {
+	Label string
+	Value string
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (f field) GetLabel() string {
+	return f.Label
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (f field) GetValue() string {
+	return f.Value
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 func Parse(buffer *bytes.Buffer) (*MarketSmith, error) {
 
 	m := MarketSmithNew()
 
 	var err error
+
+	err = m.getRSRating(buffer)
+	if err != nil {
+		return nil, err
+	}
 
 	err = m.getInfoCell(buffer)
 	if err != nil {
@@ -137,14 +174,18 @@ func Parse(buffer *bytes.Buffer) (*MarketSmith, error) {
 		return nil, err
 	}
 
-	err = m.getQuarterlyResults(buffer)
-	if err != nil {
-		return nil, err
-	}
+	//err = m.getQuarterlyResults(buffer)
+	//if err != nil {
+	//return nil, err
+	//}
 
 	_ = m.getFunds(buffer)
 	//if err != nil {
 	//return nil, err
+	//}
+
+	//for _, c := range m.Contents {
+	//fmt.Printf("%v @ %v\n", c.Label, c.Value)
 	//}
 
 	return m, nil
@@ -404,6 +445,33 @@ func (m *MarketSmith) getFunds(buffer *bytes.Buffer) error {
 	m.Contents = append(m.Contents, field{
 		"Avg Funds Holding 4Q",
 		fmt.Sprintf("%v", int(mean)),
+	})
+
+	return nil
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (m *MarketSmith) getRSRating(buffer *bytes.Buffer) error {
+
+	var results [][]string
+
+	results = reRSRating.FindAllStringSubmatch(buffer.String(), -1)
+	if results == nil {
+		return fmt.Errorf("no matching found in the RS Rating\n")
+	}
+
+	if len(results) > 1 {
+		return fmt.Errorf("problems occur while parsing RS Rating\n")
+	}
+
+	if len(results[0]) < 2 {
+		return fmt.Errorf("problems occur while parsing RS Rating\n")
+	}
+
+	m.Contents = append(m.Contents, field{
+		"RS Rating",
+		results[0][1],
 	})
 
 	return nil

@@ -12,6 +12,9 @@ import (
 	"headerutils"
 	"ibd"
 	"net/http"
+
+	"github.com/mongodb/mongo-go-driver/bson"
+	"github.com/mongodb/mongo-go-driver/mongo"
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -19,8 +22,8 @@ import (
 func IBD(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
-	case http.MethodGet:
-		ibdGet(w, r)
+	//case http.MethodGet:
+	//ibdGet(w, r)
 
 	case http.MethodPost:
 		ibdPost(w, r)
@@ -83,12 +86,33 @@ func ibdPost(w http.ResponseWriter, r *http.Request) {
 
 	collection := client.MongoClient.Database(config.NamespaceIBD).Collection(cookie)
 
-	_, err = collection.InsertOne(context.Background(), ibdDatastore)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+	filter := bson.NewDocument(
+		bson.EC.Interface("id", ibdDatastore.ID),
+	)
+
+	err = collection.FindOne(context.Background(), filter).Decode(&datautils.DataIDStorage{})
+	if err == nil {
+		goto ok
+	} else {
+		if err == mongo.ErrNoDocuments {
+			_, err = collection.InsertOne(context.Background(), ibdDatastore)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+		} else {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 	}
 
+	//_, err = collection.InsertOne(context.Background(), ibdDatastore)
+	//if err != nil {
+	//http.Error(w, err.Error(), http.StatusInternalServerError)
+	//return
+	//}
+
+ok:
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(http.StatusText(http.StatusOK)))
 }

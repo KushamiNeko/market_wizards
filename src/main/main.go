@@ -68,6 +68,8 @@ func main() {
 
 	mux.HandleFunc("/ibd", handler.IBD)
 
+	mux.HandleFunc("/marketsmith", handler.MarketSmith)
+
 	mux.HandleFunc("/statistic", handler.Statistic)
 
 	mux.HandleFunc("/resource/", handler.Resource)

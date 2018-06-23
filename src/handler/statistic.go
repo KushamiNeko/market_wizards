@@ -57,7 +57,7 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 	if starts != "" {
 		start, err = strconv.ParseInt(starts, 10, 64)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 	}
@@ -65,7 +65,7 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 	if ends != "" {
 		end, err = strconv.ParseInt(ends, 10, 64)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 	}
@@ -73,7 +73,7 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 	if thresholds != "" {
 		threshold, err = strconv.ParseFloat(thresholds, 64)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 	}
@@ -120,11 +120,14 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 
 	orders := make([]*transaction.Transaction, len(sellOrders))
 
-	winner := make([]*transaction.Transaction, 0)
-	losser := make([]*transaction.Transaction, 0)
+	winners := make([]*transaction.Transaction, 0)
+	losers := make([]*transaction.Transaction, 0)
 
-	winnerIBD := make([]*bytes.Buffer, 0)
-	losserIBD := make([]*bytes.Buffer, 0)
+	winnersIBD := make([]*bytes.Buffer, 0)
+	losersIBD := make([]*bytes.Buffer, 0)
+
+	winnersMS := make([]*bytes.Buffer, 0)
+	losersMS := make([]*bytes.Buffer, 0)
 
 	for i, sellOrder := range sellOrders {
 
@@ -153,14 +156,26 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 		collection = client.MongoClient.Database(config.NamespaceIBD).Collection(cookie)
 
 		filter = bson.NewDocument(
-			//bson.EC.Interface("id", ibd.IBDCheckupDatastoreGetID(sellOrder.DateOfPurchase, sellOrder.Symbol)),
 			bson.EC.Interface("id", sellOrder.GetPurchaseIBDCheckupID()),
 		)
 
-		//ibdCheckup := new(ibd.IBDCheckupDatastore)
 		ibdCheckup := new(datautils.DataIDStorage)
 
-		err = collection.FindOne(context.Background(), filter).Decode(ibdCheckup)
+		ibdErr := collection.FindOne(context.Background(), filter).Decode(ibdCheckup)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		collection = client.MongoClient.Database(config.NamespaceMarketSmith).Collection(cookie)
+
+		filter = bson.NewDocument(
+			bson.EC.Interface("id", sellOrder.GetPurchaseMarketSmithID()),
+		)
+
+		ms := new(datautils.DataIDStorage)
+
+		msErr := collection.FindOne(context.Background(), filter).Decode(ms)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -171,10 +186,10 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 			t.Buy = buyOrder
 			t.Sell = sellOrder
 
-			winner = append(winner, t)
+			winners = append(winners, t)
 
-			if err == mongo.ErrNoDocuments {
-				continue
+			if ibdErr == mongo.ErrNoDocuments {
+
 			} else {
 				if err != nil {
 					http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -187,7 +202,24 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 
-				winnerIBD = append(winnerIBD, bytes.NewBuffer(data))
+				winnersIBD = append(winnersIBD, bytes.NewBuffer(data))
+			}
+
+			if msErr == mongo.ErrNoDocuments {
+
+			} else {
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusInternalServerError)
+					return
+				}
+
+				data, err := base64.StdEncoding.DecodeString(ms.Data)
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusInternalServerError)
+					return
+				}
+
+				winnersMS = append(winnersMS, bytes.NewBuffer(data))
 			}
 
 		} else {
@@ -195,10 +227,10 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 			t.Buy = buyOrder
 			t.Sell = sellOrder
 
-			losser = append(losser, t)
+			losers = append(losers, t)
 
-			if err == mongo.ErrNoDocuments {
-				continue
+			if ibdErr == mongo.ErrNoDocuments {
+
 			} else {
 				if err != nil {
 					http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -211,13 +243,30 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 
-				losserIBD = append(losserIBD, bytes.NewBuffer(data))
+				losersIBD = append(losersIBD, bytes.NewBuffer(data))
+			}
+
+			if msErr == mongo.ErrNoDocuments {
+
+			} else {
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusInternalServerError)
+					return
+				}
+
+				data, err := base64.StdEncoding.DecodeString(ms.Data)
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusInternalServerError)
+					return
+				}
+
+				losersMS = append(losersMS, bytes.NewBuffer(data))
 			}
 
 		}
 	}
 
-	stat, err := statistic.NewStatistic(winner, losser)
+	stat, err := statistic.NewStatistic(winners, losers)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -227,13 +276,19 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 	stat.EndDate = ends
 	stat.LossThresholdP = threshold
 
-	stat.ChartGeneral, err = charts.ChartGeneralNew(orders, winner, losser)
+	stat.ChartGeneral, err = charts.ChartGeneralNew(orders, winners, losers)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	stat.ChartIBD, err = charts.ChartIBDNew(orders, winnerIBD, losserIBD)
+	stat.ChartIBD, err = charts.ChartIBDNew(orders, winnersIBD, losersIBD)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	stat.ChartMarketSmith, err = charts.ChartMarketSmithNew(orders, winnersMS, losersMS)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

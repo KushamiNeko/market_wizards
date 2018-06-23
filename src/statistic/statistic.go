@@ -16,9 +16,9 @@ type Statistic struct {
 	EndDate        string
 	LossThresholdP float64
 
-	ChartGeneral *charts.ChartGeneral
-	ChartIBD     *charts.ChartIBD
-	//ChartMarketSmith *charts.ChartGeneral
+	ChartGeneral     *charts.ChartGeneral
+	ChartIBD         *charts.ChartIBD
+	ChartMarketSmith *charts.ChartMarketSmith
 
 	TotalTrade int
 

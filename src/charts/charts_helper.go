@@ -6,7 +6,6 @@ import (
 	"config"
 	"datautils"
 	"fmt"
-	"ibd"
 	"math"
 	"sort"
 	"strconv"
@@ -15,7 +14,7 @@ import (
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func columnChartPercent(label string, interval float64, winners, losers []*ibd.IBDCheckup) (string, error) {
+func columnChartPercent(label string, interval float64, winners, losers []datautils.Contents) (string, error) {
 	g := make([][]interface{}, 0)
 
 	g = append(g, []interface{}{
@@ -34,14 +33,14 @@ func columnChartPercent(label string, interval float64, winners, losers []*ibd.I
 	intervalDictL := make(map[int]int)
 
 	for _, o := range winners {
-		for _, f := range o.Contents {
-			if f.Label == label {
+		for _, f := range o.GetContents() {
+			if f.GetLabel() == label {
 				var grps int
 
-				if f.Value == config.NullValue {
+				if f.GetValue() == config.NullValue {
 					grps = math.MaxInt32
 				} else {
-					vf, err := strconv.ParseFloat(strings.Replace(f.Value, "%", "", -1), 64)
+					vf, err := strconv.ParseFloat(strings.Replace(f.GetValue(), "%", "", -1), 64)
 					if err != nil {
 						return "", err
 					}
@@ -63,15 +62,15 @@ func columnChartPercent(label string, interval float64, winners, losers []*ibd.I
 	}
 
 	for _, o := range losers {
-		for _, f := range o.Contents {
-			if f.Label == label {
+		for _, f := range o.GetContents() {
+			if f.GetLabel() == label {
 				var grps int
 
-				if f.Value == config.NullValue {
+				if f.GetValue() == config.NullValue {
 					grps = math.MaxInt32
 				} else {
 
-					vf, err := strconv.ParseFloat(strings.Replace(f.Value, "%", "", -1), 64)
+					vf, err := strconv.ParseFloat(strings.Replace(f.GetValue(), "%", "", -1), 64)
 					if err != nil {
 						return "", err
 					}
@@ -155,7 +154,7 @@ outer:
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func columnChartStringRank(label string, winners, losers []*ibd.IBDCheckup) (string, error) {
+func columnChartStringRank(label string, winners, losers []datautils.Contents) (string, error) {
 	g := make([][]interface{}, 0)
 
 	g = append(g, []interface{}{
@@ -174,11 +173,11 @@ func columnChartStringRank(label string, winners, losers []*ibd.IBDCheckup) (str
 	intervalDictL := make(map[string]int)
 
 	for _, o := range winners {
-		for _, f := range o.Contents {
-			if f.Label == label {
+		for _, f := range o.GetContents() {
+			if f.GetLabel() == label {
 
 				var grps string
-				grps = f.Value
+				grps = f.GetValue()
 				grps = strings.Replace(grps, "+", "", -1)
 				grps = strings.Replace(grps, "-", "", -1)
 
@@ -194,11 +193,11 @@ func columnChartStringRank(label string, winners, losers []*ibd.IBDCheckup) (str
 	}
 
 	for _, o := range losers {
-		for _, f := range o.Contents {
-			if f.Label == label {
+		for _, f := range o.GetContents() {
+			if f.GetLabel() == label {
 
 				var grps string
-				grps = f.Value
+				grps = f.GetValue()
 				grps = strings.Replace(grps, "+", "", -1)
 				grps = strings.Replace(grps, "-", "", -1)
 
@@ -268,7 +267,7 @@ outer:
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func columnChartIntInterval(label string, interval float64, winners, losers []*ibd.IBDCheckup) (string, error) {
+func columnChartIntInterval(label string, interval float64, winners, losers []datautils.Contents) (string, error) {
 	g := make([][]interface{}, 0)
 
 	g = append(g, []interface{}{
@@ -287,15 +286,15 @@ func columnChartIntInterval(label string, interval float64, winners, losers []*i
 	intervalDictL := make(map[int]int)
 
 	for _, o := range winners {
-		for _, f := range o.Contents {
-			if f.Label == label {
+		for _, f := range o.GetContents() {
+			if f.GetLabel() == label {
 				var grps int
 
-				if f.Value == config.NullValue {
+				if f.GetValue() == config.NullValue {
 					grps = math.MaxInt32
 				} else {
 
-					vf, err := strconv.ParseFloat(f.Value, 64)
+					vf, err := strconv.ParseFloat(f.GetValue(), 64)
 					if err != nil {
 						return "", err
 					}
@@ -316,15 +315,15 @@ func columnChartIntInterval(label string, interval float64, winners, losers []*i
 	}
 
 	for _, o := range losers {
-		for _, f := range o.Contents {
-			if f.Label == label {
+		for _, f := range o.GetContents() {
+			if f.GetLabel() == label {
 				var grps int
 
-				if f.Value == config.NullValue {
+				if f.GetValue() == config.NullValue {
 					grps = math.MaxInt32
 				} else {
 
-					vf, err := strconv.ParseFloat(f.Value, 64)
+					vf, err := strconv.ParseFloat(f.GetValue(), 64)
 					if err != nil {
 						return "", err
 					}
@@ -408,7 +407,7 @@ outer:
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func columnChartFloatInterval(label string, interval float64, winners, losers []*ibd.IBDCheckup) (string, error) {
+func columnChartFloatInterval(label string, interval float64, winners, losers []datautils.Contents) (string, error) {
 	g := make([][]interface{}, 0)
 
 	g = append(g, []interface{}{
@@ -427,15 +426,15 @@ func columnChartFloatInterval(label string, interval float64, winners, losers []
 	intervalDictL := make(map[float64]int)
 
 	for _, o := range winners {
-		for _, f := range o.Contents {
-			if f.Label == label {
+		for _, f := range o.GetContents() {
+			if f.GetLabel() == label {
 				var grps float64
 
-				if f.Value == config.NullValue {
+				if f.GetValue() == config.NullValue {
 					grps = math.MaxFloat64
 				} else {
 
-					vf, err := strconv.ParseFloat(f.Value, 64)
+					vf, err := strconv.ParseFloat(f.GetValue(), 64)
 					if err != nil {
 						return "", err
 					}
@@ -456,15 +455,15 @@ func columnChartFloatInterval(label string, interval float64, winners, losers []
 	}
 
 	for _, o := range losers {
-		for _, f := range o.Contents {
-			if f.Label == label {
+		for _, f := range o.GetContents() {
+			if f.GetLabel() == label {
 				var grps float64
 
-				if f.Value == config.NullValue {
+				if f.GetValue() == config.NullValue {
 					grps = math.MaxFloat64
 				} else {
 
-					vf, err := strconv.ParseFloat(f.Value, 64)
+					vf, err := strconv.ParseFloat(f.GetValue(), 64)
 					if err != nil {
 						return "", err
 					}
@@ -548,7 +547,7 @@ outer:
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func columnChartInt(label string, winners, losers []*ibd.IBDCheckup) (string, error) {
+func columnChartInt(label string, winners, losers []datautils.Contents) (string, error) {
 
 	g := make([][]interface{}, 0)
 
@@ -568,15 +567,15 @@ func columnChartInt(label string, winners, losers []*ibd.IBDCheckup) (string, er
 	intervalDictL := make(map[int]int)
 
 	for _, o := range winners {
-		for _, f := range o.Contents {
-			if f.Label == label {
+		for _, f := range o.GetContents() {
+			if f.GetLabel() == label {
 				var grps int
 
-				if f.Value == config.NullValue {
+				if f.GetValue() == config.NullValue {
 					grps = math.MaxInt32
 
 				} else {
-					vf, err := strconv.ParseFloat(f.Value, 64)
+					vf, err := strconv.ParseFloat(f.GetValue(), 64)
 					if err != nil {
 						return "", err
 					}
@@ -596,16 +595,16 @@ func columnChartInt(label string, winners, losers []*ibd.IBDCheckup) (string, er
 	}
 
 	for _, o := range losers {
-		for _, f := range o.Contents {
-			if f.Label == label {
+		for _, f := range o.GetContents() {
+			if f.GetLabel() == label {
 				var grps int
 
-				if f.Value == config.NullValue {
+				if f.GetValue() == config.NullValue {
 					grps = math.MaxInt32
 
 				} else {
 
-					vf, err := strconv.ParseFloat(f.Value, 64)
+					vf, err := strconv.ParseFloat(f.GetValue(), 64)
 					if err != nil {
 						return "", err
 					}
@@ -687,7 +686,7 @@ outer:
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func columnChartString(label string, winners, losers []*ibd.IBDCheckup) (string, error) {
+func columnChartString(label string, winners, losers []datautils.Contents) (string, error) {
 
 	g := make([][]interface{}, 0)
 
@@ -707,15 +706,15 @@ func columnChartString(label string, winners, losers []*ibd.IBDCheckup) (string,
 	intervalDictL := make(map[string]int)
 
 	for _, o := range winners {
-		for _, f := range o.Contents {
-			if f.Label == label {
+		for _, f := range o.GetContents() {
+			if f.GetLabel() == label {
 				//var grps int
 
-				//if f.Value == config.NullValue {
+				//if f.GetValue() == config.NullValue {
 				//grps = math.MaxInt32
 
 				//} else {
-				//vf, err := strconv.ParseFloat(f.Value, 64)
+				//vf, err := strconv.ParseFloat(f.GetValue(), 64)
 				//if err != nil {
 				//return "", err
 				//}
@@ -723,7 +722,7 @@ func columnChartString(label string, winners, losers []*ibd.IBDCheckup) (string,
 				//grps = int(vf)
 				//}
 
-				grps := f.Value
+				grps := f.GetValue()
 
 				if val, ok := intervalDictW[grps]; ok {
 					intervalDictW[grps] = val + 1
@@ -737,16 +736,16 @@ func columnChartString(label string, winners, losers []*ibd.IBDCheckup) (string,
 	}
 
 	for _, o := range losers {
-		for _, f := range o.Contents {
-			if f.Label == label {
+		for _, f := range o.GetContents() {
+			if f.GetLabel() == label {
 				//var grps int
 
-				//if f.Value == config.NullValue {
+				//if f.GetValue() == config.NullValue {
 				//grps = math.MaxInt32
 
 				//} else {
 
-				//vf, err := strconv.ParseFloat(f.Value, 64)
+				//vf, err := strconv.ParseFloat(f.GetValue(), 64)
 				//if err != nil {
 				//return "", err
 				//}
@@ -754,7 +753,7 @@ func columnChartString(label string, winners, losers []*ibd.IBDCheckup) (string,
 				//grps = int(vf)
 				//}
 
-				grps := f.Value
+				grps := f.GetValue()
 
 				if val, ok := intervalDictL[grps]; ok {
 					intervalDictL[grps] = val + 1
