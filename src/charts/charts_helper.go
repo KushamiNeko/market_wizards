@@ -10,6 +10,8 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+
+	"golang.org/x/text/message"
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -109,6 +111,8 @@ outer:
 
 	sort.Ints(ck)
 
+	p := message.NewPrinter(message.MatchLanguage("en"))
+
 	for _, k := range ck {
 
 		var vw int
@@ -120,7 +124,8 @@ outer:
 			grpk = config.NullValue
 		} else {
 			grp := math.Floor(float64(k) / interval)
-			grpk = fmt.Sprintf(config.PercentIntervalFormat, int(grp*interval), int((grp+1)*interval))
+			//grpk = fmt.Sprintf(config.PercentIntervalFormat, int(grp*interval), int((grp+1)*interval))
+			grpk = p.Sprintf(config.PercentIntervalFormat, int(grp*interval), int((grp+1)*interval))
 		}
 
 		if v, ok := intervalDictW[k]; ok {
@@ -362,6 +367,8 @@ outer:
 
 	sort.Ints(ck)
 
+	p := message.NewPrinter(message.MatchLanguage("en"))
+
 	for _, k := range ck {
 
 		var vw int
@@ -373,7 +380,8 @@ outer:
 			grpk = config.NullValue
 		} else {
 			grp := math.Floor(float64(k) / interval)
-			grpk = fmt.Sprintf(config.IntervalFormat, int(grp*interval), int((grp+1)*interval))
+			//grpk = fmt.Sprintf(config.IntervalFormat, int(grp*interval), int((grp+1)*interval))
+			grpk = p.Sprintf(config.IntervalFormat, int(grp*interval), int((grp+1)*interval))
 		}
 
 		if v, ok := intervalDictW[k]; ok {
@@ -502,6 +510,8 @@ outer:
 
 	sort.Float64s(ck)
 
+	p := message.NewPrinter(message.MatchLanguage("en"))
+
 	for _, k := range ck {
 
 		var vw int
@@ -513,7 +523,8 @@ outer:
 			grpk = config.NullValue
 		} else {
 			grp := math.Floor(float64(k) / interval)
-			grpk = fmt.Sprintf(config.IntervalFormat, grp*interval, (grp+1)*interval)
+			//grpk = fmt.Sprintf(config.IntervalFormat, grp*interval, (grp+1)*interval)
+			grpk = p.Sprintf(config.IntervalFormat, grp*interval, (grp+1)*interval)
 		}
 
 		if v, ok := intervalDictW[k]; ok {
@@ -642,6 +653,8 @@ outer:
 
 	sort.Ints(ck)
 
+	p := message.NewPrinter(message.MatchLanguage("en"))
+
 	for _, k := range ck {
 
 		var vw int
@@ -652,7 +665,8 @@ outer:
 		if k == math.MaxInt32 {
 			grpk = config.NullValue
 		} else {
-			grpk = fmt.Sprintf("%v", k)
+			//grpk = fmt.Sprintf("%v", k)
+			grpk = p.Sprintf("%v", k)
 		}
 
 		if v, ok := intervalDictW[k]; ok {

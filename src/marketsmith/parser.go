@@ -72,39 +72,15 @@ func init() {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//type MarketSmithDatastore struct {
-//ID   string
-//Data []byte `datastore:",noindex"`
-//}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//func MarketSmithDatastoreNew(date int, symbol, chartType string, data []byte) *MarketSmithDatastore {
-//m := new(MarketSmithDatastore)
-
-//m.ID = MarketSmithDatastoreGetID(date, symbol, chartType)
-//m.Data = data
-
-//return m
-//}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//func MarketSmithDatastoreGetID(date int, symbol, chartType string) string {
-//return fmt.Sprintf("%d_%v_%v", date, symbol, chartType)
-//}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 type MarketSmith struct {
-	Contents []field
+	Contents []*field
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func MarketSmithNew() *MarketSmith {
 	m := new(MarketSmith)
-	m.Contents = make([]field, 0)
+	m.Contents = make([]*field, 0)
 
 	return m
 }
@@ -131,14 +107,20 @@ type field struct {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (f field) GetLabel() string {
+func (f *field) GetLabel() string {
 	return f.Label
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (f field) GetValue() string {
+func (f *field) GetValue() string {
 	return f.Value
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (f *field) SetValue(value string) {
+	f.Value = value
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -184,9 +166,9 @@ func Parse(buffer *bytes.Buffer) (*MarketSmith, error) {
 	//return nil, err
 	//}
 
-	//for _, c := range m.Contents {
-	//fmt.Printf("%v @ %v\n", c.Label, c.Value)
-	//}
+	for _, c := range m.Contents {
+		fmt.Printf("%v @ %v\n", c.Label, c.Value)
+	}
 
 	return m, nil
 }
@@ -207,7 +189,7 @@ func (m *MarketSmith) getInfoCell(buffer *bytes.Buffer) error {
 			return fmt.Errorf("problems occur while parsing Info Cell \n")
 		}
 
-		m.Contents = append(m.Contents, field{
+		m.Contents = append(m.Contents, &field{
 			strings.TrimSpace(r[1]),
 			strings.TrimSpace(r[2]),
 		})
@@ -232,7 +214,7 @@ func (m *MarketSmith) getIndustryGroup(buffer *bytes.Buffer) error {
 			return fmt.Errorf("problems occur while parsing Industry Group \n")
 		}
 
-		m.Contents = append(m.Contents, field{
+		m.Contents = append(m.Contents, &field{
 			"Industry Group",
 			strings.TrimSpace(r[1]),
 		})
@@ -257,7 +239,7 @@ func (m *MarketSmith) getOptions(buffer *bytes.Buffer) error {
 			return fmt.Errorf("problems occur while parsing Options \n")
 		}
 
-		m.Contents = append(m.Contents, field{
+		m.Contents = append(m.Contents, &field{
 			"Options",
 			strings.TrimSpace(r[1]),
 		})
@@ -282,17 +264,17 @@ func (m *MarketSmith) getFloatShare(buffer *bytes.Buffer) error {
 			return fmt.Errorf("problems occur while parsing Float Share \n")
 		}
 
-		m.Contents = append(m.Contents, field{
+		m.Contents = append(m.Contents, &field{
 			strings.TrimSpace(r[1]),
 			strings.TrimSpace(r[4]),
 		})
 
-		m.Contents = append(m.Contents, field{
+		m.Contents = append(m.Contents, &field{
 			strings.TrimSpace(r[2]),
 			strings.TrimSpace(r[5]),
 		})
 
-		m.Contents = append(m.Contents, field{
+		m.Contents = append(m.Contents, &field{
 			strings.TrimSpace(r[3]),
 			strings.TrimSpace(r[6]),
 		})
@@ -324,52 +306,52 @@ func (m *MarketSmith) getQuarterlyResults(buffer *bytes.Buffer) error {
 		saless[i] = strings.TrimSpace(r[4])
 	}
 
-	m.Contents = append(m.Contents, field{
+	m.Contents = append(m.Contents, &field{
 		"Avg EPS % Chg 2Q",
 		m.getQuarterlyMean(epss[5:]),
 	})
 
-	m.Contents = append(m.Contents, field{
+	m.Contents = append(m.Contents, &field{
 		"Avg EPS % Chg 3Q",
 		m.getQuarterlyMean(epss[4:]),
 	})
 
-	m.Contents = append(m.Contents, field{
+	m.Contents = append(m.Contents, &field{
 		"Avg EPS % Chg 4Q",
 		m.getQuarterlyMean(epss[3:]),
 	})
 
-	m.Contents = append(m.Contents, field{
+	m.Contents = append(m.Contents, &field{
 		"Avg EPS % Chg 5Q",
 		m.getQuarterlyMean(epss[2:]),
 	})
 
-	m.Contents = append(m.Contents, field{
+	m.Contents = append(m.Contents, &field{
 		"Avg EPS % Chg 6Q",
 		m.getQuarterlyMean(epss[1:]),
 	})
 
-	m.Contents = append(m.Contents, field{
+	m.Contents = append(m.Contents, &field{
 		"Avg Sales % Chg 2Q",
 		m.getQuarterlyMean(saless[5:]),
 	})
 
-	m.Contents = append(m.Contents, field{
+	m.Contents = append(m.Contents, &field{
 		"Avg Sales % Chg 3Q",
 		m.getQuarterlyMean(saless[4:]),
 	})
 
-	m.Contents = append(m.Contents, field{
+	m.Contents = append(m.Contents, &field{
 		"Avg Sales % Chg 4Q",
 		m.getQuarterlyMean(saless[3:]),
 	})
 
-	m.Contents = append(m.Contents, field{
+	m.Contents = append(m.Contents, &field{
 		"Avg Sales % Chg 5Q",
 		m.getQuarterlyMean(saless[2:]),
 	})
 
-	m.Contents = append(m.Contents, field{
+	m.Contents = append(m.Contents, &field{
 		"Avg Sales % Chg 6Q",
 		m.getQuarterlyMean(saless[1:]),
 	})
@@ -442,7 +424,7 @@ func (m *MarketSmith) getFunds(buffer *bytes.Buffer) error {
 		return err
 	}
 
-	m.Contents = append(m.Contents, field{
+	m.Contents = append(m.Contents, &field{
 		"Avg Funds Holding 4Q",
 		fmt.Sprintf("%v", int(mean)),
 	})
@@ -469,7 +451,7 @@ func (m *MarketSmith) getRSRating(buffer *bytes.Buffer) error {
 		return fmt.Errorf("problems occur while parsing RS Rating\n")
 	}
 
-	m.Contents = append(m.Contents, field{
+	m.Contents = append(m.Contents, &field{
 		"RS Rating",
 		results[0][1],
 	})

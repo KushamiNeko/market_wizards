@@ -84,14 +84,14 @@ func init() {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 type IBDCheckup struct {
-	Contents []field
+	Contents []*field
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func IBDCheckupNew() *IBDCheckup {
 	checkup := new(IBDCheckup)
-	checkup.Contents = make([]field, 0)
+	checkup.Contents = make([]*field, 0)
 
 	return checkup
 }
@@ -119,14 +119,20 @@ type field struct {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (f field) GetLabel() string {
+func (f *field) GetLabel() string {
 	return f.Label
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (f field) GetValue() string {
+func (f *field) GetValue() string {
 	return f.Value
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (f *field) SetValue(value string) {
+	f.Value = value
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -153,7 +159,7 @@ func Parse(buffer *bytes.Buffer) (*IBDCheckup, error) {
 
 	symbol := strings.TrimSpace(results[0][1])
 
-	checkup.Contents = append(checkup.Contents, field{
+	checkup.Contents = append(checkup.Contents, &field{
 		"Symbol",
 		symbol,
 		"",
@@ -172,7 +178,7 @@ func Parse(buffer *bytes.Buffer) (*IBDCheckup, error) {
 
 		if s == symbol {
 
-			checkup.Contents = append(checkup.Contents, field{
+			checkup.Contents = append(checkup.Contents, &field{
 				"Rank in Group",
 				strings.TrimSpace(r),
 				"",
@@ -245,7 +251,7 @@ func Parse(buffer *bytes.Buffer) (*IBDCheckup, error) {
 			condition = none
 		}
 
-		checkup.Contents = append(checkup.Contents, field{
+		checkup.Contents = append(checkup.Contents, &field{
 			strings.TrimSpace(match[1]),
 			value,
 			condition,

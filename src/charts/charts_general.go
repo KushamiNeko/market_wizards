@@ -11,6 +11,8 @@ import (
 	"strconv"
 	"strings"
 	"transaction"
+
+	"golang.org/x/text/message"
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -261,13 +263,16 @@ outer:
 
 	sort.Ints(ck)
 
+	p := message.NewPrinter(message.MatchLanguage("en"))
+
 	for _, k := range ck {
 
 		var vw int
 		var vl int
 
 		grp := math.Floor(float64(k) / config.PriceInterval)
-		grpk := fmt.Sprintf(config.PriceIntervalFormat, int(grp*config.PriceInterval), int((grp+1)*config.PriceInterval))
+		//grpk := fmt.Sprintf(config.PriceIntervalFormat, int(grp*config.PriceInterval), int((grp+1)*config.PriceInterval))
+		grpk := p.Sprintf(config.PriceIntervalFormat, int(grp*config.PriceInterval), int((grp+1)*config.PriceInterval))
 
 		if v, ok := dictPriceW[k]; ok {
 			vw = v
