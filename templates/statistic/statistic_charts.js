@@ -22,7 +22,7 @@ function drawWinLoseColumnChart(jqueryID, chartTitle) {
 
   var classicOptions = {
     width: width,
-    height: width / 1.5,
+    height: width / 2,
     hAxis: {
       slantedText: true,
     },

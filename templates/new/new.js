@@ -225,6 +225,27 @@ $("#input-date-of-purchase").change(function() {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
+var transactionStatus = 0;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function transactionOK(newLocation) {
+
+  transactionStatus += 1;
+
+  if (transactionStatus === 3) {
+
+    transactionStatus = 0;
+
+    outProcess("#button-create");
+
+    window.location = newLocation;
+
+  }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
 $("#button-create").click(function() {
   $(".invalid-feedback").hide();
 
@@ -423,7 +444,8 @@ $("#button-create").click(function() {
     url: "/ibd",
     data: ibdJsonBody,
     success: function(data) {
-      //outProcess();
+      //outProcess("#button-create");
+      transactionOK("/action");
     },
     error: function(xhr, err) {
       //$("#new-modal-body").val(xhr.responseText);
@@ -448,14 +470,14 @@ $("#button-create").click(function() {
     url: "/marketsmith",
     data: marketsmithJsonBody,
     success: function(data) {
-      //outProcess();
+      //outProcess("#button-create");
+      transactionOK("/action");
     },
     error: function(xhr, err) {
       //$("#new-modal-body").val(xhr.responseText);
       //$("#new-modal").modal("show");
 
       //outProcess("#button-create");
-
       alert(xhr.responseText);
     },
   });
@@ -516,18 +538,16 @@ $("#button-create").click(function() {
     url: "/transaction?Order=" + encodeURIComponent(order),
     data: jsonBody,
     success: function(data) {
-
-      window.location = data;
-
-      outProcess();
+      //outProcess("#button-create");
+      //window.location = data;
+      transactionOK("/action");
     },
     error: function(xhr, err) {
       //$("#new-modal-body").val(xhr.responseText);
       //$("#new-modal").modal("show");
 
+      //outProcess("#button-create");
       alert(xhr.responseText);
-
-      outProcess("#button-create");
     },
   });
 

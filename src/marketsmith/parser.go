@@ -166,10 +166,6 @@ func Parse(buffer *bytes.Buffer) (*MarketSmith, error) {
 	//return nil, err
 	//}
 
-	for _, c := range m.Contents {
-		fmt.Printf("%v @ %v\n", c.Label, c.Value)
-	}
-
 	return m, nil
 }
 

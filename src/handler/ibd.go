@@ -92,7 +92,7 @@ func ibdPost(w http.ResponseWriter, r *http.Request) {
 
 	err = collection.FindOne(context.Background(), filter).Decode(&datautils.DataIDStorage{})
 	if err == nil {
-		goto ok
+
 	} else {
 		if err == mongo.ErrNoDocuments {
 			_, err = collection.InsertOne(context.Background(), ibdDatastore)
@@ -112,7 +112,6 @@ func ibdPost(w http.ResponseWriter, r *http.Request) {
 	//return
 	//}
 
-ok:
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(http.StatusText(http.StatusOK)))
 }
