@@ -57,7 +57,8 @@ func marketsmithPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	objectRequest := new(ObjectRequestBody)
+	//objectRequest := new(ObjectRequestBody)
+	objectRequest := new(datautils.DateSymbolStorage)
 
 	err = datautils.JsonRequestBodyDecode(r, objectRequest)
 	if err != nil {
@@ -65,7 +66,7 @@ func marketsmithPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	msBuffer, err := datautils.FileReaderExtract(objectRequest.Object)
+	msBuffer, err := datautils.FileReaderExtract(objectRequest.Data)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("MarketSmith: %s\n", err.Error()), http.StatusBadRequest)
 		return
@@ -83,17 +84,22 @@ func marketsmithPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	msDatastore := datautils.DataIDStorageNewBytes(objectRequest.DateSymbolID(), msJson)
+	msDatastore := datautils.DateSymbolStorageNewBytes(objectRequest.Date, objectRequest.Symbol, msJson)
 
 	collection := client.MongoClient.Database(config.NamespaceMarketSmith).Collection(cookie)
 
 	filter := bson.NewDocument(
-		bson.EC.Interface("id", msDatastore.ID),
+		bson.EC.Interface("date", msDatastore.Date),
+		bson.EC.Interface("symbol", msDatastore.Symbol),
 	)
 
-	err = collection.FindOne(context.Background(), filter).Decode(&datautils.DataIDStorage{})
+	err = collection.FindOne(context.Background(), filter).Decode(&datautils.DateSymbolStorage{})
 	if err == nil {
-
+		_, err = collection.ReplaceOne(context.Background(), filter, msDatastore)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 	} else {
 		if err == mongo.ErrNoDocuments {
 			_, err = collection.InsertOne(context.Background(), msDatastore)

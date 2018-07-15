@@ -156,10 +156,11 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 		collection = client.MongoClient.Database(config.NamespaceIBD).Collection(cookie)
 
 		filter = bson.NewDocument(
-			bson.EC.Interface("id", sellOrder.GetPurchaseIBDCheckupID()),
+			bson.EC.Interface("date", sellOrder.DateOfPurchase),
+			bson.EC.Interface("symbol", sellOrder.Symbol),
 		)
 
-		ibdCheckup := new(datautils.DataIDStorage)
+		ibdCheckup := new(datautils.DateSymbolStorage)
 
 		ibdErr := collection.FindOne(context.Background(), filter).Decode(ibdCheckup)
 		if err != nil {
@@ -170,10 +171,11 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 		collection = client.MongoClient.Database(config.NamespaceMarketSmith).Collection(cookie)
 
 		filter = bson.NewDocument(
-			bson.EC.Interface("id", sellOrder.GetPurchaseMarketSmithID()),
+			bson.EC.Interface("date", sellOrder.DateOfPurchase),
+			bson.EC.Interface("symbol", sellOrder.Symbol),
 		)
 
-		ms := new(datautils.DataIDStorage)
+		ms := new(datautils.DateSymbolStorage)
 
 		msErr := collection.FindOne(context.Background(), filter).Decode(ms)
 		if err != nil {

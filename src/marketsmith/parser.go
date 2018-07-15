@@ -156,10 +156,10 @@ func Parse(buffer *bytes.Buffer) (*MarketSmith, error) {
 		return nil, err
 	}
 
-	//err = m.getQuarterlyResults(buffer)
-	//if err != nil {
-	//return nil, err
-	//}
+	err = m.getQuarterlyResults(buffer)
+	if err != nil {
+		return nil, err
+	}
 
 	_ = m.getFunds(buffer)
 	//if err != nil {

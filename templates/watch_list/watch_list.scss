@@ -1,0 +1,50 @@
+@import "../_share_scss/share";
+
+.watch-list-container {
+  @extend %my-share-container;
+}
+
+.watch-list-table {
+  width: 100%;
+}
+
+.watch-list-margin-top {
+  @extend %my-share-margin-top;
+}
+
+.watch-list-button {
+  @extend %my-share-button;
+  width: 100%;
+}
+
+.watch-list-button-icons {
+  @extend %my-share-button-icons;
+}
+
+.watch-list-label {
+  @extend %my-share-label;
+}
+
+.watch-list-input {
+  @extend %my-share-input;
+}
+
+.watch-list-validate {
+  @extend %my-share-validate;
+}
+
+.watch-list-menu {
+  @extend %my-share-label;
+  width: 100%;
+}
+
+.watch-list-item {
+  @extend %my-share-label;
+  width: 100%;
+}
+
+.watch-list-separator {
+  @extend %my-share-separator;
+  margin-top: 2em;
+  margin-bottom: 0;
+}

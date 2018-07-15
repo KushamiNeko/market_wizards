@@ -1,0 +1,204 @@
+{{define "WatchList"}}
+
+<html lang="en">
+
+<head>
+
+  <!---->
+  {{template "IndexHead"}}
+  <!---->
+
+  <!---->
+  {{template "IndexIcon"}}
+  <!---->
+
+  <!---->
+  {{template "CDNCSS"}}
+  <!---->
+
+  <!---->
+  {{template "ShareCSS"}}
+  <!---->
+
+  <!---->
+  {{template "WatchListCSS"}}
+  <!---->
+
+</head>
+
+<body>
+
+  <!---->
+  {{template "ShareNavbar"}}
+  <!---->
+
+  <div class="watch-list-container">
+
+    <label for="input-capital"
+      class="watch-list-margin-top watch-list-label">
+      Capital
+    </label>
+
+    <div class="input-group">
+
+      <span class="input-group-addon watch-list-input">$</span>
+
+      <input type="text"
+        id="input-capital"
+        class="form-control watch-list-input"
+        placeholder="capital"
+        value="{{.Capital}}"
+        aria-label="capital">
+
+    </div>
+
+    <div id="validate-capital"
+      class="invalid-feedback watch-list-validate">
+      Invalid Capital
+    </div>
+
+    <label for="input-size"
+      class="watch-list-margin-top watch-list-label">
+      Size
+    </label>
+
+    <div class="input-group">
+
+      <input type="text"
+        id="input-size"
+        class="form-control watch-list-input"
+        placeholder="size"
+        value="{{.Size}}"
+        aria-label="size">
+
+      <span class="input-group-addon watch-list-input">%</span>
+
+    </div>
+
+    <div id="validate-size"
+      class="invalid-feedback watch-list-validate">
+      Invalid Size
+    </div>
+
+    <label for="input-symbol"
+      class="watch-list-margin-top watch-list-label">
+      Symbol
+    </label>
+
+    <input type="text"
+      id="input-symbol"
+      class="form-control watch-list-input"
+      placeholder="symbol"
+      aria-label="symbol"
+      value="{{.Symbol}}"
+      style="text-transform: uppercase;">
+
+    <div id="validate-symbol"
+      class="invalid-feedback watch-list-validate">
+      Invalid Symbol
+    </div>
+
+    <button type="button"
+      id="button-calculate"
+      class="btn btn-lg btn-dark watch-list-margin-top watch-list-button">
+      <i class="material-icons watch-list-button-icons">search</i>
+      Calculate 
+    </button>
+
+    <div class="watch-list-separator">
+    </div>
+
+    <table class="table table-hover watch-list-margin-top watch-list-table">
+
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">Symbol</th>
+          <th scope="col">Price</th>
+          <th scope="col">Priority</th>
+          <th scope="col">Status</th>
+          <th scope="col">Fundamentals</th>
+
+          <!---->
+          <th scope="col">{{.PositionSize}}</th>
+          <!---->
+
+          <th scope="col"></th>
+
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr>
+
+          <td>Mark</td>
+
+          <td>Otto</td>
+
+          <td>@mdo</td>
+
+          <td>@mdo</td>
+
+          <td>@mdo</td>
+
+          <td>@mdo</td>
+
+          <td>
+
+            <button type="button"
+              id="button-watch-list-item-"
+              class="btn btn-light">
+              <i class="material-icons watch-list-button-icons">delete</i>
+            </button>
+
+            <script>
+            </script>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+    <div class="watch-list-separator">
+    </div>
+
+    <button type="button"
+      id="button-new"
+      class="btn btn-lg btn-dark watch-list-margin-top watch-list-button">
+      <i class="material-icons watch-list-button-icons">add</i>
+      New Item
+    </button>
+
+    <button type="button"
+      id="button-back"
+      class="btn btn-lg btn-dark watch-list-margin-top watch-list-button">
+      <i class="material-icons watch-list-button-icons">home</i>
+      Back to Action
+    </button>
+
+  </div>
+
+  <!---->
+  {{template "ShareFooter"}}
+  <!---->
+
+  <!---->
+  {{template "CDNJS"}}
+  <!---->
+
+  <!---->
+  {{template "ShareJS"}}
+  <!---->
+
+  <!---->
+  {{template "WatchListJS"}}
+  <!---->
+
+</body>
+
+</html>
+
+{{end}}

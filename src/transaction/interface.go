@@ -17,8 +17,8 @@ type Order interface {
 	GetDate() int
 	GetSymbol() string
 
-	GetIBDCheckupID() string
-	GetMarketSmithID() string
+	//GetIBDCheckupID() string
+	//GetMarketSmithID() string
 
 	JsonDecode(buffer []byte) error
 }

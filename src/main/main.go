@@ -64,6 +64,8 @@ func main() {
 
 	mux.HandleFunc("/action", handler.Action)
 
+	mux.HandleFunc("/watchlist", handler.WatchList)
+
 	mux.HandleFunc("/transaction", handler.Transaction)
 
 	mux.HandleFunc("/ibd", handler.IBD)

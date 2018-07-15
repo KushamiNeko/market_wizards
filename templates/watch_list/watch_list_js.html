@@ -1,0 +1,60 @@
+{{define "WatchListJS"}}
+
+<!---->
+
+<script>
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//$("#input-password").focus();
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$("#button-back").click(function() {
+  if (isProcessing()) {
+    return;
+  }
+
+  window.location = "/action";
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$("#button-new").click(function() {
+  if (isProcessing()) {
+    return;
+  }
+
+  window.location = "/watchlist?Action=new";
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$("#button-calculate").click(function() {
+  if (isProcessing()) {
+    return;
+  }
+
+  if ($("#input-capital").val().match(/^[0-9.]+$/) === null) {
+    $("#validate-capital").show();
+    $("#input-capital").focus();
+    return;
+  }
+
+  if ($("#input-size").val().match(/^[0-9.]+$/) === null) {
+    $("#validate-size").show();
+    $("#input-size").focus();
+    return;
+  }
+
+  window.location = "/watchlist?Capital=" + $("#input-capital").val() + "&Size=" + $("#input-size").val();
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+</script>
+
+<!---->
+
+{{end}}

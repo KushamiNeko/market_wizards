@@ -440,7 +440,8 @@ $("#button-create").click(function() {
   var ibdData = {
     "Date": date,
     "Symbol": symbol,
-    "Object": $("#img-ibd").attr("src"),
+    //"Object": $("#img-ibd").attr("src"),
+    "Data": $("#img-ibd").attr("src"),
   };
 
   var ibdJsonBody = JSON.stringify(ibdData);
@@ -466,7 +467,8 @@ $("#button-create").click(function() {
   var marketsmithData = {
     "Date": date,
     "Symbol": symbol,
-    "Object": $("#img-marketsmith").attr("src"),
+    //"Object": $("#img-marketsmith").attr("src"),
+    "Data": $("#img-marketsmith").attr("src"),
   };
 
   var marketsmithJsonBody = JSON.stringify(marketsmithData);

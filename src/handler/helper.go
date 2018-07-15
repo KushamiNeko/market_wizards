@@ -4,57 +4,55 @@ package handler
 
 import (
 	"bytes"
-	"encoding/json"
-	"fmt"
 	"minify"
 	"net/http"
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-type ObjectRequestBody struct {
-	Date      int
-	Symbol    string
-	ChartType string
+//type ObjectRequestBody struct {
+//Date   int
+//Symbol string
+////ChartType string
 
-	Object string
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-func (o *ObjectRequestBody) DateSymbolChartID() string {
-	return fmt.Sprintf("%d_%v_%v", o.Date, o.Symbol, o.ChartType)
-}
+//Object string
+//}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (o *ObjectRequestBody) DateSymbolID() string {
-	return fmt.Sprintf("%d_%v", o.Date, o.Symbol)
-}
+//func (o *ObjectRequestBody) DateSymbolChartID() string {
+//return fmt.Sprintf("%d_%v_%v", o.Date, o.Symbol, o.ChartType)
+//}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (o *ObjectRequestBody) JsonDecode(buffer []byte) error {
+//func (o *ObjectRequestBody) DateSymbolID() string {
+//return fmt.Sprintf("%d_%v", o.Date, o.Symbol)
+//}
 
-	err := json.Unmarshal(buffer, o)
-	if err != nil {
-		return err
-	}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	if o.Date == 0 {
-		return fmt.Errorf("Date Cannot Be Empty")
-	}
+//func (o *ObjectRequestBody) JsonDecode(buffer []byte) error {
 
-	if o.Symbol == "" {
-		return fmt.Errorf("Symbol Cannot Be Empty")
-	}
+//err := json.Unmarshal(buffer, o)
+//if err != nil {
+//return err
+//}
 
-	if o.Object == "" {
-		return fmt.Errorf("Object Cannot Be Empty")
-	}
+//if o.Date == 0 {
+//return fmt.Errorf("Date Cannot Be Empty")
+//}
 
-	return nil
-}
+//if o.Symbol == "" {
+//return fmt.Errorf("Symbol Cannot Be Empty")
+//}
+
+//if o.Object == "" {
+//return fmt.Errorf("Object Cannot Be Empty")
+//}
+
+//return nil
+//}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

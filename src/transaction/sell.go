@@ -113,26 +113,26 @@ func (s *SellOrder) JsonDecode(buffer []byte) error {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (s *SellOrder) GetIBDCheckupID() string {
-	return fmt.Sprintf("%d_%v", s.Date, s.Symbol)
-}
+//func (s *SellOrder) GetIBDCheckupID() string {
+//return fmt.Sprintf("%d_%v", s.Date, s.Symbol)
+//}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (s *SellOrder) GetMarketSmithID() string {
-	return fmt.Sprintf("%d_%v", s.Date, s.Symbol)
-}
+//func (s *SellOrder) GetMarketSmithID() string {
+//return fmt.Sprintf("%d_%v", s.Date, s.Symbol)
+//}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (s *SellOrder) GetPurchaseIBDCheckupID() string {
-	return fmt.Sprintf("%d_%v", s.DateOfPurchase, s.Symbol)
-}
+//func (s *SellOrder) GetPurchaseIBDCheckupID() string {
+//return fmt.Sprintf("%d_%v", s.DateOfPurchase, s.Symbol)
+//}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (s *SellOrder) GetPurchaseMarketSmithID() string {
-	return fmt.Sprintf("%d_%v", s.DateOfPurchase, s.Symbol)
-}
+//func (s *SellOrder) GetPurchaseMarketSmithID() string {
+//return fmt.Sprintf("%d_%v", s.DateOfPurchase, s.Symbol)
+//}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

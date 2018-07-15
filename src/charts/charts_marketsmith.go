@@ -579,6 +579,34 @@ func (c *ChartMarketSmith) getUDVolRatio() error {
 
 func (c *ChartMarketSmith) getROE() error {
 
+	label := "Return on Equity"
+
+	for _, w := range c.msW {
+		for _, f := range w.GetContents() {
+			if f.GetLabel() == label {
+				if strings.Contains(f.GetValue(), config.NullValue) {
+					newValue := strings.Replace(f.GetValue(), "[", "", -1)
+					newValue = strings.Replace(newValue, "]", "", -1)
+					f.SetValue(newValue)
+					break
+				}
+			}
+		}
+	}
+
+	for _, w := range c.msL {
+		for _, f := range w.GetContents() {
+			if f.GetLabel() == label {
+				if strings.Contains(f.GetValue(), config.NullValue) {
+					newValue := strings.Replace(f.GetValue(), "x", "", -1)
+					newValue = strings.Replace(newValue, "]", "", -1)
+					f.SetValue(newValue)
+					break
+				}
+			}
+		}
+	}
+
 	var err error
 	var interval float64 = 5.0
 

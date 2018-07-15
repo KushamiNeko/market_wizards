@@ -56,7 +56,8 @@ func ibdPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	objectRequest := new(ObjectRequestBody)
+	//objectRequest := new(ObjectRequestBody)
+	objectRequest := new(datautils.DateSymbolStorage)
 
 	err = datautils.JsonRequestBodyDecode(r, objectRequest)
 	if err != nil {
@@ -64,7 +65,7 @@ func ibdPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ibdBuffer, err := datautils.FileReaderExtract(objectRequest.Object)
+	ibdBuffer, err := datautils.FileReaderExtract(objectRequest.Data)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("IBD Checkup: %s\n", err.Error()), http.StatusBadRequest)
 		return
@@ -82,17 +83,22 @@ func ibdPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ibdDatastore := datautils.DataIDStorageNewBytes(objectRequest.DateSymbolID(), ibdJson)
+	ibdDatastore := datautils.DateSymbolStorageNewBytes(objectRequest.Date, objectRequest.Symbol, ibdJson)
 
 	collection := client.MongoClient.Database(config.NamespaceIBD).Collection(cookie)
 
 	filter := bson.NewDocument(
-		bson.EC.Interface("id", ibdDatastore.ID),
+		bson.EC.Interface("date", ibdDatastore.Date),
+		bson.EC.Interface("symbol", ibdDatastore.Symbol),
 	)
 
-	err = collection.FindOne(context.Background(), filter).Decode(&datautils.DataIDStorage{})
+	err = collection.FindOne(context.Background(), filter).Decode(&datautils.DateSymbolStorage{})
 	if err == nil {
-
+		_, err = collection.ReplaceOne(context.Background(), filter, ibdDatastore)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 	} else {
 		if err == mongo.ErrNoDocuments {
 			_, err = collection.InsertOne(context.Background(), ibdDatastore)

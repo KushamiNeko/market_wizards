@@ -1,0 +1,221 @@
+{{define "WatchListNew"}}
+
+<html lang="en">
+
+<head>
+
+  <!---->
+  {{template "IndexHead"}}
+  <!---->
+
+  <!---->
+  {{template "IndexIcon"}}
+  <!---->
+
+  <!---->
+  {{template "CDNCSS"}}
+  <!---->
+
+  <!---->
+  {{template "ShareCSS"}}
+  <!---->
+
+  <!---->
+  {{template "WatchListCSS"}}
+  <!---->
+
+</head>
+
+<body>
+
+  <!---->
+  {{template "ShareNavbar"}}
+  <!---->
+
+  <div class="watch-list-container">
+
+    <label for="input-symbol"
+      class="watch-list-margin-top watch-list-label">
+      Symbol
+    </label>
+
+    <input type="text"
+      id="input-symbol"
+      class="form-control watch-list-input"
+      placeholder="symbol"
+      aria-label="symbol">
+
+    <div id="validate-symbol"
+      class="invalid-feedback watch-list-validate">
+      Invalid Symbol
+    </div>
+
+    <label for="input-price"
+      class="watch-list-margin-top watch-list-label">
+      Price
+    </label>
+
+    <input type="text"
+      id="input-price"
+      class="form-control watch-list-input"
+      placeholder="price"
+      aria-label="price">
+
+    <div id="validate-price"
+      class="invalid-feedback watch-list-validate">
+      Invalid Price
+    </div>
+
+    <div class="dropdown watch-list-margin-top">
+
+      <button class="btn btn-lg btn-dark watch-list-button dropdown-toggle"
+        type="button"
+        id="dropdownMenu-priority"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false">
+        Priority
+      </button>
+
+      <div class="dropdown-menu watch-list-menu"
+        aria-labelledby="dropdownMenu">
+
+        <button id="dropdown-priority-a"
+          class="dropdown-item watch-list-item"
+          type="button">
+          A
+        </button>
+
+        <button id="dropdown-priority-b"
+          class="dropdown-item watch-list-item"
+          type="button">
+          B
+        </button>
+
+        <button id="dropdown-priority-c"
+          class="dropdown-item watch-list-item"
+          type="button">
+          C
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="dropdown watch-list-margin-top">
+
+      <button class="btn btn-lg btn-dark watch-list-button dropdown-toggle"
+        type="button"
+        id="dropdownMenu-status"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false">
+        Status
+      </button>
+
+      <div class="dropdown-menu watch-list-menu"
+        aria-labelledby="dropdownMenu">
+
+        <button id="dropdown-status-a"
+          class="dropdown-item watch-list-item"
+          type="button">
+          <!--Fueling-->
+          Charging
+        </button>
+
+        <button id="dropdown-status-b"
+          class="dropdown-item watch-list-item"
+          type="button">
+          Launched
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="dropdown watch-list-margin-top">
+
+      <button class="btn btn-lg btn-dark watch-list-button dropdown-toggle"
+        type="button"
+        id="dropdownMenu-fundamentals"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false">
+        Fundamentals
+      </button>
+
+      <div class="dropdown-menu watch-list-menu"
+        aria-labelledby="dropdownMenu">
+
+        <button id="dropdown-fundamentals-a"
+          class="dropdown-item watch-list-item"
+          type="button">
+          A
+        </button>
+
+        <button id="dropdown-fundamentals-b"
+          class="dropdown-item watch-list-item"
+          type="button">
+          B
+        </button>
+
+        <button id="dropdown-fundamentals-c"
+          class="dropdown-item watch-list-item"
+          type="button">
+          C
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="watch-list-separator">
+    </div>
+
+    <button type="button"
+      id="button-create"
+      class="btn btn-lg btn-dark watch-list-button watch-list-margin-top">
+      <i class="material-icons watch-list-button-icons">add</i>
+      Create
+    </button>
+
+    <button type="button"
+      id="button-cancel"
+      class="btn btn-lg btn-dark watch-list-margin-top watch-list-button">
+      <i class="material-icons watch-list-button-icons">close</i>
+      Cancel
+    </button>
+
+    <!--<button type="button"-->
+    <!--id="button-back"-->
+    <!--class="btn btn-lg btn-dark watch-list-margin-top watch-list-button">-->
+    <!--<i class="material-icons watch-list-button-icons">home</i>-->
+    <!--Back to Action-->
+    <!--</button>-->
+
+  </div>
+
+
+  </div>
+
+  <!---->
+  {{template "ShareFooter"}}
+  <!---->
+
+  <!---->
+  {{template "CDNJS"}}
+  <!---->
+
+  <!---->
+  {{template "ShareJS"}}
+  <!---->
+
+  <!---->
+  {{template "WatchListNewJS"}}
+  <!---->
+
+</body>
+
+</html>
+
+{{end}}

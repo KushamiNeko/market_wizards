@@ -18,7 +18,17 @@ func FileReaderExtract(content string) (*bytes.Buffer, error) {
 		return nil, fmt.Errorf("Invalid Content\n")
 	}
 
-	data := strings.Split(content, ",")[1]
+	if !strings.Contains(content, "base64") {
+		return nil, fmt.Errorf("Invalid Content\n")
+	}
+
+	s := strings.Split(content, ",")
+
+	if len(s) < 2 {
+		return nil, fmt.Errorf("Invalid Content\n")
+	}
+
+	data := s[1]
 
 	object, err := base64.StdEncoding.DecodeString(data)
 	if err != nil {
@@ -37,7 +47,19 @@ func FileReaderExtractImage(content string) (*bytes.Buffer, error) {
 		return nil, fmt.Errorf("Invalid Content\n")
 	}
 
-	data := strings.Split(content, ",")[1]
+	if !strings.Contains(content, "base64") {
+		return nil, fmt.Errorf("Invalid Content\n")
+	}
+
+	s := strings.Split(content, ",")
+
+	if len(s) < 2 {
+		return nil, fmt.Errorf("Invalid Content\n")
+	}
+
+	data := s[1]
+
+	//data := strings.Split(content, ",")[1]
 
 	object, err := base64.StdEncoding.DecodeString(data)
 	if err != nil {
