@@ -3,7 +3,6 @@ package watchlist
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import (
-	"config"
 	"encoding/json"
 	"fmt"
 )
@@ -19,7 +18,8 @@ type WatchListItem struct {
 	Status       string
 	//Note         string
 
-	PositionSize []int `bson:"-" json:"-"`
+	//PositionSize []int `bson:"-" json:"-"`
+	PositionSize int `bson:"-" json:"-"`
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -56,16 +56,18 @@ func (w *WatchListItem) JsonDecode(buffer []byte) error {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (w *WatchListItem) Caculate(capital float64) {
+func (w *WatchListItem) Caculate(capital, size float64) {
 
-	w.PositionSize = make([]int, len(config.WatchListPosition))
+	w.PositionSize = int((capital * (size / 100.0)) / w.Price)
 
-	for i, p := range config.WatchListPosition {
-		c := capital * p
-		share := int(c / w.Price)
+	//w.PositionSize = make([]int, len(config.WatchListPosition))
 
-		w.PositionSize[i] = share
-	}
+	//for i, p := range config.WatchListPosition {
+	//c := capital * p
+	//share := int(c / w.Price)
+
+	//w.PositionSize[i] = share
+	//}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

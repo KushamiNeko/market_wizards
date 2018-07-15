@@ -43,7 +43,8 @@
       id="input-symbol"
       class="form-control watch-list-input"
       placeholder="symbol"
-      aria-label="symbol">
+      aria-label="symbol"
+      style="text-transform: uppercase;">
 
     <div id="validate-symbol"
       class="invalid-feedback watch-list-validate">
@@ -55,11 +56,17 @@
       Price
     </label>
 
-    <input type="text"
-      id="input-price"
-      class="form-control watch-list-input"
-      placeholder="price"
-      aria-label="price">
+    <div class="input-group">
+
+      <span class="input-group-addon watch-list-input">$</span>
+
+      <input type="text"
+        id="input-price"
+        class="form-control watch-list-input"
+        placeholder="price"
+        aria-label="price">
+
+    </div>
 
     <div id="validate-price"
       class="invalid-feedback watch-list-validate">
@@ -102,6 +109,11 @@
 
     </div>
 
+    <div id="validate-priority"
+      class="invalid-feedback watch-list-validate">
+      Invalid Priority
+    </div>
+
     <div class="dropdown watch-list-margin-top">
 
       <button class="btn btn-lg btn-dark watch-list-button dropdown-toggle"
@@ -131,6 +143,11 @@
 
       </div>
 
+    </div>
+
+    <div id="validate-status"
+      class="invalid-feedback watch-list-validate">
+      Invalid Status
     </div>
 
     <div class="dropdown watch-list-margin-top">
@@ -169,6 +186,11 @@
 
     </div>
 
+    <div id="validate-fundamentals"
+      class="invalid-feedback watch-list-validate">
+      Invalid Fundamentals
+    </div>
+
     <div class="watch-list-separator">
     </div>
 
@@ -185,13 +207,6 @@
       <i class="material-icons watch-list-button-icons">close</i>
       Cancel
     </button>
-
-    <!--<button type="button"-->
-    <!--id="button-back"-->
-    <!--class="btn btn-lg btn-dark watch-list-margin-top watch-list-button">-->
-    <!--<i class="material-icons watch-list-button-icons">home</i>-->
-    <!--Back to Action-->
-    <!--</button>-->
 
   </div>
 

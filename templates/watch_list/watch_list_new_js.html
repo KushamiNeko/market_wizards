@@ -6,7 +6,11 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//$("#input-password").focus();
+$(".invalid-feedback").hide();
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$("#input-symbol").focus();
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -31,11 +35,78 @@ $("#button-cancel").click(function() {
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $("#button-create").click(function() {
-  //if (isProcessing()) {
-  //return;
-  //}
+  $(".invalid-feedback").hide();
 
-  //window.location = "/action";
+  if (isProcessing()) {
+    return;
+  }
+
+  if ($("#input-symbol").val().toUpperCase().match(/^[A-Z]+$/) === null) {
+    $("#validate-symbol").show();
+    $("#input-symbol").focus();
+    return;
+  }
+
+  var symbol = $("#input-symbol").val().toUpperCase();
+
+  if ($("#input-price").val().match(/^[0-9.]+$/) === null) {
+    $("#validate-price").show();
+    $("#input-price").focus();
+    return;
+  }
+
+  var price = parseFloat($("#input-price").val());
+
+  if (!$("#dropdownMenu-priority").html().includes(":")) {
+    $("#validate-priority").show();
+    $("#dropdownMenu-priority").focus();
+    return;
+  }
+
+  var priority = $("#dropdownMenu-priority").html().split(":")[1].trim();
+
+  if (!$("#dropdownMenu-status").html().includes(":")) {
+    $("#validate-status").show();
+    $("#dropdownMenu-status").focus();
+    return;
+  }
+
+  var status = $("#dropdownMenu-status").html().split(":")[1].trim();
+
+  if (!$("#dropdownMenu-fundamentals").html().includes(":")) {
+    $("#validate-fundamentals").show();
+    $("#dropdownMenu-fundamentals").focus();
+    return;
+  }
+
+  var fundamentals = $("#dropdownMenu-fundamentals").html().split(":")[1].trim();
+
+  inProcess("#button-create");
+
+  var wlData = {
+    "Symbol": symbol,
+    "Price": price,
+    "Priority": priority,
+    "Fundamentals": fundamentals,
+    "Status": status,
+  };
+
+  var wlJsonBody = JSON.stringify(wlData);
+
+  $.ajax({
+    type: "POST",
+    url: "/watchlist",
+    data: wlJsonBody,
+    success: function(data) {
+      outProcess("#button-create");
+      window.location = "/watchlist";
+    },
+    error: function(xhr, err) {
+      outProcess("#button-create");
+      alert(xhr.responseText);
+    },
+  });
+
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////

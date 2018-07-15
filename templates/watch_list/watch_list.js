@@ -1,6 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//$("#input-password").focus();
+$(".invalid-feedback").hide();
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$("#input-capital").focus();
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -25,6 +29,8 @@ $("#button-new").click(function() {
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $("#button-calculate").click(function() {
+  $(".invalid-feedback").hide();
+
   if (isProcessing()) {
     return;
   }
@@ -41,7 +47,21 @@ $("#button-calculate").click(function() {
     return;
   }
 
-  window.location = "/watchlist?Capital=" + $("#input-capital").val() + "&Size=" + $("#input-size").val();
+  if ($("#input-symbol").val() !== "") {
+    if ($("#input-symbol").val().toUpperCase().match(/^[A-Z]+$/) === null) {
+      $("#validate-symbol").show();
+      $("#input-symbol").focus();
+      return;
+    }
+
+    var symbol = $("#input-symbol").val().toUpperCase();
+
+    window.location = "/watchlist?Capital=" + $("#input-capital").val() + "&Size=" + $("#input-size").val() + "&Symbol=" + symbol;
+  } else {
+
+    window.location = "/watchlist?Capital=" + $("#input-capital").val() + "&Size=" + $("#input-size").val();
+  }
+
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
