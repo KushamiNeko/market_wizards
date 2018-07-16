@@ -120,8 +120,8 @@ func watchListGet(w http.ResponseWriter, r *http.Request) {
 		ii := items[i]
 		ij := items[j]
 
-		iis := fmt.Sprintf("%v%v%v", ii.Priority, ii.Status, ii.Fundamentals)
-		ijs := fmt.Sprintf("%v%v%v", ij.Priority, ij.Status, ij.Fundamentals)
+		iis := fmt.Sprintf("%v%v%v%v", ii.Priority, ii.Status, ii.Fundamentals, ii.Symbol)
+		ijs := fmt.Sprintf("%v%v%v%v", ij.Priority, ij.Status, ij.Fundamentals, ij.Symbol)
 
 		return iis < ijs
 	})

@@ -126,6 +126,7 @@ dropdownClick("#dropdownMenu-priority", "#dropdown-priority-c");
 
 dropdownClick("#dropdownMenu-status", "#dropdown-status-a");
 dropdownClick("#dropdownMenu-status", "#dropdown-status-b");
+dropdownClick("#dropdownMenu-status", "#dropdown-status-c");
 
 dropdownClick("#dropdownMenu-fundamentals", "#dropdown-fundamentals-a");
 dropdownClick("#dropdownMenu-fundamentals", "#dropdown-fundamentals-b");

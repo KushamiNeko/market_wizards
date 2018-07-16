@@ -34,60 +34,15 @@
 
   <div class="watch-list-container">
 
-    <table class="table table-striped watch-list-margin-top watch-list-table">
+    <button type="button"
+      id="button-new"
+      class="btn btn-lg btn-dark watch-list-margin-top watch-list-button">
+      <i class="material-icons watch-list-button-icons">add</i>
+      New Item
+    </button>
 
-      <thead class="thead-dark">
-        <tr>
-          <th scope="col">Symbol</th>
-          <th scope="col">Price</th>
-
-          <th scope="col">Priority</th>
-          <th scope="col">Status</th>
-
-          <th scope="col">Fundamentals</th>
-
-          <!---->
-          <th scope="col">{{.PositionSize}}</th>
-          <!---->
-
-          <th scope="col"></th>
-
-        </tr>
-      </thead>
-
-      <tbody>
-
-        <!---->
-        {{range $i, $t := .Items}}
-
-        <tr>
-          <td>{{$t.Symbol}}</td>
-          <td>{{$t.Price}}</td>
-
-          <td>{{$t.Priority}}</td>
-          <td>{{$t.Status}}</td>
-
-          <td>{{$t.Fundamentals}}</td>
-
-          <td>{{$t.PositionSize}}</td>
-          <td>
-            <button type="button"
-              id="button-watch-list-item-{{$i}}"
-              class="btn btn-light">
-              <i class="material-icons watch-list-button-icons">delete</i>
-            </button>
-          </td>
-        </tr>
-
-        {{end}}
-        <!---->
-
-      </tbody>
-
-    </table>
-
-    <div class="watch-list-separator">
-    </div>
+    <!--<div class="watch-list-separator">-->
+    <!--</div>-->
 
     <label for="input-capital"
       class="watch-list-margin-top watch-list-label">
@@ -163,12 +118,60 @@
     <div class="watch-list-separator">
     </div>
 
-    <button type="button"
-      id="button-new"
-      class="btn btn-lg btn-dark watch-list-margin-top watch-list-button">
-      <i class="material-icons watch-list-button-icons">add</i>
-      New Item
-    </button>
+    <table class="table table-striped watch-list-margin-top watch-list-table">
+
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Symbol</th>
+          <th scope="col">Price</th>
+
+          <th scope="col">Priority</th>
+          <th scope="col">Status</th>
+
+          <th scope="col">Fundamentals</th>
+
+          <!---->
+          <th scope="col">{{.PositionSize}}</th>
+          <!---->
+
+          <th scope="col"></th>
+
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <!---->
+        {{range $i, $t := .Items}}
+
+        <tr>
+          <td>{{$t.Symbol}}</td>
+          <td>{{$t.Price}}</td>
+
+          <td>{{$t.Priority}}</td>
+          <td>{{$t.Status}}</td>
+
+          <td>{{$t.Fundamentals}}</td>
+
+          <td>{{$t.PositionSize}}</td>
+          <td>
+            <button type="button"
+              id="button-watch-list-item-{{$i}}"
+              class="btn btn-light">
+              <i class="material-icons watch-list-button-icons">delete</i>
+            </button>
+          </td>
+        </tr>
+
+        {{end}}
+        <!---->
+
+      </tbody>
+
+    </table>
+
+    <div class="watch-list-separator">
+    </div>
 
     <button type="button"
       id="button-back"
@@ -213,7 +216,8 @@
         url: "/watchlist?Symbol={{$t.Symbol}}",
         success: function(data) {
           outProcess("#button-calculate");
-          $("#button-calculate").click();
+          //$("#button-calculate").click();
+          window.location = "/watchlist";
         },
         error: function(xhr, err) {
           outProcess("#button-calculate");
