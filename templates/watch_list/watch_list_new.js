@@ -67,6 +67,22 @@ $("#button-create").click(function() {
 
   var status = $("#dropdownMenu-status").html().split(":")[1].trim();
 
+  if (!$("#dropdownMenu-grs").html().includes(":")) {
+    $("#validate-grs").show();
+    $("#dropdownMenu-grs").focus();
+    return;
+  }
+
+  var grs = $("#dropdownMenu-grs").html().split(":")[1].trim();
+
+  if (!$("#dropdownMenu-rs").html().includes(":")) {
+    $("#validate-rs").show();
+    $("#dropdownMenu-rs").focus();
+    return;
+  }
+
+  var rs = $("#dropdownMenu-rs").html().split(":")[1].trim();
+
   if (!$("#dropdownMenu-fundamentals").html().includes(":")) {
     $("#validate-fundamentals").show();
     $("#dropdownMenu-fundamentals").focus();
@@ -81,6 +97,8 @@ $("#button-create").click(function() {
     "Symbol": symbol,
     "Price": price,
     "Priority": priority,
+    "GRS": grs,
+    "RS": rs,
     "Fundamentals": fundamentals,
     "Status": status,
   };
@@ -127,6 +145,14 @@ dropdownClick("#dropdownMenu-priority", "#dropdown-priority-c");
 dropdownClick("#dropdownMenu-status", "#dropdown-status-a");
 dropdownClick("#dropdownMenu-status", "#dropdown-status-b");
 dropdownClick("#dropdownMenu-status", "#dropdown-status-c");
+
+dropdownClick("#dropdownMenu-grs", "#dropdown-grs-a");
+dropdownClick("#dropdownMenu-grs", "#dropdown-grs-b");
+
+dropdownClick("#dropdownMenu-rs", "#dropdown-rs-a");
+dropdownClick("#dropdownMenu-rs", "#dropdown-rs-b");
+dropdownClick("#dropdownMenu-rs", "#dropdown-rs-c");
+dropdownClick("#dropdownMenu-rs", "#dropdown-rs-d");
 
 dropdownClick("#dropdownMenu-fundamentals", "#dropdown-fundamentals-a");
 dropdownClick("#dropdownMenu-fundamentals", "#dropdown-fundamentals-b");

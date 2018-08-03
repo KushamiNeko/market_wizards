@@ -1,35 +1,29 @@
 @import "../_share_scss/share";
 
-.user-container {
+.login-container {
   @extend %my-share-container;
 }
 
-.user-margin-top {
+.login-margin-top {
   @extend %my-share-margin-top;
 }
 
-.user-button {
+.login-button {
   @extend %my-share-button;
-  width: 100%;
 }
 
-.user-button-icons {
+.login-button-icons {
   @extend %my-share-button-icons;
 }
 
-.user-label {
+.login-label {
   @extend %my-share-label;
 }
 
-.user-input {
+.login-input {
   @extend %my-share-input;
 }
 
-.user-validate {
+.login-validate {
   @extend %my-share-validate;
-}
-
-.user-separator {
-  @extend %my-share-separator;
-  margin-top: 2em;
 }

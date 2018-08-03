@@ -29,6 +29,10 @@
   @extend %my-share-input;
 }
 
+.watch-list-table {
+  @extend %my-share-input;
+}
+
 .watch-list-validate {
   @extend %my-share-validate;
 }

@@ -13,12 +13,16 @@ type WatchListItem struct {
 	Symbol string
 	Price  float64
 
-	Priority     string
+	Priority string
+
+	GRS string
+	RS  string
+
 	Fundamentals string
-	Status       string
+
+	Status string
 	//Note         string
 
-	//PositionSize []int `bson:"-" json:"-"`
 	PositionSize int `bson:"-" json:"-"`
 }
 
@@ -41,6 +45,14 @@ func (w *WatchListItem) JsonDecode(buffer []byte) error {
 
 	if w.Priority == "" {
 		return fmt.Errorf("Priority cannot be empty")
+	}
+
+	if w.RS == "" {
+		return fmt.Errorf("Relative Strength cannot be empty")
+	}
+
+	if w.GRS == "" {
+		return fmt.Errorf("Group Relative Strength cannot be empty")
 	}
 
 	if w.Fundamentals == "" {

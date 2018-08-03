@@ -41,16 +41,20 @@ $("#button-calculate").click(function() {
     return;
   }
 
-  if ($("#input-capital").val().match(/^[0-9.]+$/) === null) {
-    $("#validate-capital").show();
-    $("#input-capital").focus();
-    return;
+  if ($("#input-capital").val() !== "") {
+    if ($("#input-capital").val().match(/^[0-9.]+$/) === null) {
+      $("#validate-capital").show();
+      $("#input-capital").focus();
+      return;
+    }
   }
 
-  if ($("#input-size").val().match(/^[0-9.]+$/) === null) {
-    $("#validate-size").show();
-    $("#input-size").focus();
-    return;
+  if ($("#input-size").val() !== "") {
+    if ($("#input-size").val().match(/^[0-9.]+$/) === null) {
+      $("#validate-size").show();
+      $("#input-size").focus();
+      return;
+    }
   }
 
   if ($("#input-symbol").val() !== "") {

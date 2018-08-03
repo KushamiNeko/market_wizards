@@ -42,7 +42,7 @@ func postAnalysisGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//writeTemplate(w, "Action", nil, nil)
+	writeTemplate(w, "PostAnalysis", nil, nil)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
