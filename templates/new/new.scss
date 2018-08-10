@@ -3,41 +3,41 @@
 @import "../_common_scss/material_design_style/typography";
 
 .new-container {
-  @extend %my-share-container;
+  @include share-container;
 }
 
 .new-margin-top {
-  @extend %my-share-margin-top;
+  @include share-margin-top;
 }
 
 .new-button {
-  @extend %my-share-button;
+  @include share-button;
   width: 100%;
 }
 
 .new-button-icons {
-  @extend %my-share-button-icons;
+  @include share-button-icons;
 }
 
 .new-label {
-  @extend %my-share-label;
+  @include share-label;
 }
 
 .new-input {
-  @extend %my-share-input;
+  @include share-input;
 }
 
 .new-validate {
-  @extend %my-share-validate;
+  @include share-validate;
 }
 
 .new-menu {
-  @extend %my-share-label;
+  @include share-label;
   width: 100%;
 }
 
 .new-item {
-  @extend %my-share-label;
+  @include share-label;
   width: 100%;
 }
 
@@ -46,18 +46,18 @@
 }
 
 .new-separator {
-  @extend %my-share-separator;
+  @include share-separator;
   margin-top: 2em;
   margin-bottom: 0;
 }
 
 .new-modal-title {
-  @extend %font-title;
-  @extend %my-share-font-family;
+  @include font-title;
+  @include share-font-family;
 }
 
 .new-modal-body {
-  @extend %my-share-input;
+  @include share-input;
 
   display: block;
   resize: none;

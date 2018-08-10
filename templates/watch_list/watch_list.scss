@@ -1,7 +1,7 @@
 @import "../_share_scss/share";
 
 .watch-list-container {
-  @extend %my-share-container;
+  @include share-container;
 }
 
 .watch-list-table {
@@ -9,46 +9,46 @@
 }
 
 .watch-list-margin-top {
-  @extend %my-share-margin-top;
+  @include share-margin-top;
 }
 
 .watch-list-button {
-  @extend %my-share-button;
+  @include share-button;
   width: 100%;
 }
 
 .watch-list-button-icons {
-  @extend %my-share-button-icons;
+  @include share-button-icons;
 }
 
 .watch-list-label {
-  @extend %my-share-label;
+  @include share-label;
 }
 
 .watch-list-input {
-  @extend %my-share-input;
+  @include share-input;
 }
 
 .watch-list-table {
-  @extend %my-share-input;
+  @include share-input;
 }
 
 .watch-list-validate {
-  @extend %my-share-validate;
+  @include share-validate;
 }
 
 .watch-list-menu {
-  @extend %my-share-label;
+  @include share-label;
   width: 100%;
 }
 
 .watch-list-item {
-  @extend %my-share-label;
+  @include share-label;
   width: 100%;
 }
 
 .watch-list-separator {
-  @extend %my-share-separator;
+  @include share-separator;
   margin-top: 2em;
   margin-bottom: 0;
 }

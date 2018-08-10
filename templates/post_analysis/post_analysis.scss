@@ -1,29 +1,29 @@
 @import "../_share_scss/share";
 
 .post-analysis-container {
-  @extend %my-share-container;
+  @include share-container;
 }
 
 .post-analysis-margin-top {
-  @extend %my-share-margin-top;
+  @include share-margin-top;
 }
 
 .post-analysis-button {
-  @extend %my-share-button;
+  @include share-button;
 }
 
 .post-analysis-button-icons {
-  @extend %my-share-button-icons;
+  @include share-button-icons;
 }
 
 .post-analysis-label {
-  @extend %my-share-label;
+  @include share-label;
 }
 
 .post-analysis-input {
-  @extend %my-share-input;
+  @include share-input;
 }
 
 .post-analysis-validate {
-  @extend %my-share-validate;
+  @include share-validate;
 }

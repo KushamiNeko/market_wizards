@@ -1,29 +1,29 @@
 @import "../_share_scss/share";
 
 .login-container {
-  @extend %my-share-container;
+  @include share-container;
 }
 
 .login-margin-top {
-  @extend %my-share-margin-top;
+  @include share-margin-top;
 }
 
 .login-button {
-  @extend %my-share-button;
+  @include share-button;
 }
 
 .login-button-icons {
-  @extend %my-share-button-icons;
+  @include share-button-icons;
 }
 
 .login-label {
-  @extend %my-share-label;
+  @include share-label;
 }
 
 .login-input {
-  @extend %my-share-input;
+  @include share-input;
 }
 
 .login-validate {
-  @extend %my-share-validate;
+  @include share-validate;
 }

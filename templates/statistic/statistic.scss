@@ -4,28 +4,28 @@
 @import "../_share_scss/share";
 
 .statistic-container {
-  @extend %my-share-container;
+  @include share-container;
 }
 
 .statistic-margin-top {
-  @extend %my-share-margin-top;
+  @include share-margin-top;
 }
 
 .statistic-button {
-  @extend %my-share-button;
+  @include share-button;
   width: 100%;
 }
 
 .statistic-button-icons {
-  @extend %my-share-button-icons;
+  @include share-button-icons;
 }
 
 .statistic-label {
-  @extend %my-share-label;
+  @include share-label;
 }
 
 .statistic-input {
-  @extend %my-share-input;
+  @include share-input;
 }
 
 .statistic-charts {
@@ -33,27 +33,27 @@
 }
 
 .statistic-menu {
-  @extend %my-share-label;
+  @include share-label;
   width: 100%;
 }
 
 .statistic-item {
-  @extend %my-share-label;
+  @include share-label;
   width: 100%;
 }
 
 .statistic-validate {
-  @extend %my-share-validate;
+  @include share-validate;
 }
 
 .statistic-separator {
-  @extend %my-share-separator;
+  @include share-separator;
   margin-top: 2em;
 }
 
 .statistic-list-item {
-  @extend %layout-horizontal;
-  @extend %layout-justified;
+  @include layout-horizontal;
+  @include layout-justified;
 }
 
 .statistic-color-general {
@@ -87,6 +87,6 @@
 }
 
 li {
-  @extend %font-subhead;
+  @include font-subhead;
   font-family: 'Padauk', sans-serif;
 }

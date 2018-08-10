@@ -1,24 +1,24 @@
 @import "../_share_scss/share";
 
 .action-container {
-  @extend %my-share-container;
+  @include share-container;
 }
 
 .action-margin-top {
-  @extend %my-share-margin-top;
+  @include share-margin-top;
 }
 
 .action-button {
-  @extend %my-share-button;
+  @include share-button;
   width: 100%;
 }
 
 .action-button-icons {
-  @extend %my-share-button-icons;
+  @include share-button-icons;
 }
 
 .action-separator {
-  @extend %my-share-separator;
+  @include share-separator;
   margin-top: 2em;
   margin-bottom: 0;
 }

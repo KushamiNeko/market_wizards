@@ -1,156 +1,156 @@
-%font-common-base {
+@mixin font-common-base {
   //font-family: 'Roboto', 'Noto', sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-%font-common-code {
+@mixin font-common-code {
   //font-family: 'Roboto Mono', 'Consolas', 'Menlo', monospace;
   -webkit-font-smoothing: antialiased;
 }
 
-%font-common-expensive-kerning {
+@mixin font-common-expensive-kerning {
   text-rendering: optimizeLegibility;
 }
 
-%font-common-nowrap {
+@mixin font-common-nowrap {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-%font-display4-spec {
+@mixin font-display4-spec {
   font-size: 112px;
   font-weight: 300;
   letter-spacing: -.044em;
   line-height: 120px;
 }
 
-%font-display4 {
-  @extend %font-common-base;
-  @extend %font-common-nowrap;
-  @extend %font-display4-spec;
+@mixin font-display4 {
+  @include font-common-base;
+  @include font-common-nowrap;
+  @include font-display4-spec;
 }
 
-%font-display3-spec {
+@mixin font-display3-spec {
   font-size: 56px;
   font-weight: 400;
   letter-spacing: -.026em;
   line-height: 60px;
 }
 
-%font-display3 {
-  @extend %font-common-base;
-  @extend %font-common-nowrap;
-  @extend %font-display3-spec;
+@mixin font-display3 {
+  @include font-common-base;
+  @include font-common-nowrap;
+  @include font-display3-spec;
 }
 
-%font-display2-spec {
+@mixin font-display2-spec {
   font-size: 45px;
   font-weight: 400;
   letter-spacing: -.018em;
   line-height: 48px;
 }
 
-%font-display2 {
-  @extend %font-common-base;
-  @extend %font-display2-spec;
+@mixin font-display2 {
+  @include font-common-base;
+  @include font-display2-spec;
 }
 
-%font-display1-spec {
+@mixin font-display1-spec {
   font-size: 34px;
   font-weight: 400;
   letter-spacing: -.01em;
   line-height: 40px;
 }
 
-%font-display1 {
-  @extend %font-common-base;
-  @extend %font-display1-spec;
+@mixin font-display1 {
+  @include font-common-base;
+  @include font-display1-spec;
 }
 
-%font-headline-spec {
+@mixin font-headline-spec {
   font-size: 24px;
   font-weight: 400;
   letter-spacing: -.012em;
   line-height: 32px;
 }
 
-%font-headline {
-  @extend %font-common-base;
-  @extend %font-headline-spec;
+@mixin font-headline {
+  @include font-common-base;
+  @include font-headline-spec;
 }
 
-%font-title-spec {
+@mixin font-title-spec {
   font-size: 20px;
   font-weight: 500;
   line-height: 28px;
 }
 
-%font-title {
-  @extend %font-common-base;
-  @extend %font-common-nowrap;
-  @extend %font-title-spec;
+@mixin font-title {
+  @include font-common-base;
+  @include font-common-nowrap;
+  @include font-title-spec;
 }
 
-%font-subhead-spec {
+@mixin font-subhead-spec {
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
 }
 
-%font-subhead {
-  @extend %font-common-base;
-  @extend %font-subhead-spec;
+@mixin font-subhead {
+  @include font-common-base;
+  @include font-subhead-spec;
 }
 
-%font-body2-spec {
+@mixin font-body2-spec {
   font-size: 14px;
   font-weight: 500;
   line-height: 24px;
 }
 
-%font-body2 {
-  @extend %font-common-base;
-  @extend %font-body2-spec;
+@mixin font-body2 {
+  @include font-common-base;
+  @include font-body2-spec;
 }
 
-%font-body1-spec {
+@mixin font-body1-spec {
   font-size: 14px;
   font-weight: 400;
   line-height: 20px;
 }
 
-%font-body1 {
-  @extend %font-common-base;
-  @extend %font-body1-spec;
+@mixin font-body1 {
+  @include font-common-base;
+  @include font-body1-spec;
 }
 
-%font-caption-spec {
+@mixin font-caption-spec {
   font-size: 12px;
   font-weight: 400;
   letter-spacing: 0.011em;
   line-height: 20px;
 }
 
-%font-caption {
-  @extend %font-common-base;
-  @extend %font-common-nowrap;
-  @extend %font-caption-spec;
+@mixin font-caption {
+  @include font-common-base;
+  @include font-common-nowrap;
+  @include font-caption-spec;
 }
 
-%font-menu-spec {
+@mixin font-menu-spec {
   font-size: 13px;
   font-weight: 500;
   line-height: 24px;
 }
 
-%font-menu {
-  @extend %font-common-base;
-  @extend %font-common-nowrap;
-  @extend %font-menu-spec;
+@mixin font-menu {
+  @include font-common-base;
+  @include font-common-nowrap;
+  @include font-menu-spec;
 }
 
-%font-button-icon-spec {
+@mixin font-button-icon-spec {
   font-size: 16px;
   line-height: 16px;
   font-weight: 500;
@@ -158,7 +158,7 @@
   margin: 0 0.15em 0 0;
 }
 
-%font-button-spec {
+@mixin font-button-spec {
   font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.018em;
@@ -166,30 +166,30 @@
   text-transform: uppercase;
 }
 
-%font-button {
-  @extend %font-common-base;
-  @extend %font-common-nowrap;
-  @extend %font-button-spec;
+@mixin font-button {
+  @include font-common-base;
+  @include font-common-nowrap;
+  @include font-button-spec;
 }
 
-%font-code2-spec {
+@mixin font-code2-spec {
   font-size: 14px;
   font-weight: 700;
   line-height: 20px;
 }
 
-%font-code2 {
-  @extend %font-common-code;
-  @extend %font-code2-spec;
+@mixin font-code2 {
+  @include font-common-code;
+  @include font-code2-spec;
 }
 
-%font-code1-spec {
+@mixin font-code1-spec {
   font-size: 14px;
   font-weight: 500;
   line-height: 20px;
 }
 
-%font-code1 {
-  @extend %font-common-code;
-  @extend %font-code1-spec;
+@mixin font-code1 {
+  @include font-common-code;
+  @include font-code1-spec;
 }

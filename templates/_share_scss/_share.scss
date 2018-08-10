@@ -3,14 +3,14 @@
 @import "../_common_scss/material_design_style/colors";
 @import "../_common_scss/material_design_style/shadows";
 
-%my-share-font-family {
+@mixin share-font-family {
   //font-family: 'Noto Sans', sans-serif;
   //font-family: 'Oxygen', sans-serif;
   //font-family: 'Padauk', sans-serif;
   font-family: 'Ubuntu', sans-serif;
 }
 
-%my-share-container {
+@mixin share-container {
   width: 65%;
   margin-left: auto;
   margin-right: auto;
@@ -20,41 +20,41 @@
   }
 }
 
-%my-share-button-row {
-  @extend %layout-horizontal;
-  @extend %layout-justified;
+@mixin share-button-row {
+  @include layout-horizontal;
+  @include layout-justified;
 }
 
-%my-share-margin-top {
+@mixin share-margin-top {
   //margin-top: 2em;
   margin-top: 1.25em;
 }
 
-%my-share-label {
-  @extend %font-subhead;
-  @extend %my-share-font-family;
+@mixin share-label {
+  @include font-subhead;
+  @include share-font-family;
 }
 
-%my-share-input {
-  @extend %font-subhead;
-  @extend %my-share-font-family;
+@mixin share-input {
+  @include font-subhead;
+  @include share-font-family;
 }
 
-%my-share-validate {
-  @extend %font-body2;
-  @extend %my-share-font-family;
+@mixin share-validate {
+  @include font-body2;
+  @include share-font-family;
 }
 
-%my-share-button {
-  @extend %font-button;
-  @extend %my-share-font-family;
+@mixin share-button {
+  @include font-button;
+  @include share-font-family;
 }
 
-%my-share-button-icons {
-  @extend %font-button-icon-spec;
+@mixin share-button-icons {
+  @include font-button-icon-spec;
 }
 
-%my-share-separator {
+@mixin share-separator {
   display: block;
   height: 1px;
   width: 97.5%;

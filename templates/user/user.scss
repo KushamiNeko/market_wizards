@@ -1,35 +1,35 @@
 @import "../_share_scss/share";
 
 .user-container {
-  @extend %my-share-container;
+  @include share-container;
 }
 
 .user-margin-top {
-  @extend %my-share-margin-top;
+  @include share-margin-top;
 }
 
 .user-button {
-  @extend %my-share-button;
+  @include share-button;
   width: 100%;
 }
 
 .user-button-icons {
-  @extend %my-share-button-icons;
+  @include share-button-icons;
 }
 
 .user-label {
-  @extend %my-share-label;
+  @include share-label;
 }
 
 .user-input {
-  @extend %my-share-input;
+  @include share-input;
 }
 
 .user-validate {
-  @extend %my-share-validate;
+  @include share-validate;
 }
 
 .user-separator {
-  @extend %my-share-separator;
+  @include share-separator;
   margin-top: 2em;
 }

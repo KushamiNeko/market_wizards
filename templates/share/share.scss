@@ -3,8 +3,8 @@
 @import "../_common_scss/material_design_style/typography";
 
 .share-navbar {
-  @extend %font-title;
-  @extend %my-share-font-family;
+  @include font-title;
+  @include share-font-family;
 }
 
 .share-navbar-icon {
