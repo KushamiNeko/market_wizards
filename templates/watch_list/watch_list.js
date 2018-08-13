@@ -23,7 +23,7 @@ $("#button-new").click(function() {
     return;
   }
 
-  window.location = "/watchlist?Action=new";
+  window.location = "/watchlist?action=new";
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -39,6 +39,14 @@ $("#button-calculate").click(function() {
     if ($("#input-capital").val().match(/^[0-9.]+$/) === null) {
       $("#validate-capital").show();
       $("#input-capital").focus();
+      return;
+    }
+  }
+
+  if ($("#input-margin").val() !== "") {
+    if ($("#input-margin").val().match(/^[0-9.]+$/) === null) {
+      $("#validate-margin").show();
+      $("#input-margin").focus();
       return;
     }
   }
@@ -60,10 +68,14 @@ $("#button-calculate").click(function() {
 
     var symbol = $("#input-symbol").val().toUpperCase();
 
-    window.location = "/watchlist?Capital=" + $("#input-capital").val() + "&Size=" + $("#input-size").val() + "&Symbol=" + symbol;
+    window.location =
+      "/watchlist?capital=" + $("#input-capital").val() + "&size=" + $("#input-size").val() +
+      "&margin=" + $("#input-margin").val() + "&symbol=" + symbol;
   } else {
 
-    window.location = "/watchlist?Capital=" + $("#input-capital").val() + "&Size=" + $("#input-size").val();
+    window.location =
+      "/watchlist?capital=" + $("#input-capital").val() + "&size=" + $("#input-size").val() +
+      "&margin=" + $("#input-margin").val();
   }
 
 });

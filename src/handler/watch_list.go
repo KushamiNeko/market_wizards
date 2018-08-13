@@ -22,6 +22,7 @@ import (
 
 type watchListTemplate struct {
 	Capital string
+	Margin  string
 	Size    string
 	Symbol  string
 
@@ -36,7 +37,7 @@ func WatchList(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case http.MethodGet:
-		action := r.URL.Query().Get("Action")
+		action := r.URL.Query().Get("action")
 
 		if action == "" {
 			watchListGet(w, r)
@@ -68,12 +69,14 @@ func watchListGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	capital := r.URL.Query().Get("Capital")
-	size := r.URL.Query().Get("Size")
-	symbol := r.URL.Query().Get("Symbol")
+	capital := r.URL.Query().Get("capital")
+	margin := r.URL.Query().Get("margin")
+	size := r.URL.Query().Get("size")
+	symbol := r.URL.Query().Get("symbol")
 
 	wt := new(watchListTemplate)
 	wt.Capital = capital
+	wt.Margin = margin
 	wt.Size = size
 
 	collection := client.MongoClient.Database(config.NamespaceWatchList).Collection(cookie)
@@ -139,6 +142,16 @@ func watchListGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if margin != "" {
+		marginF, err := strconv.ParseFloat(margin, 64)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		capitalF = capitalF * ((marginF / 100.0) + 1)
+	}
+
 	sizeF, err := strconv.ParseFloat(size, 64)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -158,10 +171,39 @@ func watchListGet(w http.ResponseWriter, r *http.Request) {
 
 func watchListNewGet(w http.ResponseWriter, r *http.Request) {
 
-	_, err := headerutils.GetCookie(r, headerutils.CookieName)
+	cookie, err := headerutils.GetCookie(r, headerutils.CookieName)
 	if err != nil {
 		http.Redirect(w, r, Root, http.StatusTemporaryRedirect)
 		return
+	}
+
+	symbol := r.URL.Query().Get("symbol")
+
+	if symbol == "" {
+		writeTemplate(w, "WatchListNew", nil, nil)
+		return
+	}
+
+	collection := client.MongoClient.Database(config.NamespaceWatchList).Collection(cookie)
+
+	filter := bson.NewDocument(
+		bson.EC.Interface("symbol", symbol),
+	)
+
+	object := new(watchlist.WatchListItem)
+
+	err = collection.FindOne(context.Background(), filter).Decode(object)
+	if err == nil {
+		writeTemplate(w, "WatchListNew", object, nil)
+		return
+	} else {
+		if err == mongo.ErrNoDocuments {
+			writeTemplate(w, "WatchListNew", nil, nil)
+			return
+		} else {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 	}
 
 	writeTemplate(w, "WatchListNew", nil, nil)
@@ -177,9 +219,9 @@ func watchListPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	objectRequest := new(watchlist.WatchListItem)
+	object := new(watchlist.WatchListItem)
 
-	err = datautils.JsonRequestBodyDecode(r, objectRequest)
+	err = datautils.JsonRequestBodyDecode(r, object)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -188,19 +230,19 @@ func watchListPost(w http.ResponseWriter, r *http.Request) {
 	collection := client.MongoClient.Database(config.NamespaceWatchList).Collection(cookie)
 
 	filter := bson.NewDocument(
-		bson.EC.Interface("symbol", objectRequest.Symbol),
+		bson.EC.Interface("symbol", object.Symbol),
 	)
 
 	err = collection.FindOne(context.Background(), filter).Decode(&datautils.DateSymbolStorage{})
 	if err == nil {
-		_, err = collection.ReplaceOne(context.Background(), filter, objectRequest)
+		_, err = collection.ReplaceOne(context.Background(), filter, object)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 	} else {
 		if err == mongo.ErrNoDocuments {
-			_, err = collection.InsertOne(context.Background(), objectRequest)
+			_, err = collection.InsertOne(context.Background(), object)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
@@ -225,7 +267,7 @@ func watchListDelete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	symbol := r.URL.Query().Get("Symbol")
+	symbol := r.URL.Query().Get("symbol")
 
 	if symbol == "" {
 		http.Error(w, err.Error(), http.StatusBadRequest)

@@ -35,7 +35,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func loginGet(w http.ResponseWriter, r *http.Request) {
-
 	writeTemplate(w, "Login", nil, func() {
 		headerutils.DeleteCookie(w, headerutils.CookieName, headerutils.CookiePathRoot)
 	})

@@ -43,6 +43,7 @@
       id="input-symbol"
       class="form-control watch-list-input"
       placeholder="symbol"
+      value="{{if .}}{{.Symbol}}{{end}}"
       aria-label="symbol"
       style="text-transform: uppercase;">
 
@@ -64,6 +65,7 @@
         id="input-price"
         class="form-control watch-list-input"
         placeholder="price"
+        value="{{if .}}{{.Price}}{{end}}"
         aria-label="price">
 
     </div>
@@ -81,7 +83,23 @@
         data-toggle="dropdown"
         aria-haspopup="true"
         aria-expanded="false">
+
+        <!---->
+        {{if .}}
+        <!---->
+
+        Priority &nbsp; : {{.Priority}}
+
+        <!---->
+        {{else}}
+        <!---->
+
         Priority
+
+        <!---->
+        {{end}}
+        <!---->
+
       </button>
 
       <div class="dropdown-menu watch-list-menu"
@@ -122,7 +140,23 @@
         data-toggle="dropdown"
         aria-haspopup="true"
         aria-expanded="false">
+
+        <!---->
+        {{if .}}
+        <!---->
+
+        Status &nbsp; : {{.Status}}
+
+        <!---->
+        {{else}}
+        <!---->
+
         Status
+
+        <!---->
+        {{end}}
+        <!---->
+
       </button>
 
       <div class="dropdown-menu watch-list-menu"
@@ -131,7 +165,6 @@
         <button id="dropdown-status-a"
           class="dropdown-item watch-list-item"
           type="button">
-          <!--Fueling-->
           Charging
         </button>
 
@@ -164,7 +197,23 @@
         data-toggle="dropdown"
         aria-haspopup="true"
         aria-expanded="false">
+
+        <!---->
+        {{if .}}
+        <!---->
+
+        Group Relative Strength &nbsp; : {{.GRS}}
+
+        <!---->
+        {{else}}
+        <!---->
+
         Group Relative Strength
+
+        <!---->
+        {{end}}
+        <!---->
+
       </button>
 
       <div class="dropdown-menu watch-list-menu"
@@ -199,7 +248,23 @@
         data-toggle="dropdown"
         aria-haspopup="true"
         aria-expanded="false">
+
+        <!---->
+        {{if .}}
+        <!---->
+
+        Relative Strength &nbsp; : {{.RS}}
+
+        <!---->
+        {{else}}
+        <!---->
+
         Relative Strength
+
+        <!---->
+        {{end}}
+        <!---->
+
       </button>
 
       <div class="dropdown-menu watch-list-menu"
@@ -246,7 +311,22 @@
         data-toggle="dropdown"
         aria-haspopup="true"
         aria-expanded="false">
+
+        <!---->
+        {{if .}}
+        <!---->
+
+        Fundamentals &nbsp; : {{.Fundamentals}}
+
+        <!---->
+        {{else}}
+        <!---->
+
         Fundamentals
+
+        <!---->
+        {{end}}
+        <!---->
       </button>
 
       <div class="dropdown-menu watch-list-menu"

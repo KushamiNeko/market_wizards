@@ -12,7 +12,12 @@ function action(email, password, url, method, errcb) {
     return;
   }
 
-  if (!validateEmail(email)) {
+  //if (!validateEmail(email)) {
+  //$("#validate-email").show();
+  //return;
+  //}
+
+  if (email === "") {
     $("#validate-email").show();
     return;
   }
@@ -51,7 +56,8 @@ function action(email, password, url, method, errcb) {
 
 $("#button-create").click(function() {
   action(
-    $("#input-email").val() + "@gmail.com",
+    //$("#input-email").val() + "@gmail.com",
+    $("#input-email").val(),
     $("#input-password").val(),
     "/user",
     "POST",
@@ -64,7 +70,8 @@ $("#button-create").click(function() {
 
 $("#button-login").click(function() {
   action(
-    $("#input-email").val() + "@gmail.com",
+    //$("#input-email").val() + "@gmail.com",
+    $("#input-email").val(),
     $("#input-password").val(),
     "/login",
     "POST",
@@ -79,7 +86,8 @@ $("#button-login").click(function() {
 
 $("#button-reset").click(function() {
   action(
-    $("#input-email").val() + "@gmail.com",
+    //$("#input-email").val() + "@gmail.com",
+    $("#input-email").val(),
     "0000",
     "/user",
     "PUT",

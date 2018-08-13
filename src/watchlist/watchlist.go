@@ -13,6 +13,8 @@ type WatchListItem struct {
 	Symbol string
 	Price  float64
 
+	Operation string
+
 	Priority string
 
 	GRS string

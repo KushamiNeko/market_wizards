@@ -41,9 +41,6 @@
       New Item
     </button>
 
-    <!--<div class="watch-list-separator">-->
-    <!--</div>-->
-
     <label for="input-capital"
       class="watch-list-margin-top watch-list-label">
       Capital
@@ -65,6 +62,29 @@
     <div id="validate-capital"
       class="invalid-feedback watch-list-validate">
       Invalid Capital
+    </div>
+
+    <label for="input-margin"
+      class="watch-list-margin-top watch-list-label">
+      Margin 
+    </label>
+
+    <div class="input-group">
+
+      <input type="text"
+        id="input-margin"
+        class="form-control watch-list-input"
+        placeholder="margin"
+        value="{{.Margin}}"
+        aria-label="margin">
+
+      <span class="input-group-addon watch-list-input">%</span>
+
+    </div>
+
+    <div id="validate-margin"
+      class="invalid-feedback watch-list-validate">
+      Invalid Margin
     </div>
 
     <label for="input-size"
@@ -145,6 +165,7 @@
 
         <!---->
         {{range $i, $t := .Items}}
+        <!---->
 
         <tr id="tr-watch-list-item-{{$i}}">
           <td>{{$t.Symbol}}</td>
@@ -160,13 +181,20 @@
           <td>{{$t.PositionSize}}</td>
           <td>
             <button type="button"
-              id="button-watch-list-item-{{$i}}"
+              id="button-watch-list-item-edit-{{$i}}"
+              class="btn btn-light">
+              <i class="material-icons watch-list-button-icons">edit</i>
+            </button>
+
+            <button type="button"
+              id="button-watch-list-item-delete-{{$i}}"
               class="btn btn-light">
               <i class="material-icons watch-list-button-icons">delete</i>
             </button>
           </td>
         </tr>
 
+        <!---->
         {{end}}
         <!---->
 
@@ -204,10 +232,23 @@
 
   <!---->
   {{range $i, $t := .Items}}
+  <!---->
 
   <script defer>
-    $("#button-watch-list-item-{{$i}}").click(function() {
-      console.log("click");
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    $("#button-watch-list-item-edit-{{$i}}").click(function() {
+      if (isProcessing()) {
+        return;
+      }
+
+      window.location = "/watchlist?action=new&symbol={{$t.Symbol}}";
+
+    });
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    $("#button-watch-list-item-delete-{{$i}}").click(function() {
 
       if (isProcessing()) {
         return;
@@ -217,12 +258,10 @@
 
       $.ajax({
         type: "Delete",
-        url: "/watchlist?Symbol={{$t.Symbol}}",
+        url: "/watchlist?symbol={{$t.Symbol}}",
         success: function(data) {
           outProcess("#button-calculate");
           $("#button-calculate").click();
-          //window.location = "/watchlist";
-          //$("#tr-watch-list-item-{{$i}}").hide();
         },
         error: function(xhr, err) {
           outProcess("#button-calculate");
@@ -231,8 +270,11 @@
       });
 
     });
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
   </script>
 
+  <!---->
   {{end}}
   <!---->
 
