@@ -8,6 +8,8 @@ github.com
 golang.org
 google.golang.org
 go.opencensus.io
+gonum.org
+rsc.io
 
 images
 *.jpg

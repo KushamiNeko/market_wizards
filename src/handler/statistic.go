@@ -284,6 +284,8 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//fmt.Println(stat.ChartGeneral.GainVsDaysHeld)
+
 	stat.ChartIBD, err = charts.ChartIBDNew(orders, winnersIBD, losersIBD)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

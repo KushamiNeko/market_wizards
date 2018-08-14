@@ -71,17 +71,7 @@ func (w *WatchListItem) JsonDecode(buffer []byte) error {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func (w *WatchListItem) Caculate(capital, size float64) {
-
 	w.PositionSize = int((capital * (size / 100.0)) / w.Price)
-
-	//w.PositionSize = make([]int, len(config.WatchListPosition))
-
-	//for i, p := range config.WatchListPosition {
-	//c := capital * p
-	//share := int(c / w.Price)
-
-	//w.PositionSize[i] = share
-	//}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

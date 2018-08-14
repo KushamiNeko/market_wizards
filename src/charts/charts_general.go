@@ -3,9 +3,12 @@ package charts
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import (
+	"bytes"
 	"config"
 	"datautils"
+	"encoding/base64"
 	"fmt"
+	"html/template"
 	"math"
 	"sort"
 	"strconv"
@@ -13,6 +16,11 @@ import (
 	"transaction"
 
 	"golang.org/x/text/message"
+
+	"gonum.org/v1/plot"
+	"gonum.org/v1/plot/plotter"
+	"gonum.org/v1/plot/vg"
+	"gonum.org/v1/plot/vg/draw"
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -23,10 +31,12 @@ type ChartGeneral struct {
 	winners []*transaction.Transaction
 	losers  []*transaction.Transaction
 
-	GainVsDaysHeld string
-	BuyPoints      string
-	PriceInterval  string
-	Stage          string
+	//GainVsDaysHeld string
+	GainVsDaysHeld template.URL
+	//BuyPoints      string
+	BuyPoints     template.URL
+	PriceInterval string
+	Stage         string
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,90 +79,233 @@ func ChartGeneralNew(filterOrders, winners, losers []*transaction.Transaction) (
 
 func (c *ChartGeneral) getGainVsDaysHeld() error {
 
-	g := make([][]interface{}, 0)
-
-	g = append(g, []interface{}{
-		"DaysHeld",
-		"Gain(%)",
-		map[string]string{
-			"role": "style",
-		},
-	})
-
-	for _, o := range c.winners {
-		g = append(g, []interface{}{
-			o.Sell.DaysHeld,
-			o.Sell.GainP,
-			fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
-		})
-	}
-
-	for _, o := range c.losers {
-		g = append(g, []interface{}{
-			o.Sell.DaysHeld,
-			o.Sell.GainP,
-			fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
-		})
-	}
-
-	jg, err := datautils.JsonB64Encrypt(g)
+	p, err := plot.New()
 	if err != nil {
 		return err
 	}
 
-	c.GainVsDaysHeld = jg
+	p.Title.Text = "Days Held vs Gain(%)"
+	p.X.Label.Text = "Days Held"
+	p.Y.Label.Text = "Gain(%)"
+
+	p.Title.Font.Size = vg.Points(config.ChartFontSizeL)
+	p.X.Label.Font.Size = vg.Points(config.ChartFontSizeM)
+	p.Y.Label.Font.Size = vg.Points(config.ChartFontSizeM)
+
+	p.X.Tick.Label.Font.Size = vg.Points(config.ChartFontSizeS)
+	p.Y.Tick.Label.Font.Size = vg.Points(config.ChartFontSizeS)
+
+	err = p.Title.Font.SetName(config.ChartFont)
+	if err != nil {
+		return err
+	}
+
+	err = p.X.Label.Font.SetName(config.ChartFont)
+	if err != nil {
+		return err
+	}
+
+	err = p.Y.Label.Font.SetName(config.ChartFont)
+	if err != nil {
+		return err
+	}
+
+	err = p.X.Tick.Label.Font.SetName(config.ChartFont)
+	if err != nil {
+		return err
+	}
+
+	err = p.Y.Tick.Label.Font.SetName(config.ChartFont)
+	if err != nil {
+		return err
+	}
+
+	p.Add(plotter.NewGrid())
+
+	pts := make(plotter.XYs, 0)
+	for _, o := range c.winners {
+		pts = append(pts, struct{ X, Y float64 }{
+			float64(o.Sell.DaysHeld),
+			float64(o.Sell.GainP),
+		})
+	}
+
+	ws, err := plotter.NewScatter(pts)
+	if err != nil {
+		panic(err)
+	}
+
+	ws.GlyphStyle.Color = config.WinnerRGBA
+	ws.GlyphStyle.Radius = vg.Points(config.ChartPointRadius)
+	ws.GlyphStyle.Shape = draw.CircleGlyph{}
+
+	pts = make(plotter.XYs, 0)
+
+	for _, o := range c.losers {
+		pts = append(pts, struct{ X, Y float64 }{
+			float64(o.Sell.DaysHeld),
+			float64(o.Sell.GainP),
+		})
+	}
+
+	ls, err := plotter.NewScatter(pts)
+	if err != nil {
+		return err
+	}
+
+	ls.GlyphStyle.Color = config.LoserRGBA
+	ls.GlyphStyle.Radius = vg.Points(config.ChartPointRadius)
+	ls.GlyphStyle.Shape = draw.CircleGlyph{}
+
+	p.Add(ws, ls)
+
+	//p.Legend.Add("winners", ws)
+	//p.Legend.Add("losers", ls)
+	//p.Legend.Font.Size = vg.Points(config.ChartPointRadius * 3)
+
+	writer, err := p.WriterTo(vg.Points(config.ChartWidth), vg.Points(config.ChartHeight), "png")
+	if err != nil {
+		return err
+	}
+
+	buffer := new(bytes.Buffer)
+
+	_, err = writer.WriteTo(buffer)
+	if err != nil {
+		return err
+	}
+
+	encode := base64.StdEncoding.EncodeToString(buffer.Bytes())
+
+	c.GainVsDaysHeld = template.URL(fmt.Sprintf("data:image/png;base64,%s", encode))
 
 	return nil
+
+	//g := make([][]interface{}, 0)
+
+	//g = append(g, []interface{}{
+	//"DaysHeld",
+	//"Gain(%)",
+	//map[string]string{
+	//"role": "style",
+	//},
+	//})
+
+	//for _, o := range c.winners {
+	//g = append(g, []interface{}{
+	//o.Sell.DaysHeld,
+	//o.Sell.GainP,
+	//fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
+	//})
+	//}
+
+	//for _, o := range c.losers {
+	//g = append(g, []interface{}{
+	//o.Sell.DaysHeld,
+	//o.Sell.GainP,
+	//fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
+	//})
+	//}
+
+	//jg, err := datautils.JsonB64Encrypt(g)
+	//if err != nil {
+	//return err
+	//}
+
+	//c.GainVsDaysHeld = jg
+
+	//return nil
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func (c *ChartGeneral) getBuyPoints() error {
-	g := make([][]interface{}, 0)
 
-	g = append(g, []interface{}{
-		"BuyPoint",
-		"Winner",
-		map[string]string{
-			"role": "style",
-		},
-		"Loser",
-		map[string]string{
-			"role": "style",
-		},
-	})
+	p, err := plot.New()
+	if err != nil {
+		return err
+	}
 
-	dictBuyPointW := make(map[string]int)
-	dictBuyPointL := make(map[string]int)
+	p.Title.Text = "Buy Points"
+	//p.X.Label.Text = "Days Held"
+	//p.Y.Label.Text = "Gain(%)"
+
+	p.Title.Font.Size = vg.Points(config.ChartFontSizeL)
+	p.X.Label.Font.Size = vg.Points(config.ChartFontSizeM)
+	p.Y.Label.Font.Size = vg.Points(config.ChartFontSizeM)
+
+	p.X.Tick.Label.Font.Size = vg.Points(config.ChartFontSizeS)
+	p.Y.Tick.Label.Font.Size = vg.Points(config.ChartFontSizeS)
+	p.X.Tick.Label.Rotation = config.ChartLabelRotation
+
+	p.X.Tick.Label.XAlign = draw.XLeft
+	p.Y.Tick.Label.XAlign = draw.XLeft
+	p.X.Tick.Label.YAlign = draw.YCenter
+	p.Y.Tick.Label.YAlign = draw.YCenter
+
+	p.X.Padding = vg.Points(config.ChartXLabelPadding)
+
+	err = p.Title.Font.SetName(config.ChartFont)
+	if err != nil {
+		return err
+	}
+
+	err = p.X.Label.Font.SetName(config.ChartFont)
+	if err != nil {
+		return err
+	}
+
+	err = p.Y.Label.Font.SetName(config.ChartFont)
+	if err != nil {
+		return err
+	}
+
+	err = p.X.Tick.Label.Font.SetName(config.ChartFont)
+	if err != nil {
+		return err
+	}
+
+	err = p.Y.Tick.Label.Font.SetName(config.ChartFont)
+	if err != nil {
+		return err
+	}
+
+	p.Add(plotter.NewGrid())
+
+	width := vg.Points(config.ChartBarWidth)
+
+	winners := make(map[string]int)
+	losers := make(map[string]int)
 
 	for _, o := range c.winners {
 		buyPoint := strings.TrimSpace(o.Buy.BuyPoint)
 
-		if val, ok := dictBuyPointW[buyPoint]; ok {
-			dictBuyPointW[buyPoint] = val + 1
+		if val, ok := winners[buyPoint]; ok {
+			winners[buyPoint] = val + 1
 		} else {
-			dictBuyPointW[buyPoint] = 1
+			winners[buyPoint] = 1
 		}
 	}
 
 	for _, o := range c.losers {
 		buyPoint := strings.TrimSpace(o.Buy.BuyPoint)
 
-		if val, ok := dictBuyPointL[buyPoint]; ok {
-			dictBuyPointL[buyPoint] = val + 1
+		if val, ok := losers[buyPoint]; ok {
+			losers[buyPoint] = val + 1
 		} else {
-			dictBuyPointL[buyPoint] = 1
+			losers[buyPoint] = 1
 		}
 	}
 
 	ck := make([]string, 0)
 
-	for k, _ := range dictBuyPointW {
+	for k, _ := range winners {
 		ck = append(ck, k)
 	}
 
 outer:
-	for k, _ := range dictBuyPointL {
+	for k, _ := range losers {
+
 		for _, kk := range ck {
 			if kk == k {
 				continue outer
@@ -164,40 +317,156 @@ outer:
 
 	sort.Strings(ck)
 
-	for _, c := range ck {
+	winnersG := make([]float64, len(ck))
+	losersG := make([]float64, len(ck))
 
-		var vw int
-		var vl int
-
-		if v, ok := dictBuyPointW[c]; ok {
-			vw = v
+	for i, c := range ck {
+		if vw, ok := winners[c]; ok {
+			winnersG[i] = float64(vw)
 		} else {
-			vw = 0
+			winnersG[i] = 0.0
 		}
-
-		if v, ok := dictBuyPointL[c]; ok {
-			vl = v
+		if vl, ok := losers[c]; ok {
+			losersG[i] = float64(vl)
 		} else {
-			vl = 0
+			losersG[i] = 0.0
 		}
-
-		g = append(g, []interface{}{
-			c,
-			vw,
-			fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
-			vl,
-			fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
-		})
 	}
 
-	jg, err := datautils.JsonB64Encrypt(g)
+	wb, err := plotter.NewBarChart(plotter.Values(winnersG), width)
 	if err != nil {
 		return err
 	}
 
-	c.BuyPoints = jg
+	wb.LineStyle.Width = vg.Length(0)
+	wb.Color = config.WinnerRGBA
+	wb.Offset = -width / 2
+
+	lb, err := plotter.NewBarChart(plotter.Values(losersG), width)
+	if err != nil {
+		return err
+	}
+
+	lb.LineStyle.Width = vg.Length(0)
+	lb.Color = config.LoserRGBA
+	lb.Offset = width / 2
+
+	p.Add(wb, lb)
+
+	//p.Legend.Add("winners", wb)
+	//p.Legend.Add("losers", lb)
+	//p.Legend.Top = true
+
+	p.NominalX(ck...)
+
+	writer, err := p.WriterTo(vg.Points(config.ChartWidth), vg.Points(config.ChartHeight), "png")
+	if err != nil {
+		return err
+	}
+
+	buffer := new(bytes.Buffer)
+
+	_, err = writer.WriteTo(buffer)
+	if err != nil {
+		return err
+	}
+
+	encode := base64.StdEncoding.EncodeToString(buffer.Bytes())
+
+	c.BuyPoints = template.URL(fmt.Sprintf("data:image/png;base64,%s", encode))
 
 	return nil
+
+	//g := make([][]interface{}, 0)
+
+	//g = append(g, []interface{}{
+	//"BuyPoint",
+	//"Winner",
+	//map[string]string{
+	//"role": "style",
+	//},
+	//"Loser",
+	//map[string]string{
+	//"role": "style",
+	//},
+	//})
+
+	//dictBuyPointW := make(map[string]int)
+	//dictBuyPointL := make(map[string]int)
+
+	//for _, o := range c.winners {
+	//buyPoint := strings.TrimSpace(o.Buy.BuyPoint)
+
+	//if val, ok := dictBuyPointW[buyPoint]; ok {
+	//dictBuyPointW[buyPoint] = val + 1
+	//} else {
+	//dictBuyPointW[buyPoint] = 1
+	//}
+	//}
+
+	//for _, o := range c.losers {
+	//buyPoint := strings.TrimSpace(o.Buy.BuyPoint)
+
+	//if val, ok := dictBuyPointL[buyPoint]; ok {
+	//dictBuyPointL[buyPoint] = val + 1
+	//} else {
+	//dictBuyPointL[buyPoint] = 1
+	//}
+	//}
+
+	//ck := make([]string, 0)
+
+	//for k, _ := range dictBuyPointW {
+	//ck = append(ck, k)
+	//}
+
+	//outer:
+	//for k, _ := range dictBuyPointL {
+	//for _, kk := range ck {
+	//if kk == k {
+	//continue outer
+	//}
+	//}
+
+	//ck = append(ck, k)
+	//}
+
+	//sort.Strings(ck)
+
+	//for _, c := range ck {
+
+	//var vw int
+	//var vl int
+
+	//if v, ok := dictBuyPointW[c]; ok {
+	//vw = v
+	//} else {
+	//vw = 0
+	//}
+
+	//if v, ok := dictBuyPointL[c]; ok {
+	//vl = v
+	//} else {
+	//vl = 0
+	//}
+
+	//g = append(g, []interface{}{
+	//c,
+	//vw,
+	//fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
+	//vl,
+	//fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
+	//})
+	//}
+
+	//jg, err := datautils.JsonB64Encrypt(g)
+	//if err != nil {
+	//return err
+	//}
+
+	//c.BuyPoints = jg
+
+	//return nil
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

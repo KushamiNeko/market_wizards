@@ -1,6 +1,8 @@
 package config
 
 import (
+	"image/color"
+	"math"
 	"os"
 	"strings"
 )
@@ -63,13 +65,32 @@ const (
 
 	WinnerOpacity = 0.5
 	LoserOpacity  = 0.5
+
+	ChartMultiplier = 1
+
+	ChartWidth  = 1920 * ChartMultiplier
+	ChartHeight = 1080 * ChartMultiplier
+
+	ChartFontSizeL = 30 * ChartMultiplier
+	ChartFontSizeM = 30 * ChartMultiplier
+	ChartFontSizeS = 25 * ChartMultiplier
+
+	ChartPointRadius = 8 * ChartMultiplier
+	ChartBarWidth    = 32 * ChartMultiplier
+
+	ChartFont = "Helvetica"
+	//ChartFont          = "Helvetica-Oblique"
+	ChartLabelRotation = -35 * math.Pi / 180.0
+	ChartXLabelPadding = 10
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 var (
-	//WatchListPosition []float64 = []float64{0.05, 0.08, 0.1, 0.12, 0.13, 0.15, 0.2, 0.25, 0.3, 0.35}
-	WatchListPosition []float64 = []float64{0.05, 0.075, 0.1, 0.125, 0.15, 0.2, 0.25, 0.3}
+	//WinnerRGBA = color.NRGBA{R: 3, G: 169, B: 244, A: 127}
+	WinnerRGBA = color.NRGBA{R: 3, G: 169, B: 255, A: 127}
+	//LoserRGBA  = color.NRGBA{R: 244, G: 67, B: 54, A: 127}
+	LoserRGBA = color.NRGBA{R: 255, G: 50, B: 70, A: 127}
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////

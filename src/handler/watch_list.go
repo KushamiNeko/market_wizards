@@ -24,6 +24,7 @@ type watchListTemplate struct {
 	Capital string
 	Margin  string
 	Size    string
+	Dollars string
 	Symbol  string
 
 	PositionSize string
@@ -158,6 +159,7 @@ func watchListGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	wt.Dollars = fmt.Sprintf("%.2f", capitalF*(sizeF/100.0))
 	wt.PositionSize = fmt.Sprintf("%.2f%%", sizeF)
 
 	for _, t := range items {

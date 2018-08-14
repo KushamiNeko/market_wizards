@@ -11,7 +11,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/montanaflynn/stats"
+	//"github.com/montanaflynn/stats"
+	"gonum.org/v1/gonum/stat"
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -381,10 +382,11 @@ func (m *MarketSmith) getQuarterlyMean(list []string) string {
 		eps[i] = f
 	}
 
-	mean, err := stats.Mean(eps)
-	if err != nil {
-		return err.Error()
-	}
+	mean := stat.Mean(eps, nil)
+	//mean, err := stats.Mean(eps)
+	//if err != nil {
+	//return err.Error()
+	//}
 
 	return fmt.Sprintf("%v", mean)
 }
@@ -415,10 +417,11 @@ func (m *MarketSmith) getFunds(buffer *bytes.Buffer) error {
 		funds[i] = num
 	}
 
-	mean, err := stats.Mean(funds)
-	if err != nil {
-		return err
-	}
+	mean := stat.Mean(funds, nil)
+	//mean, err := stats.Mean(funds)
+	//if err != nil {
+	//return err
+	//}
 
 	m.Contents = append(m.Contents, &field{
 		"Avg Funds Holding 4Q",

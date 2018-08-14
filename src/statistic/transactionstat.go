@@ -5,11 +5,13 @@ package statistic
 import (
 	"config"
 	"math"
+	"sort"
 	"strconv"
 	"strings"
 	"transaction"
 
-	"github.com/montanaflynn/stats"
+	//"github.com/montanaflynn/stats"
+	"gonum.org/v1/gonum/stat"
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -88,52 +90,67 @@ func NewTransactionStat(orders []*transaction.Transaction) (*TransactionStat, er
 	t.BuyPoint = dictBuyPoint
 	t.Stage = dictStage
 
-	var err error
+	//var err error
 
-	t.GainPMean, err = stats.Mean(sliceGainP)
-	if err != nil {
-		return nil, err
-	}
+	t.GainPMean = stat.Mean(sliceGainP, nil)
+	//t.GainPMean, err = stats.Mean(sliceGainP)
+	//if err != nil {
+	//return nil, err
+	//}
 
-	t.GainPMax, err = stats.Max(sliceGainP)
-	if err != nil {
-		return nil, err
-	}
+	sort.Float64s(sliceGainP)
 
-	t.GainPMin, err = stats.Min(sliceGainP)
-	if err != nil {
-		return nil, err
-	}
+	t.GainPMax = sliceGainP[len(sliceGainP)-1]
+	//t.GainPMax, err = stats.Max(sliceGainP)
+	//if err != nil {
+	//return nil, err
+	//}
 
-	t.GainDMean, err = stats.Mean(sliceGainD)
-	if err != nil {
-		return nil, err
-	}
+	t.GainPMin = sliceGainP[0]
+	//t.GainPMin, err = stats.Min(sliceGainP)
+	//if err != nil {
+	//return nil, err
+	//}
 
-	t.GainDMax, err = stats.Max(sliceGainD)
-	if err != nil {
-		return nil, err
-	}
+	t.GainDMean = stat.Mean(sliceGainD, nil)
+	//t.GainDMean, err = stats.Mean(sliceGainD)
+	//if err != nil {
+	//return nil, err
+	//}
 
-	t.GainDMin, err = stats.Min(sliceGainD)
-	if err != nil {
-		return nil, err
-	}
+	sort.Float64s(sliceGainD)
 
-	t.DaysHeldMean, err = stats.Mean(sliceDaysHeld)
-	if err != nil {
-		return nil, err
-	}
+	t.GainDMax = sliceGainD[len(sliceGainD)-1]
+	//t.GainDMax, err = stats.Max(sliceGainD)
+	//if err != nil {
+	//return nil, err
+	//}
 
-	t.DaysHeldMax, err = stats.Max(sliceDaysHeld)
-	if err != nil {
-		return nil, err
-	}
+	t.GainDMin = sliceGainD[0]
+	//t.GainDMin, err = stats.Min(sliceGainD)
+	//if err != nil {
+	//return nil, err
+	//}
 
-	t.DaysHeldMin, err = stats.Min(sliceDaysHeld)
-	if err != nil {
-		return nil, err
-	}
+	t.DaysHeldMean = stat.Mean(sliceDaysHeld, nil)
+	//t.DaysHeldMean, err = stats.Mean(sliceDaysHeld)
+	//if err != nil {
+	//return nil, err
+	//}
+
+	sort.Float64s(sliceDaysHeld)
+
+	t.DaysHeldMax = sliceDaysHeld[len(sliceDaysHeld)-1]
+	//t.DaysHeldMax, err = stats.Max(sliceDaysHeld)
+	//if err != nil {
+	//return nil, err
+	//}
+
+	t.DaysHeldMin = sliceDaysHeld[0]
+	//t.DaysHeldMin, err = stats.Min(sliceDaysHeld)
+	//if err != nil {
+	//return nil, err
+	//}
 
 	return t, nil
 }
