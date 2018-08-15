@@ -65,23 +65,31 @@ const (
 
 	WinnerOpacity = 0.5
 	LoserOpacity  = 0.5
+)
 
-	ChartMultiplier = 1
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const (
+	ChartMultiplier = 1.25
 
 	ChartWidth  = 1920 * ChartMultiplier
 	ChartHeight = 1080 * ChartMultiplier
 
-	ChartFontSizeL = 30 * ChartMultiplier
-	ChartFontSizeM = 30 * ChartMultiplier
-	ChartFontSizeS = 25 * ChartMultiplier
+	ChartFontSizeL = 25 * ChartMultiplier
+	ChartFontSizeM = 25 * ChartMultiplier
+	ChartFontSizeS = 20 * ChartMultiplier
 
-	ChartPointRadius = 8 * ChartMultiplier
+	ChartPointRadius = 9 * ChartMultiplier
 	ChartBarWidth    = 32 * ChartMultiplier
 
 	ChartFont = "Helvetica"
 	//ChartFont          = "Helvetica-Oblique"
-	ChartLabelRotation = -35 * math.Pi / 180.0
-	ChartXLabelPadding = 10
+	ChartLabelRotation = -90 * math.Pi / 180.0
+
+	ChartXLabelPadding       = 15
+	ChartLegendPaddingYRatio = 1.15
+
+	ChartDataUrlFormat = "data:image/png;base64,%s"
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////

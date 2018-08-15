@@ -8,19 +8,20 @@ import (
 	"handler"
 	"log"
 	"net/http"
+	"runtime"
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const (
-	//TestFile = "test_files/ibd_checkup_spar.html"
-	//TestFile = "test_files/ibd_checkup_cade.html"
-	//TestFile = "test_files/ibd_checkup_extr.html"
-	//TestFile = "test_files/ibd_checkup_ebsb.html"
+//TestFile = "test_files/ibd_checkup_spar.html"
+//TestFile = "test_files/ibd_checkup_cade.html"
+//TestFile = "test_files/ibd_checkup_extr.html"
+//TestFile = "test_files/ibd_checkup_ebsb.html"
 
-	//TestFile = "test_files/ibd_checkup_cacc.html"
-	TestFile = "test_files/20180601_MarketSmith_SCVL_W.html"
-	//TestFile = "test_files/ibd_checkup_sgh.html"
+//TestFile = "test_files/ibd_checkup_cacc.html"
+//TestFile = "test_files/20180601_MarketSmith_SCVL_W.html"
+//TestFile = "test_files/ibd_checkup_sgh.html"
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -55,6 +56,8 @@ func main() {
 	//fmt.Println(m)
 
 	//return
+
+	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	mux := http.NewServeMux()
 
