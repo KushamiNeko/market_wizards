@@ -4,7 +4,6 @@ package ibd
 
 import (
 	"bytes"
-	"datautils"
 	"fmt"
 	"regexp"
 	"strings"
@@ -84,56 +83,58 @@ func init() {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 type IBDCheckup struct {
-	Contents []*field
+	//Contents []*field
+	Contents map[string]string
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func IBDCheckupNew() *IBDCheckup {
 	checkup := new(IBDCheckup)
-	checkup.Contents = make([]*field, 0)
+	//checkup.Contents = make([]*field, 0)
+	checkup.Contents = make(map[string]string)
 
 	return checkup
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (i *IBDCheckup) GetContents() []datautils.Fields {
+//func (i *IBDCheckup) GetContents() []datautils.Fields {
 
-	f := make([]datautils.Fields, len(i.Contents))
+//f := make([]datautils.Fields, len(i.Contents))
 
-	for i, c := range i.Contents {
-		f[i] = c
-	}
+//for i, c := range i.Contents {
+//f[i] = c
+//}
 
-	return f
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-type field struct {
-	Label     string
-	Value     string
-	Condition string `json:",omitempty"`
-}
+//return f
+//}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (f *field) GetLabel() string {
-	return f.Label
-}
+//type field struct {
+//Label     string
+//Value     string
+//Condition string `json:",omitempty"`
+//}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (f *field) GetValue() string {
-	return f.Value
-}
+//func (f *field) GetLabel() string {
+//return f.Label
+//}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (f *field) SetValue(value string) {
-	f.Value = value
-}
+//func (f *field) GetValue() string {
+//return f.Value
+//}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//func (f *field) SetValue(value string) {
+//f.Value = value
+//}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -159,11 +160,13 @@ func Parse(buffer *bytes.Buffer) (*IBDCheckup, error) {
 
 	symbol := strings.TrimSpace(results[0][1])
 
-	checkup.Contents = append(checkup.Contents, &field{
-		"Symbol",
-		symbol,
-		"",
-	})
+	checkup.Contents["Symbol"] = symbol
+
+	//checkup.Contents = append(checkup.Contents, &field{
+	//"Symbol",
+	//symbol,
+	//"",
+	//})
 
 	results = reRankInGroup.FindAllStringSubmatch(buffer.String(), -1)
 
@@ -178,11 +181,13 @@ func Parse(buffer *bytes.Buffer) (*IBDCheckup, error) {
 
 		if s == symbol {
 
-			checkup.Contents = append(checkup.Contents, &field{
-				"Rank in Group",
-				strings.TrimSpace(r),
-				"",
-			})
+			checkup.Contents["Rank in Group"] = strings.TrimSpace(r)
+
+			//checkup.Contents = append(checkup.Contents, &field{
+			//"Rank in Group",
+			//strings.TrimSpace(r),
+			//"",
+			//})
 
 			break
 		}
@@ -245,17 +250,19 @@ func Parse(buffer *bytes.Buffer) (*IBDCheckup, error) {
 
 	found:
 
-		condition := strings.TrimSpace(r[5])
+		//condition := strings.TrimSpace(r[5])
 
-		if value == none {
-			condition = none
-		}
+		//if value == none {
+		//condition = none
+		//}
 
-		checkup.Contents = append(checkup.Contents, &field{
-			strings.TrimSpace(match[1]),
-			value,
-			condition,
-		})
+		checkup.Contents[strings.TrimSpace(match[1])] = value
+
+		//checkup.Contents = append(checkup.Contents, &field{
+		//strings.TrimSpace(match[1]),
+		//value,
+		//condition,
+		//})
 	}
 
 	return checkup, nil

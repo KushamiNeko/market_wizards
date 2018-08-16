@@ -3,10 +3,7 @@ package charts
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import (
-	"bytes"
 	"config"
-	"encoding/base64"
-	"fmt"
 	"html/template"
 	"math"
 	"sort"
@@ -30,6 +27,9 @@ type ChartGeneral struct {
 	winners []*transaction.Transaction
 	losers  []*transaction.Transaction
 
+	winnersI []interface{}
+	losersI  []interface{}
+
 	//GainVsDaysHeld string
 	GainVsDaysHeld template.URL
 	//BuyPoints      string
@@ -42,11 +42,9 @@ type ChartGeneral struct {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-var wg sync.WaitGroup
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 func ChartGeneralNew(filterOrders, winners, losers []*transaction.Transaction) (*ChartGeneral, error) {
+
+	var wg sync.WaitGroup
 
 	c := new(ChartGeneral)
 
@@ -55,10 +53,21 @@ func ChartGeneralNew(filterOrders, winners, losers []*transaction.Transaction) (
 	c.winners = winners
 	c.losers = losers
 
-	//var err error
-	errs := make([]error, 4)
+	c.winnersI = make([]interface{}, len(c.winners))
+	c.losersI = make([]interface{}, len(c.losers))
 
-	wg.Add(4)
+	for i, v := range c.winners {
+		c.winnersI[i] = v
+	}
+
+	for i, v := range c.losers {
+		c.losersI[i] = v
+	}
+
+	fs := 4
+
+	wg.Add(fs)
+	errs := make([]error, fs)
 
 	go func() {
 		err := c.getGainVsDaysHeld()
@@ -114,7 +123,7 @@ func ChartGeneralNew(filterOrders, winners, losers []*transaction.Transaction) (
 
 func (c *ChartGeneral) getGainVsDaysHeld() error {
 
-	p, err := newPlot(
+	p, err := makePlot(
 		"Days Held vs Gain(%)",
 		"Days Held",
 		"Gain(%)",
@@ -213,6 +222,9 @@ func (c *ChartGeneral) getGainVsDaysHeld() error {
 	p.Add(ws, ls)
 	p.Y.Max = max * config.ChartLegendPaddingYRatio
 
+	p.X.Min = -(p.X.Max * (config.ChartBarXPaddingRatio - 1.0) / 2.0)
+	p.X.Max = p.X.Max * (((config.ChartBarXPaddingRatio - 1.0) / 2.0) + 1.0)
+
 	p.Legend.Add("winners", ws)
 	p.Legend.Add("losers", ls)
 	//p.Legend.Font.Size = vg.Points(config.ChartFontSizeS)
@@ -281,20 +293,22 @@ func (c *ChartGeneral) getGainVsDaysHeld() error {
 
 func (c *ChartGeneral) getBuyPoints() error {
 
-	p, err := newPlot(
+	p, err := makePlot(
 		"Buy Points",
 		"",
 		"",
 		true,
 		func(p *plot.Plot) {
 
-			p.X.Padding = vg.Points(config.ChartXLabelPadding)
+			barChartSetup(p)
+			//p.X.Padding = vg.Points(config.ChartXLabelPadding)
+
+			//p.X.Tick.Label.XAlign = draw.XLeft
+			//p.X.Tick.Label.YAlign = draw.YCenter
+
+			//p.Y.Tick.Label.XAlign = draw.XRight
 
 			p.X.Tick.Label.Rotation = config.ChartLabelRotation
-			p.X.Tick.Label.XAlign = draw.XLeft
-			p.X.Tick.Label.YAlign = draw.YCenter
-
-			p.Y.Tick.Label.XAlign = draw.XRight
 		},
 	)
 	if err != nil {
@@ -420,12 +434,14 @@ func (c *ChartGeneral) getBuyPoints() error {
 	//}
 	//}
 
-	keys, winnersG, losersG, wmax, lmax :=
-		makeWinLoseSlice(
-			c.winners,
-			c.losers,
-			func(o *transaction.Transaction) interface{} {
-				return strings.TrimSpace(o.Buy.BuyPoint)
+	keys, winnersG, losersG, wmax, lmax, err :=
+		makeValueSlice(
+			c.winnersI,
+			c.losersI,
+			//func(o *transaction.Transaction) interface{} {
+			func(o interface{}) (interface{}, error) {
+				t := o.(*transaction.Transaction)
+				return strings.TrimSpace(t.Buy.BuyPoint), nil
 			},
 			func(keys []interface{}) {
 				sort.Slice(keys, func(i, j int) bool {
@@ -439,6 +455,9 @@ func (c *ChartGeneral) getBuyPoints() error {
 				return key.(string)
 			},
 		)
+	if err != nil {
+		return err
+	}
 
 	//func makeWinLoseFloatSlice(
 	//winners []*transaction.Transaction,
@@ -448,39 +467,44 @@ func (c *ChartGeneral) getBuyPoints() error {
 	//keyFormatCb func(key interface{}) string,
 	//) ([]string, []float64, []float64, float64, float64) {
 
-	width := vg.Points(config.ChartBarWidth)
-
-	wb, err := plotter.NewBarChart(plotter.Values(winnersG), width)
+	err = makeBarCharts(p, keys, winnersG, losersG, wmax, lmax)
 	if err != nil {
 		return err
 	}
 
-	wb.LineStyle.Width = vg.Length(0)
-	wb.Color = config.WinnerRGBA
-	wb.Offset = -width / 2
+	//width := vg.Points(config.ChartBarWidth)
 
-	lb, err := plotter.NewBarChart(plotter.Values(losersG), width)
-	if err != nil {
-		return err
-	}
+	//wb, err := plotter.NewBarChart(plotter.Values(winnersG), width)
+	//if err != nil {
+	//return err
+	//}
 
-	lb.LineStyle.Width = vg.Length(0)
-	lb.Color = config.LoserRGBA
-	lb.Offset = width / 2
+	//wb.LineStyle.Width = vg.Length(0)
+	//wb.Color = config.WinnerRGBA
+	//wb.Offset = -width / 2
 
-	p.Add(wb, lb)
+	//lb, err := plotter.NewBarChart(plotter.Values(losersG), width)
+	//if err != nil {
+	//return err
+	//}
 
-	p.Y.Max = math.Max(wmax, lmax) * config.ChartLegendPaddingYRatio
+	//lb.LineStyle.Width = vg.Length(0)
+	//lb.Color = config.LoserRGBA
+	//lb.Offset = width / 2
 
-	p.Legend.Add("winners", wb)
-	p.Legend.Add("losers", lb)
-	//p.Legend.Font.Size = vg.Points(config.ChartFontSizeS)
-	//p.Legend.YAlign = draw.YBottom
-	//p.Legend.TextStyle.YAlign = draw.YBottom
-	//p.Legend.Top = true
-	//p.Legend.Left = true
+	//p.Add(wb, lb)
 
-	p.NominalX(keys...)
+	//p.Y.Max = math.Max(wmax, lmax) * config.ChartLegendPaddingYRatio
+
+	//p.Legend.Add("winners", wb)
+	//p.Legend.Add("losers", lb)
+	////p.Legend.Font.Size = vg.Points(config.ChartFontSizeS)
+	////p.Legend.YAlign = draw.YBottom
+	////p.Legend.TextStyle.YAlign = draw.YBottom
+	////p.Legend.Top = true
+	////p.Legend.Left = true
+
+	//p.NominalX(keys...)
 
 	//writer, err := p.WriterTo(vg.Points(config.ChartWidth), vg.Points(config.ChartHeight), "png")
 	//if err != nil {
@@ -600,35 +624,40 @@ func (c *ChartGeneral) getBuyPoints() error {
 
 func (c *ChartGeneral) getPriceInterval() error {
 
-	p, err := newPlot(
+	p, err := makePlot(
 		"Price Interval",
 		"",
 		"",
 		true,
 		func(p *plot.Plot) {
 
-			p.X.Padding = vg.Points(config.ChartXLabelPadding)
+			//p.X.Padding = vg.Points(config.ChartXLabelPadding)
+
+			//p.X.Tick.Label.XAlign = draw.XLeft
+			//p.X.Tick.Label.YAlign = draw.YCenter
+
+			//p.Y.Tick.Label.XAlign = draw.XRight
+
+			barChartSetup(p)
 
 			p.X.Tick.Label.Rotation = config.ChartLabelRotation
-			p.X.Tick.Label.XAlign = draw.XLeft
-			p.X.Tick.Label.YAlign = draw.YCenter
-
-			p.Y.Tick.Label.XAlign = draw.XRight
 		},
 	)
 	if err != nil {
 		return err
 	}
 
-	keys, winnersG, losersG, wmax, lmax :=
-		makeWinLoseSlice(
-			c.winners,
-			c.losers,
-			func(o *transaction.Transaction) interface{} {
-				grp := math.Floor(o.Buy.Price / config.PriceInterval)
+	keys, winnersG, losersG, wmax, lmax, err :=
+		makeValueSlice(
+			c.winnersI,
+			c.losersI,
+			//func(o *transaction.Transaction) interface{} {
+			func(o interface{}) (interface{}, error) {
+				t := o.(*transaction.Transaction)
+				grp := math.Floor(t.Buy.Price / config.PriceInterval)
 				grps := int(grp * config.PriceInterval)
 
-				return grps
+				return grps, nil
 			},
 			func(keys []interface{}) {
 				sort.Slice(keys, func(i, j int) bool {
@@ -647,6 +676,9 @@ func (c *ChartGeneral) getPriceInterval() error {
 				return grpk
 			},
 		)
+	if err != nil {
+		return err
+	}
 
 	//func makeWinLoseFloatSlice(
 	//winners []*transaction.Transaction,
@@ -656,34 +688,39 @@ func (c *ChartGeneral) getPriceInterval() error {
 	//keyFormatCb func(key interface{}) string,
 	//) ([]string, []float64, []float64, float64, float64) {
 
-	width := vg.Points(config.ChartBarWidth)
-
-	wb, err := plotter.NewBarChart(plotter.Values(winnersG), width)
+	err = makeBarCharts(p, keys, winnersG, losersG, wmax, lmax)
 	if err != nil {
 		return err
 	}
 
-	wb.LineStyle.Width = vg.Length(0)
-	wb.Color = config.WinnerRGBA
-	wb.Offset = -width / 2
+	//width := vg.Points(config.ChartBarWidth)
 
-	lb, err := plotter.NewBarChart(plotter.Values(losersG), width)
-	if err != nil {
-		return err
-	}
+	//wb, err := plotter.NewBarChart(plotter.Values(winnersG), width)
+	//if err != nil {
+	//return err
+	//}
 
-	lb.LineStyle.Width = vg.Length(0)
-	lb.Color = config.LoserRGBA
-	lb.Offset = width / 2
+	//wb.LineStyle.Width = vg.Length(0)
+	//wb.Color = config.WinnerRGBA
+	//wb.Offset = -width / 2
 
-	p.Add(wb, lb)
+	//lb, err := plotter.NewBarChart(plotter.Values(losersG), width)
+	//if err != nil {
+	//return err
+	//}
 
-	p.Y.Max = math.Max(wmax, lmax) * config.ChartLegendPaddingYRatio
+	//lb.LineStyle.Width = vg.Length(0)
+	//lb.Color = config.LoserRGBA
+	//lb.Offset = width / 2
 
-	p.Legend.Add("winners", wb)
-	p.Legend.Add("losers", lb)
+	//p.Add(wb, lb)
 
-	p.NominalX(keys...)
+	//p.Y.Max = math.Max(wmax, lmax) * config.ChartLegendPaddingYRatio
+
+	//p.Legend.Add("winners", wb)
+	//p.Legend.Add("losers", lb)
+
+	//p.NominalX(keys...)
 
 	c.PriceInterval, err = plotToDataUrl(p)
 	if err != nil {
@@ -798,33 +835,37 @@ func (c *ChartGeneral) getPriceInterval() error {
 
 func (c *ChartGeneral) getStage() error {
 
-	p, err := newPlot(
+	p, err := makePlot(
 		"Stage",
 		"",
 		"",
 		true,
 		func(p *plot.Plot) {
 
-			p.X.Padding = vg.Points(config.ChartXLabelPadding)
-			//p.X.Tick.Label.Rotation = config.ChartLabelRotation
+			barChartSetup(p)
 
-			p.X.Tick.Label.XAlign = draw.XLeft
-			p.X.Tick.Label.YAlign = draw.YCenter
+			//p.X.Padding = vg.Points(config.ChartXLabelPadding)
+			////p.X.Tick.Label.Rotation = config.ChartLabelRotation
 
-			p.Y.Tick.Label.XAlign = draw.XRight
+			//p.X.Tick.Label.XAlign = draw.XLeft
+			//p.X.Tick.Label.YAlign = draw.YCenter
+
+			//p.Y.Tick.Label.XAlign = draw.XRight
 		},
 	)
 	if err != nil {
 		return err
 	}
 
-	keys, winnersG, losersG, wmax, lmax :=
-		makeWinLoseSlice(
-			c.winners,
-			c.losers,
-			func(o *transaction.Transaction) interface{} {
-				stage := strconv.FormatFloat(math.Floor(o.Buy.Stage), 'f', -1, 64)
-				return stage
+	keys, winnersG, losersG, wmax, lmax, err :=
+		makeValueSlice(
+			c.winnersI,
+			c.losersI,
+			//func(o *transaction.Transaction) interface{} {
+			func(o interface{}) (interface{}, error) {
+				t := o.(*transaction.Transaction)
+				stage := strconv.FormatFloat(math.Floor(t.Buy.Stage), 'f', -1, 64)
+				return stage, nil
 			},
 			func(keys []interface{}) {
 				sort.Slice(keys, func(i, j int) bool {
@@ -838,6 +879,9 @@ func (c *ChartGeneral) getStage() error {
 				return key.(string)
 			},
 		)
+	if err != nil {
+		return err
+	}
 
 	//func makeWinLoseFloatSlice(
 	//winners []*transaction.Transaction,
@@ -847,36 +891,41 @@ func (c *ChartGeneral) getStage() error {
 	//keyFormatCb func(key interface{}) string,
 	//) ([]string, []float64, []float64, float64, float64) {
 
-	width := vg.Points(config.ChartBarWidth)
-
-	wb, err := plotter.NewBarChart(plotter.Values(winnersG), width)
+	err = makeBarCharts(p, keys, winnersG, losersG, wmax, lmax)
 	if err != nil {
 		return err
 	}
 
-	wb.LineStyle.Width = vg.Length(0)
-	wb.Color = config.WinnerRGBA
-	wb.Offset = -width / 2
+	//width := vg.Points(config.ChartBarWidth)
 
-	lb, err := plotter.NewBarChart(plotter.Values(losersG), width)
-	if err != nil {
-		return err
-	}
+	//wb, err := plotter.NewBarChart(plotter.Values(winnersG), width)
+	//if err != nil {
+	//return err
+	//}
 
-	lb.LineStyle.Width = vg.Length(0)
-	lb.Color = config.LoserRGBA
-	lb.Offset = width / 2
+	//wb.LineStyle.Width = vg.Length(0)
+	//wb.Color = config.WinnerRGBA
+	//wb.Offset = -width / 2
 
-	p.Add(wb, lb)
+	//lb, err := plotter.NewBarChart(plotter.Values(losersG), width)
+	//if err != nil {
+	//return err
+	//}
 
-	p.Y.Max = math.Max(wmax, lmax) * config.ChartLegendPaddingYRatio
+	//lb.LineStyle.Width = vg.Length(0)
+	//lb.Color = config.LoserRGBA
+	//lb.Offset = width / 2
 
-	//p.X.Min = 0.0 - (float64(len(keys)) * 0.05)
+	//p.Add(wb, lb)
 
-	p.Legend.Add("winners", wb)
-	p.Legend.Add("losers", lb)
+	//p.Y.Max = math.Max(wmax, lmax) * config.ChartLegendPaddingYRatio
 
-	p.NominalX(keys...)
+	////p.X.Min = 0.0 - (float64(len(keys)) * 0.05)
+
+	//p.Legend.Add("winners", wb)
+	//p.Legend.Add("losers", lb)
+
+	//p.NominalX(keys...)
 
 	c.Stage, err = plotToDataUrl(p)
 	if err != nil {
@@ -975,197 +1024,6 @@ func (c *ChartGeneral) getStage() error {
 	//c.Stage = jg
 
 	//return nil
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-func newPlot(
-	title,
-	xLabel,
-	yLabel string,
-	grid bool,
-	setupCb func(p *plot.Plot),
-) (*plot.Plot, error) {
-
-	p, err := plot.New()
-	if err != nil {
-		return nil, err
-	}
-
-	p.Title.Text = title
-
-	if xLabel != "" {
-		p.X.Label.Text = xLabel
-	}
-
-	if yLabel != "" {
-		p.Y.Label.Text = yLabel
-	}
-
-	p.Title.Font.Size = vg.Points(config.ChartFontSizeL)
-
-	p.X.Label.Font.Size = vg.Points(config.ChartFontSizeM)
-	p.Y.Label.Font.Size = vg.Points(config.ChartFontSizeM)
-
-	p.X.Tick.Label.Font.Size = vg.Points(config.ChartFontSizeS)
-	p.Y.Tick.Label.Font.Size = vg.Points(config.ChartFontSizeS)
-
-	if setupCb != nil {
-		setupCb(p)
-	}
-
-	err = p.Title.Font.SetName(config.ChartFont)
-	if err != nil {
-		return nil, err
-	}
-
-	err = p.X.Label.Font.SetName(config.ChartFont)
-	if err != nil {
-		return nil, err
-	}
-
-	err = p.Y.Label.Font.SetName(config.ChartFont)
-	if err != nil {
-		return nil, err
-	}
-
-	err = p.X.Tick.Label.Font.SetName(config.ChartFont)
-	if err != nil {
-		return nil, err
-	}
-
-	err = p.Y.Tick.Label.Font.SetName(config.ChartFont)
-	if err != nil {
-		return nil, err
-	}
-
-	err = p.Legend.Font.SetName(config.ChartFont)
-	if err != nil {
-		return nil, err
-	}
-
-	if grid {
-		p.Add(plotter.NewGrid())
-	}
-
-	p.Legend.Font.Size = vg.Points(config.ChartFontSizeS)
-	p.Legend.YAlign = draw.YBottom
-	p.Legend.TextStyle.YAlign = draw.YBottom
-	p.Legend.Top = true
-
-	return p, nil
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-func plotToDataUrl(p *plot.Plot) (template.URL, error) {
-
-	writer, err := p.WriterTo(vg.Points(config.ChartWidth), vg.Points(config.ChartHeight), "png")
-	if err != nil {
-		return "", err
-	}
-
-	buffer := new(bytes.Buffer)
-
-	_, err = writer.WriteTo(buffer)
-	if err != nil {
-		return "", err
-	}
-
-	encode := base64.StdEncoding.EncodeToString(buffer.Bytes())
-
-	return template.URL(fmt.Sprintf(config.ChartDataUrlFormat, encode)), nil
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-func makeWinLoseSlice(
-	winners []*transaction.Transaction,
-	losers []*transaction.Transaction,
-	labelCb func(o *transaction.Transaction) interface{},
-	keysSortCb func(keys []interface{}),
-	keyFormatCb func(key interface{}) string,
-) ([]string, []float64, []float64, float64, float64) {
-
-	dictW := make(map[interface{}]int)
-	dictL := make(map[interface{}]int)
-
-	for _, o := range winners {
-
-		grps := labelCb(o)
-
-		if val, ok := dictW[grps]; ok {
-			dictW[grps] = val + 1
-		} else {
-			dictW[grps] = 1
-		}
-	}
-
-	for _, o := range losers {
-
-		grps := labelCb(o)
-
-		if val, ok := dictL[grps]; ok {
-			dictL[grps] = val + 1
-		} else {
-			dictL[grps] = 1
-		}
-	}
-
-	fmt.Println(dictW)
-	fmt.Println(dictL)
-
-	ck := make([]interface{}, 0)
-
-	for k, _ := range dictW {
-		ck = append(ck, k)
-	}
-
-outer:
-	for k, _ := range dictL {
-		for _, c := range ck {
-			if c == k {
-				continue outer
-			}
-		}
-
-		ck = append(ck, k)
-	}
-
-	keysSortCb(ck)
-
-	winnersG := make([]float64, len(ck))
-	losersG := make([]float64, len(ck))
-
-	wmax := 0.0
-	lmax := 0.0
-
-	for i, c := range ck {
-		if vw, ok := dictW[c]; ok {
-			winnersG[i] = float64(vw)
-			if float64(vw) > wmax {
-				wmax = float64(vw)
-			}
-		} else {
-			winnersG[i] = 0.0
-		}
-		if vl, ok := dictL[c]; ok {
-			losersG[i] = float64(vl)
-			if float64(vl) > lmax {
-				lmax = float64(vl)
-			}
-		} else {
-			losersG[i] = 0.0
-		}
-	}
-
-	keys := make([]string, len(ck))
-
-	for i, c := range ck {
-		keys[i] = keyFormatCb(c)
-	}
-
-	return keys, winnersG, losersG, wmax, lmax
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

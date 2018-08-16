@@ -70,24 +70,26 @@ const (
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const (
-	ChartMultiplier = 1.25
+	ChartMultiplier = 0.6
 
 	ChartWidth  = 1920 * ChartMultiplier
 	ChartHeight = 1080 * ChartMultiplier
 
 	ChartFontSizeL = 25 * ChartMultiplier
 	ChartFontSizeM = 25 * ChartMultiplier
-	ChartFontSizeS = 20 * ChartMultiplier
+	ChartFontSizeS = 25 * ChartMultiplier
 
 	ChartPointRadius = 9 * ChartMultiplier
-	ChartBarWidth    = 32 * ChartMultiplier
+	ChartBarWidth    = 16 * ChartMultiplier
 
 	ChartFont = "Helvetica"
 	//ChartFont          = "Helvetica-Oblique"
 	ChartLabelRotation = -90 * math.Pi / 180.0
 
-	ChartXLabelPadding       = 15
+	ChartXLabelPadding       = 15 * ChartMultiplier
 	ChartLegendPaddingYRatio = 1.15
+
+	ChartBarXPaddingRatio = 1.035
 
 	ChartDataUrlFormat = "data:image/png;base64,%s"
 )
@@ -95,10 +97,8 @@ const (
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 var (
-	//WinnerRGBA = color.NRGBA{R: 3, G: 169, B: 244, A: 127}
 	WinnerRGBA = color.NRGBA{R: 3, G: 169, B: 255, A: 127}
-	//LoserRGBA  = color.NRGBA{R: 244, G: 67, B: 54, A: 127}
-	LoserRGBA = color.NRGBA{R: 255, G: 50, B: 70, A: 127}
+	LoserRGBA  = color.NRGBA{R: 255, G: 50, B: 70, A: 127}
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
