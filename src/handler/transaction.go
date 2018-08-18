@@ -82,7 +82,7 @@ func transactionSearch(w http.ResponseWriter, r *http.Request) {
 		bson.EC.Interface("symbol", symbol),
 	)
 
-	t := new(transaction.BuyOrder)
+	t := new(transaction.Open)
 
 	err = collection.FindOne(context.Background(), filter).Decode(t)
 	if err == mongo.ErrNoDocuments {
@@ -123,14 +123,14 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var t transaction.Order
+	var t datautils.JsonBodyInterface
 
-	if order == "buy" {
-		t = new(transaction.BuyOrder)
+	if order == "buy" || order == "short" {
+		t = new(transaction.Open)
 	}
 
-	if order == "sell" {
-		t = new(transaction.SellOrder)
+	if order == "sell" || order == "cover" {
+		t = new(transaction.Close)
 	}
 
 	err = datautils.JsonRequestBodyDecode(r, t)
@@ -139,32 +139,6 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//if t.GetJsonIBDCheckup() == "" {
-	//http.Error(w, "Missing IBD Checkup File", http.StatusBadRequest)
-	//return
-	//}
-
-	//ibdBuffer, err := datautils.FileReaderExtract(t.GetJsonIBDCheckup())
-	//if err != nil {
-	//http.Error(w, fmt.Sprintf("IBD Checkup: %s\n", err.Error()), http.StatusBadRequest)
-	//return
-	//}
-
-	//ibdCheckup, err := ibd.Parse(ibdBuffer)
-	//if err != nil {
-	//http.Error(w, fmt.Sprintf("IBD Checkup: %s\n", err.Error()), http.StatusBadRequest)
-	//return
-	//}
-
-	//ibdJson, err := json.Marshal(ibdCheckup)
-	//if err != nil {
-	//http.Error(w, err.Error(), http.StatusInternalServerError)
-	//return
-	//}
-
-	//ibdDatastore := ibd.IBDCheckupDatastoreNew(t.GetDate(), t.GetSymbol(), ibdJson)
-	//ibdDatastore := datautils.DataIDStorageNewBytes(t.GetIBDCheckupID(), ibdJson)
-
 	collection := client.MongoClient.Database(config.NamespaceTransaction).Collection(cookie)
 
 	_, err = collection.InsertOne(context.Background(), t)
@@ -172,14 +146,6 @@ func transactionPost(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	//collection = client.MongoClient.Database(config.NamespaceIBD).Collection(cookie)
-
-	//_, err = collection.InsertOne(context.Background(), ibdDatastore)
-	//if err != nil {
-	//http.Error(w, err.Error(), http.StatusInternalServerError)
-	//return
-	//}
 
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("/action"))

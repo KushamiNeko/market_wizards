@@ -23,7 +23,9 @@ var (
 
 func init() {
 	templates = template.Must(
-		template.New("templates").Funcs(template.FuncMap{"formatGrpPrice": statistic.FormatGrpPrice}).ParseGlob("templates/**/*.html"))
+		template.New("templates").
+			Funcs(template.FuncMap{"formatGrpPrice": statistic.FormatGrpPrice}).
+			ParseGlob("templates/**/*.html"))
 
 }
 

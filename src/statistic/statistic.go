@@ -40,39 +40,39 @@ type Statistic struct {
 
 	KellyCriterionD float64
 
-	Gain *TransactionStat
-	Loss *TransactionStat
+	Gain *Trades
+	Loss *Trades
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func NewStatistic(winners []*transaction.Transaction, losers []*transaction.Transaction) (*Statistic, error) {
+func NewStatistic(winners []*transaction.Trade, losers []*transaction.Trade) (*Statistic, error) {
 	s := new(Statistic)
 
-	var stat *TransactionStat
+	var stat *Trades
 	var err error
 
 	if winners != nil && len(winners) != 0 {
-		stat, err = NewTransactionStat(winners)
+		stat, err = newTrades(winners)
 		if err != nil {
 			return nil, err
 		}
 
 		s.Gain = stat
 	} else {
-		s.Gain = new(TransactionStat)
+		s.Gain = new(Trades)
 	}
 
 	if losers != nil && len(losers) != 0 {
 
-		stat, err = NewTransactionStat(losers)
+		stat, err = newTrades(losers)
 		if err != nil {
 			return nil, err
 		}
 
 		s.Loss = stat
 	} else {
-		s.Loss = new(TransactionStat)
+		s.Loss = new(Trades)
 	}
 
 	s.TotalTrade = s.Gain.TotalTrade + s.Loss.TotalTrade

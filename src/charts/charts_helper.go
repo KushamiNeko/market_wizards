@@ -3,6 +3,7 @@ package charts
 import (
 	"bytes"
 	"config"
+	"datautils"
 	"encoding/base64"
 	"fmt"
 	"html/template"
@@ -122,11 +123,8 @@ func plotToDataUrl(p *plot.Plot) (template.URL, error) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func makeValueSlice(
-	//winners []*transaction.Transaction,
-	//losers []*transaction.Transaction,
 	winners []interface{},
 	losers []interface{},
-	//labelCb func(o *transaction.Transaction) interface{},
 	labelCb func(o interface{}) (interface{}, error),
 	keysSortCb func(keys []interface{}),
 	keyFormatCb func(key interface{}) string,
@@ -182,6 +180,8 @@ outer:
 
 	keysSortCb(ck)
 
+	keys := make([]string, len(ck))
+
 	winnersG := make([]float64, len(ck))
 	losersG := make([]float64, len(ck))
 
@@ -205,11 +205,7 @@ outer:
 		} else {
 			losersG[i] = 0.0
 		}
-	}
 
-	keys := make([]string, len(ck))
-
-	for i, c := range ck {
 		keys[i] = keyFormatCb(c)
 	}
 
@@ -275,7 +271,6 @@ func barChartSetup(p *plot.Plot) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//func columnChartPercent(label string, interval float64, winners, losers []datautils.Contents) (string, error) {
 func barChartPercent(
 	label string,
 	interval float64,
@@ -289,15 +284,7 @@ func barChartPercent(
 		"",
 		true,
 		func(p *plot.Plot) {
-			//p.X.Padding = vg.Points(config.ChartXLabelPadding)
-
-			//p.X.Tick.Label.XAlign = draw.XLeft
-			//p.X.Tick.Label.YAlign = draw.YCenter
-
-			//p.Y.Tick.Label.XAlign = draw.XRight
-
 			barChartSetup(p)
-
 			p.X.Tick.Label.Rotation = config.ChartLabelRotation
 		},
 	)
@@ -372,149 +359,10 @@ func barChartPercent(
 
 	return str, nil
 
-	//g := make([][]interface{}, 0)
-
-	//g = append(g, []interface{}{
-	//label,
-	//"Winner",
-	//map[string]string{
-	//"role": "style",
-	//},
-	//"Loser",
-	//map[string]string{
-	//"role": "style",
-	//},
-	//})
-
-	//intervalDictW := make(map[int]int)
-	//intervalDictL := make(map[int]int)
-
-	//for _, o := range winners {
-	//for _, f := range o.GetContents() {
-	//if f.GetLabel() == label {
-	//var grps int
-
-	//if f.GetValue() == config.NullValue {
-	//grps = math.MaxInt32
-	//} else {
-	//vf, err := strconv.ParseFloat(strings.Replace(f.GetValue(), "%", "", -1), 64)
-	//if err != nil {
-	//return "", err
-	//}
-
-	//grp := math.Floor(vf / interval)
-	//grps = int(grp * interval)
-	//}
-
-	//if val, ok := intervalDictW[grps]; ok {
-	//intervalDictW[grps] = val + 1
-	//} else {
-	//intervalDictW[grps] = 1
-	//}
-
-	//break
-
-	//}
-	//}
-	//}
-
-	//for _, o := range losers {
-	//for _, f := range o.GetContents() {
-	//if f.GetLabel() == label {
-	//var grps int
-
-	//if f.GetValue() == config.NullValue {
-	//grps = math.MaxInt32
-	//} else {
-
-	//vf, err := strconv.ParseFloat(strings.Replace(f.GetValue(), "%", "", -1), 64)
-	//if err != nil {
-	//return "", err
-	//}
-
-	//grp := math.Floor(vf / interval)
-	//grps = int(grp * interval)
-	//}
-
-	//if val, ok := intervalDictL[grps]; ok {
-	//intervalDictL[grps] = val + 1
-	//} else {
-	//intervalDictL[grps] = 1
-	//}
-
-	//break
-	//}
-	//}
-	//}
-
-	//ck := make([]int, 0)
-
-	//for k, _ := range intervalDictW {
-	//ck = append(ck, k)
-	//}
-
-	//outer:
-	//for k, _ := range intervalDictL {
-	//for _, c := range ck {
-	//if c == k {
-	//continue outer
-	//}
-	//}
-
-	//ck = append(ck, k)
-	//}
-
-	//sort.Ints(ck)
-
-	//p := message.NewPrinter(message.MatchLanguage("en"))
-
-	//for _, k := range ck {
-
-	//var vw int
-	//var vl int
-
-	//var grpk string
-
-	//if k == math.MaxInt32 {
-	//grpk = config.NullValue
-	//} else {
-	//grp := math.Floor(float64(k) / interval)
-	////grpk = fmt.Sprintf(config.PercentIntervalFormat, int(grp*interval), int((grp+1)*interval))
-	//grpk = p.Sprintf(config.PercentIntervalFormat, int(grp*interval), int((grp+1)*interval))
-	//}
-
-	//if v, ok := intervalDictW[k]; ok {
-	//vw = v
-	//} else {
-	//vw = 0
-	//}
-
-	//if v, ok := intervalDictL[k]; ok {
-	//vl = v
-	//} else {
-	//vl = 0
-	//}
-
-	//g = append(g, []interface{}{
-	//grpk,
-	//vw,
-	//fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
-	//vl,
-	//fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
-	//})
-	//}
-
-	//jg, err := datautils.JsonB64Encrypt(g)
-	//if err != nil {
-	//return "", err
-	//}
-
-	//return jg, nil
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//func columnChartStringRank(label string, winners, losers []datautils.Contents) (string, error) {
 func barChartStringRank(
 	label string,
 	winners,
@@ -527,14 +375,6 @@ func barChartStringRank(
 		"",
 		true,
 		func(p *plot.Plot) {
-			//p.X.Padding = vg.Points(config.ChartXLabelPadding)
-			////p.X.Tick.Label.Rotation = config.ChartLabelRotation
-
-			//p.X.Tick.Label.XAlign = draw.XLeft
-			//p.X.Tick.Label.YAlign = draw.YCenter
-
-			//p.Y.Tick.Label.XAlign = draw.XRight
-
 			barChartSetup(p)
 		},
 	)
@@ -589,119 +429,10 @@ func barChartStringRank(
 
 	return str, nil
 
-	//g := make([][]interface{}, 0)
-
-	//g = append(g, []interface{}{
-	//label,
-	//"Winner",
-	//map[string]string{
-	//"role": "style",
-	//},
-	//"Loser",
-	//map[string]string{
-	//"role": "style",
-	//},
-	//})
-
-	//intervalDictW := make(map[string]int)
-	//intervalDictL := make(map[string]int)
-
-	//for _, o := range winners {
-	//for _, f := range o.GetContents() {
-	//if f.GetLabel() == label {
-
-	//var grps string
-	//grps = f.GetValue()
-	//grps = strings.Replace(grps, "+", "", -1)
-	//grps = strings.Replace(grps, "-", "", -1)
-
-	//if val, ok := intervalDictW[grps]; ok {
-	//intervalDictW[grps] = val + 1
-	//} else {
-	//intervalDictW[grps] = 1
-	//}
-
-	//break
-	//}
-	//}
-	//}
-
-	//for _, o := range losers {
-	//for _, f := range o.GetContents() {
-	//if f.GetLabel() == label {
-
-	//var grps string
-	//grps = f.GetValue()
-	//grps = strings.Replace(grps, "+", "", -1)
-	//grps = strings.Replace(grps, "-", "", -1)
-
-	//if val, ok := intervalDictL[grps]; ok {
-	//intervalDictL[grps] = val + 1
-	//} else {
-	//intervalDictL[grps] = 1
-	//}
-
-	//break
-	//}
-	//}
-	//}
-
-	//ck := make([]string, 0)
-
-	//for k, _ := range intervalDictW {
-	//ck = append(ck, k)
-	//}
-
-	//outer:
-	//for k, _ := range intervalDictL {
-	//for _, c := range ck {
-	//if c == k {
-	//continue outer
-	//}
-	//}
-
-	//ck = append(ck, k)
-	//}
-
-	//sort.Strings(ck)
-
-	//for _, k := range ck {
-
-	//var vw int
-	//var vl int
-
-	//if v, ok := intervalDictW[k]; ok {
-	//vw = v
-	//} else {
-	//vw = 0
-	//}
-
-	//if v, ok := intervalDictL[k]; ok {
-	//vl = v
-	//} else {
-	//vl = 0
-	//}
-
-	//g = append(g, []interface{}{
-	//k,
-	//vw,
-	//fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
-	//vl,
-	//fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
-	//})
-	//}
-
-	//jg, err := datautils.JsonB64Encrypt(g)
-	//if err != nil {
-	//return "", err
-	//}
-
-	//return jg, nil
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//func columnChartIntInterval(label string, interval float64, winners, losers []datautils.Contents) (string, error) {
 func barChartIntInterval(
 	label string,
 	interval float64,
@@ -716,13 +447,7 @@ func barChartIntInterval(
 		true,
 		func(p *plot.Plot) {
 			barChartSetup(p)
-			//p.X.Padding = vg.Points(config.ChartXLabelPadding)
 			p.X.Tick.Label.Rotation = config.ChartLabelRotation
-
-			//p.X.Tick.Label.XAlign = draw.XLeft
-			//p.X.Tick.Label.YAlign = draw.YCenter
-
-			//p.Y.Tick.Label.XAlign = draw.XRight
 		},
 	)
 	if err != nil {
@@ -799,149 +524,10 @@ func barChartIntInterval(
 
 	return str, nil
 
-	//g := make([][]interface{}, 0)
-
-	//g = append(g, []interface{}{
-	//label,
-	//"Winner",
-	//map[string]string{
-	//"role": "style",
-	//},
-	//"Loser",
-	//map[string]string{
-	//"role": "style",
-	//},
-	//})
-
-	//intervalDictW := make(map[int]int)
-	//intervalDictL := make(map[int]int)
-
-	//for _, o := range winners {
-	//for _, f := range o.GetContents() {
-	//if f.GetLabel() == label {
-	//var grps int
-
-	//if f.GetValue() == config.NullValue {
-	//grps = math.MaxInt32
-	//} else {
-
-	//vf, err := strconv.ParseFloat(f.GetValue(), 64)
-	//if err != nil {
-	//return "", err
-	//}
-
-	//grp := math.Floor(vf / interval)
-	//grps = int(grp * interval)
-	//}
-
-	//if val, ok := intervalDictW[grps]; ok {
-	//intervalDictW[grps] = val + 1
-	//} else {
-	//intervalDictW[grps] = 1
-	//}
-
-	//break
-	//}
-	//}
-	//}
-
-	//for _, o := range losers {
-	//for _, f := range o.GetContents() {
-	//if f.GetLabel() == label {
-	//var grps int
-
-	//if f.GetValue() == config.NullValue {
-	//grps = math.MaxInt32
-	//} else {
-
-	//vf, err := strconv.ParseFloat(f.GetValue(), 64)
-	//if err != nil {
-	//return "", err
-	//}
-
-	//grp := math.Floor(vf / interval)
-	//grps = int(grp * interval)
-	//}
-
-	//if val, ok := intervalDictL[grps]; ok {
-	//intervalDictL[grps] = val + 1
-	//} else {
-	//intervalDictL[grps] = 1
-	//}
-
-	//break
-	//}
-	//}
-	//}
-
-	//ck := make([]int, 0)
-
-	//for k, _ := range intervalDictW {
-	//ck = append(ck, k)
-	//}
-
-	//outer:
-	//for k, _ := range intervalDictL {
-	//for _, c := range ck {
-	//if c == k {
-	//continue outer
-	//}
-	//}
-
-	//ck = append(ck, k)
-	//}
-
-	//sort.Ints(ck)
-
-	//p := message.NewPrinter(message.MatchLanguage("en"))
-
-	//for _, k := range ck {
-
-	//var vw int
-	//var vl int
-
-	//var grpk string
-
-	//if k == math.MaxInt32 {
-	//grpk = config.NullValue
-	//} else {
-	//grp := math.Floor(float64(k) / interval)
-	////grpk = fmt.Sprintf(config.IntervalFormat, int(grp*interval), int((grp+1)*interval))
-	//grpk = p.Sprintf(config.IntervalFormat, int(grp*interval), int((grp+1)*interval))
-	//}
-
-	//if v, ok := intervalDictW[k]; ok {
-	//vw = v
-	//} else {
-	//vw = 0
-	//}
-
-	//if v, ok := intervalDictL[k]; ok {
-	//vl = v
-	//} else {
-	//vl = 0
-	//}
-
-	//g = append(g, []interface{}{
-	//grpk,
-	//vw,
-	//fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
-	//vl,
-	//fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
-	//})
-	//}
-
-	//jg, err := datautils.JsonB64Encrypt(g)
-	//if err != nil {
-	//return "", err
-	//}
-
-	//return jg, nil
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//func columnChartFloatInterval(label string, interval float64, winners, losers []datautils.Contents) (string, error) {
 func barChartFloatInterval(
 	label string,
 	interval float64,
@@ -956,13 +542,7 @@ func barChartFloatInterval(
 		true,
 		func(p *plot.Plot) {
 			barChartSetup(p)
-			//p.X.Padding = vg.Points(config.ChartXLabelPadding)
 			p.X.Tick.Label.Rotation = config.ChartLabelRotation
-
-			//p.X.Tick.Label.XAlign = draw.XLeft
-			//p.X.Tick.Label.YAlign = draw.YCenter
-
-			//p.Y.Tick.Label.XAlign = draw.XRight
 		},
 	)
 	if err != nil {
@@ -1038,149 +618,10 @@ func barChartFloatInterval(
 
 	return str, nil
 
-	//g := make([][]interface{}, 0)
-
-	//g = append(g, []interface{}{
-	//label,
-	//"Winner",
-	//map[string]string{
-	//"role": "style",
-	//},
-	//"Loser",
-	//map[string]string{
-	//"role": "style",
-	//},
-	//})
-
-	//intervalDictW := make(map[float64]int)
-	//intervalDictL := make(map[float64]int)
-
-	//for _, o := range winners {
-	//for _, f := range o.GetContents() {
-	//if f.GetLabel() == label {
-	//var grps float64
-
-	//if f.GetValue() == config.NullValue {
-	//grps = math.MaxFloat64
-	//} else {
-
-	//vf, err := strconv.ParseFloat(f.GetValue(), 64)
-	//if err != nil {
-	//return "", err
-	//}
-
-	//grp := math.Floor(vf / interval)
-	//grps = float64(grp * interval)
-	//}
-
-	//if val, ok := intervalDictW[grps]; ok {
-	//intervalDictW[grps] = val + 1
-	//} else {
-	//intervalDictW[grps] = 1
-	//}
-
-	//break
-	//}
-	//}
-	//}
-
-	//for _, o := range losers {
-	//for _, f := range o.GetContents() {
-	//if f.GetLabel() == label {
-	//var grps float64
-
-	//if f.GetValue() == config.NullValue {
-	//grps = math.MaxFloat64
-	//} else {
-
-	//vf, err := strconv.ParseFloat(f.GetValue(), 64)
-	//if err != nil {
-	//return "", err
-	//}
-
-	//grp := math.Floor(vf / interval)
-	//grps = float64(grp * interval)
-	//}
-
-	//if val, ok := intervalDictL[grps]; ok {
-	//intervalDictL[grps] = val + 1
-	//} else {
-	//intervalDictL[grps] = 1
-	//}
-
-	//break
-	//}
-	//}
-	//}
-
-	//ck := make([]float64, 0)
-
-	//for k, _ := range intervalDictW {
-	//ck = append(ck, k)
-	//}
-
-	//outer:
-	//for k, _ := range intervalDictL {
-	//for _, c := range ck {
-	//if c == k {
-	//continue outer
-	//}
-	//}
-
-	//ck = append(ck, k)
-	//}
-
-	//sort.Float64s(ck)
-
-	//p := message.NewPrinter(message.MatchLanguage("en"))
-
-	//for _, k := range ck {
-
-	//var vw int
-	//var vl int
-
-	//var grpk string
-
-	//if k == math.MaxFloat64 {
-	//grpk = config.NullValue
-	//} else {
-	//grp := math.Floor(float64(k) / interval)
-	////grpk = fmt.Sprintf(config.IntervalFormat, grp*interval, (grp+1)*interval)
-	//grpk = p.Sprintf(config.IntervalFormat, grp*interval, (grp+1)*interval)
-	//}
-
-	//if v, ok := intervalDictW[k]; ok {
-	//vw = v
-	//} else {
-	//vw = 0
-	//}
-
-	//if v, ok := intervalDictL[k]; ok {
-	//vl = v
-	//} else {
-	//vl = 0
-	//}
-
-	//g = append(g, []interface{}{
-	//grpk,
-	//vw,
-	//fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
-	//vl,
-	//fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
-	//})
-	//}
-
-	//jg, err := datautils.JsonB64Encrypt(g)
-	//if err != nil {
-	//return "", err
-	//}
-
-	//return jg, nil
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//func columnChartInt(label string, winners, losers []datautils.Contents) (string, error) {
 func barChartInt(
 	label string,
 	winners,
@@ -1194,13 +635,6 @@ func barChartInt(
 		true,
 		func(p *plot.Plot) {
 			barChartSetup(p)
-			//p.X.Padding = vg.Points(config.ChartXLabelPadding)
-			////p.X.Tick.Label.Rotation = config.ChartLabelRotation
-
-			//p.X.Tick.Label.XAlign = draw.XLeft
-			//p.X.Tick.Label.YAlign = draw.YCenter
-
-			//p.Y.Tick.Label.XAlign = draw.XRight
 		},
 	)
 	if err != nil {
@@ -1272,147 +706,10 @@ func barChartInt(
 
 	return str, nil
 
-	//g := make([][]interface{}, 0)
-
-	//g = append(g, []interface{}{
-	//label,
-	//"Winner",
-	//map[string]string{
-	//"role": "style",
-	//},
-	//"Loser",
-	//map[string]string{
-	//"role": "style",
-	//},
-	//})
-
-	//intervalDictW := make(map[int]int)
-	//intervalDictL := make(map[int]int)
-
-	//for _, o := range winners {
-	//for _, f := range o.GetContents() {
-	//if f.GetLabel() == label {
-	//var grps int
-
-	//if f.GetValue() == config.NullValue {
-	//grps = math.MaxInt32
-
-	//} else {
-	//vf, err := strconv.ParseFloat(f.GetValue(), 64)
-	//if err != nil {
-	//return "", err
-	//}
-
-	//grps = int(vf)
-	//}
-
-	//if val, ok := intervalDictW[grps]; ok {
-	//intervalDictW[grps] = val + 1
-	//} else {
-	//intervalDictW[grps] = 1
-	//}
-
-	//break
-	//}
-	//}
-	//}
-
-	//for _, o := range losers {
-	//for _, f := range o.GetContents() {
-	//if f.GetLabel() == label {
-	//var grps int
-
-	//if f.GetValue() == config.NullValue {
-	//grps = math.MaxInt32
-
-	//} else {
-
-	//vf, err := strconv.ParseFloat(f.GetValue(), 64)
-	//if err != nil {
-	//return "", err
-	//}
-
-	//grps = int(vf)
-	//}
-
-	//if val, ok := intervalDictL[grps]; ok {
-	//intervalDictL[grps] = val + 1
-	//} else {
-	//intervalDictL[grps] = 1
-	//}
-
-	//break
-	//}
-	//}
-	//}
-
-	//ck := make([]int, 0)
-
-	//for k, _ := range intervalDictW {
-	//ck = append(ck, k)
-	//}
-
-	//outer:
-	//for k, _ := range intervalDictL {
-	//for _, c := range ck {
-	//if c == k {
-	//continue outer
-	//}
-	//}
-
-	//ck = append(ck, k)
-	//}
-
-	//sort.Ints(ck)
-
-	//p := message.NewPrinter(message.MatchLanguage("en"))
-
-	//for _, k := range ck {
-
-	//var vw int
-	//var vl int
-
-	//var grpk string
-
-	//if k == math.MaxInt32 {
-	//grpk = config.NullValue
-	//} else {
-	////grpk = fmt.Sprintf("%v", k)
-	//grpk = p.Sprintf("%v", k)
-	//}
-
-	//if v, ok := intervalDictW[k]; ok {
-	//vw = v
-	//} else {
-	//vw = 0
-	//}
-
-	//if v, ok := intervalDictL[k]; ok {
-	//vl = v
-	//} else {
-	//vl = 0
-	//}
-
-	//g = append(g, []interface{}{
-	//grpk,
-	//vw,
-	//fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
-	//vl,
-	//fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
-	//})
-	//}
-
-	//jg, err := datautils.JsonB64Encrypt(g)
-	//if err != nil {
-	//return "", err
-	//}
-
-	//return jg, nil
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//func columnChartString(label string, winners, losers []datautils.Contents) (string, error) {
 func barChartString(
 	label string,
 	winners,
@@ -1426,13 +723,6 @@ func barChartString(
 		true,
 		func(p *plot.Plot) {
 			barChartSetup(p)
-			//p.X.Padding = vg.Points(config.ChartXLabelPadding)
-			////p.X.Tick.Label.Rotation = config.ChartLabelRotation
-
-			//p.X.Tick.Label.XAlign = draw.XLeft
-			//p.X.Tick.Label.YAlign = draw.YCenter
-
-			//p.Y.Tick.Label.XAlign = draw.XRight
 		},
 	)
 	if err != nil {
@@ -1479,145 +769,47 @@ func barChartString(
 
 	return str, nil
 
-	//g := make([][]interface{}, 0)
+}
 
-	//g = append(g, []interface{}{
-	//label,
-	//"Winner",
-	//map[string]string{
-	//"role": "style",
-	//},
-	//"Loser",
-	//map[string]string{
-	//"role": "style",
-	//},
-	//})
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	//intervalDictW := make(map[string]int)
-	//intervalDictL := make(map[string]int)
+func makeGoogleChartsDataStruct(
+	chartLabel string,
+	keys []string,
+	winners []float64,
+	losers []float64,
+) (string, error) {
 
-	//for _, o := range winners {
-	//for _, f := range o.GetContents() {
-	//if f.GetLabel() == label {
-	////var grps int
+	g := make([][]interface{}, 0)
 
-	////if f.GetValue() == config.NullValue {
-	////grps = math.MaxInt32
+	g = append(g, []interface{}{
+		chartLabel,
+		"Winner",
+		map[string]string{
+			"role": "style",
+		},
+		"Loser",
+		map[string]string{
+			"role": "style",
+		},
+	})
 
-	////} else {
-	////vf, err := strconv.ParseFloat(f.GetValue(), 64)
-	////if err != nil {
-	////return "", err
-	////}
+	for i, k := range keys {
+		g = append(g, []interface{}{
+			k,
+			winners[i],
+			fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
+			losers[i],
+			fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
+		})
+	}
 
-	////grps = int(vf)
-	////}
+	jg, err := datautils.JsonB64Encrypt(g)
+	if err != nil {
+		return "", err
+	}
 
-	//grps := f.GetValue()
-
-	//if val, ok := intervalDictW[grps]; ok {
-	//intervalDictW[grps] = val + 1
-	//} else {
-	//intervalDictW[grps] = 1
-	//}
-
-	//break
-	//}
-	//}
-	//}
-
-	//for _, o := range losers {
-	//for _, f := range o.GetContents() {
-	//if f.GetLabel() == label {
-	////var grps int
-
-	////if f.GetValue() == config.NullValue {
-	////grps = math.MaxInt32
-
-	////} else {
-
-	////vf, err := strconv.ParseFloat(f.GetValue(), 64)
-	////if err != nil {
-	////return "", err
-	////}
-
-	////grps = int(vf)
-	////}
-
-	//grps := f.GetValue()
-
-	//if val, ok := intervalDictL[grps]; ok {
-	//intervalDictL[grps] = val + 1
-	//} else {
-	//intervalDictL[grps] = 1
-	//}
-
-	//break
-	//}
-	//}
-	//}
-
-	//ck := make([]string, 0)
-
-	//for k, _ := range intervalDictW {
-	//ck = append(ck, k)
-	//}
-
-	//outer:
-	//for k, _ := range intervalDictL {
-	//for _, c := range ck {
-	//if c == k {
-	//continue outer
-	//}
-	//}
-
-	//ck = append(ck, k)
-	//}
-
-	//sort.Strings(ck)
-
-	//for _, k := range ck {
-
-	//var vw int
-	//var vl int
-
-	////var grpk string
-
-	////if k == math.MaxInt32 {
-	////grpk = config.NullValue
-	////} else {
-	////grpk = fmt.Sprintf("%v", k)
-	////}
-
-	//grpk := k
-
-	//if v, ok := intervalDictW[k]; ok {
-	//vw = v
-	//} else {
-	//vw = 0
-	//}
-
-	//if v, ok := intervalDictL[k]; ok {
-	//vl = v
-	//} else {
-	//vl = 0
-	//}
-
-	//g = append(g, []interface{}{
-	//grpk,
-	//vw,
-	//fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
-	//vl,
-	//fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
-	//})
-	//}
-
-	//jg, err := datautils.JsonB64Encrypt(g)
-	//if err != nil {
-	//return "", err
-	//}
-
-	//return jg, nil
+	return jg, nil
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

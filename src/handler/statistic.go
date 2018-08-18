@@ -92,11 +92,11 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 
 	defer cursor.Close(context.Background())
 
-	sellOrders := make([]*transaction.SellOrder, 0)
+	sellOrders := make([]*transaction.Close, 0)
 
 	for cursor.Next(context.Background()) {
 
-		t := new(transaction.SellOrder)
+		t := new(transaction.Close)
 
 		err := cursor.Decode(t)
 		if err != nil {
@@ -118,10 +118,10 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	orders := make([]*transaction.Transaction, len(sellOrders))
+	orders := make([]*transaction.Trade, len(sellOrders))
 
-	winners := make([]*transaction.Transaction, 0)
-	losers := make([]*transaction.Transaction, 0)
+	winners := make([]*transaction.Trade, 0)
+	losers := make([]*transaction.Trade, 0)
 
 	winnersIBD := make([]*bytes.Buffer, 0)
 	losersIBD := make([]*bytes.Buffer, 0)
@@ -139,7 +139,7 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 			bson.EC.Interface("symbol", sellOrder.Symbol),
 		)
 
-		buyOrder := new(transaction.BuyOrder)
+		buyOrder := new(transaction.Open)
 
 		err = collection.FindOne(context.Background(), filter).Decode(buyOrder)
 		if err != nil {
@@ -147,9 +147,9 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		o := new(transaction.Transaction)
-		o.Buy = buyOrder
-		o.Sell = sellOrder
+		o := new(transaction.Trade)
+		o.Open = buyOrder
+		o.Close = sellOrder
 
 		orders[i] = o
 
@@ -184,9 +184,9 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if sellOrder.GainP >= threshold {
-			t := new(transaction.Transaction)
-			t.Buy = buyOrder
-			t.Sell = sellOrder
+			t := new(transaction.Trade)
+			t.Open = buyOrder
+			t.Close = sellOrder
 
 			winners = append(winners, t)
 
@@ -225,9 +225,9 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 			}
 
 		} else {
-			t := new(transaction.Transaction)
-			t.Buy = buyOrder
-			t.Sell = sellOrder
+			t := new(transaction.Trade)
+			t.Open = buyOrder
+			t.Close = sellOrder
 
 			losers = append(losers, t)
 

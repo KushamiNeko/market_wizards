@@ -23,19 +23,13 @@ import (
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 type ChartIBD struct {
-	filterOrders []*transaction.Transaction
+	filterOrders []*transaction.Trade
 
 	winnersIBD []*bytes.Buffer
 	losersIBD  []*bytes.Buffer
 
 	winnersI []interface{}
 	losersI  []interface{}
-
-	//ibdCheckupsW []*ibd.IBDCheckup
-	//ibdCheckupsL []*ibd.IBDCheckup
-
-	//ibdCheckupsW []datautils.Contents
-	//ibdCheckupsL []datautils.Contents
 
 	MarketCapitalization template.URL
 	UpDownVolumeRatio    template.URL
@@ -76,7 +70,7 @@ type ChartIBD struct {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD []*bytes.Buffer) (*ChartIBD, error) {
+func ChartIBDNew(filterOrders []*transaction.Trade, winnersIBD, losersIBD []*bytes.Buffer) (*ChartIBD, error) {
 
 	var wg sync.WaitGroup
 
@@ -87,14 +81,8 @@ func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD 
 	c.winnersIBD = winnersIBD
 	c.losersIBD = losersIBD
 
-	//c.ibdCheckupsW = make([]*ibd.IBDCheckup, len(c.winnersIBD))
-	//c.ibdCheckupsL = make([]*ibd.IBDCheckup, len(c.losersIBD))
-
 	c.winnersI = make([]interface{}, len(c.winnersIBD))
 	c.losersI = make([]interface{}, len(c.losersIBD))
-
-	//c.ibdCheckupsW = make([]datautils.Contents, len(c.winnersIBD))
-	//c.ibdCheckupsL = make([]datautils.Contents, len(c.losersIBD))
 
 	var err error
 
@@ -105,8 +93,6 @@ func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD 
 		if err != nil {
 			return nil, err
 		}
-
-		//c.ibdCheckupsW[i] = checkup
 
 		c.winnersI[i] = checkup
 	}
@@ -119,8 +105,6 @@ func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD 
 			return nil, err
 		}
 
-		//c.ibdCheckupsL[i] = checkup
-
 		c.losersI[i] = checkup
 	}
 
@@ -132,7 +116,6 @@ func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD 
 	go func() {
 		err := c.getMarketCapitalization()
 		if err != nil {
-			//return nil, err
 			errs[0] = err
 		}
 
@@ -142,7 +125,6 @@ func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD 
 	go func() {
 		err := c.getUpDownVolumeRatio()
 		if err != nil {
-			//return nil, err
 			errs[1] = err
 		}
 
@@ -152,7 +134,6 @@ func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD 
 	go func() {
 		err := c.getRSRating()
 		if err != nil {
-			//return nil, err
 			errs[2] = err
 		}
 
@@ -162,7 +143,6 @@ func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD 
 	go func() {
 		err := c.getIndustryGroupRank()
 		if err != nil {
-			//return nil, err
 			errs[3] = err
 		}
 
@@ -172,7 +152,6 @@ func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD 
 	go func() {
 		err := c.getCompositeRating()
 		if err != nil {
-			//return nil, err
 			errs[4] = err
 		}
 
@@ -182,7 +161,6 @@ func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD 
 	go func() {
 		err := c.getEPSRating()
 		if err != nil {
-			//return nil, err
 			errs[5] = err
 		}
 
@@ -192,7 +170,6 @@ func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD 
 	go func() {
 		err := c.getSMRRating()
 		if err != nil {
-			//return nil, err
 			errs[6] = err
 		}
 
@@ -202,7 +179,6 @@ func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD 
 	go func() {
 		err := c.getAccDisRating()
 		if err != nil {
-			//return nil, err
 			errs[7] = err
 		}
 
@@ -212,7 +188,6 @@ func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD 
 	go func() {
 		err := c.getEPSChgLastQtr()
 		if err != nil {
-			//return nil, err
 			errs[8] = err
 		}
 
@@ -222,7 +197,6 @@ func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD 
 	go func() {
 		err := c.getLast3QtrsAvgEPSGrowth()
 		if err != nil {
-			//return nil, err
 			errs[9] = err
 		}
 
@@ -232,7 +206,6 @@ func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD 
 	go func() {
 		err := c.getQtrsofEPSAcceleration()
 		if err != nil {
-			//return nil, err
 			errs[10] = err
 		}
 
@@ -242,7 +215,6 @@ func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD 
 	go func() {
 		err := c.getEPSEstChgCurrentQtr()
 		if err != nil {
-			//return nil, err
 			errs[11] = err
 		}
 
@@ -252,7 +224,6 @@ func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD 
 	go func() {
 		err := c.getEstimateRevisions()
 		if err != nil {
-			//return nil, err
 			errs[12] = err
 		}
 
@@ -262,7 +233,6 @@ func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD 
 	go func() {
 		err := c.getLastQtrEarningsSurprise()
 		if err != nil {
-			//return nil, err
 			errs[13] = err
 		}
 
@@ -272,7 +242,6 @@ func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD 
 	go func() {
 		err := c.getThreeYrEPSGrowthRate()
 		if err != nil {
-			//return nil, err
 			errs[14] = err
 		}
 
@@ -282,7 +251,6 @@ func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD 
 	go func() {
 		err := c.getConsecutiveYrsofAnnualEPSGrowth()
 		if err != nil {
-			//return nil, err
 			errs[15] = err
 		}
 
@@ -292,7 +260,6 @@ func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD 
 	go func() {
 		err := c.getEPSEstChgforCurrentYear()
 		if err != nil {
-			//return nil, err
 			errs[16] = err
 		}
 
@@ -302,7 +269,6 @@ func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD 
 	go func() {
 		err := c.getSalesChgLastQtr()
 		if err != nil {
-			//return nil, err
 			errs[17] = err
 		}
 
@@ -312,7 +278,6 @@ func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD 
 	go func() {
 		err := c.getThreeYrSalesGrowthRate()
 		if err != nil {
-			//return nil, err
 			errs[18] = err
 		}
 
@@ -322,7 +287,6 @@ func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD 
 	go func() {
 		err := c.getAnnualPreTaxMargin()
 		if err != nil {
-			//return nil, err
 			errs[19] = err
 		}
 
@@ -332,7 +296,6 @@ func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD 
 	go func() {
 		err := c.getAnnualROE()
 		if err != nil {
-			//return nil, err
 			errs[20] = err
 		}
 
@@ -342,7 +305,6 @@ func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD 
 	go func() {
 		err := c.getDebtEquityRatio()
 		if err != nil {
-			//return nil, err
 			errs[21] = err
 		}
 
@@ -352,7 +314,6 @@ func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD 
 	go func() {
 		err := c.getOff52WeekHigh()
 		if err != nil {
-			//return nil, err
 			errs[22] = err
 		}
 
@@ -362,7 +323,6 @@ func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD 
 	go func() {
 		err := c.getPricevs50DayMovingAverage()
 		if err != nil {
-			//return nil, err
 			errs[23] = err
 		}
 
@@ -372,7 +332,6 @@ func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD 
 	go func() {
 		err := c.getFiftyDayAverageVolume()
 		if err != nil {
-			//return nil, err
 			errs[24] = err
 		}
 
@@ -382,7 +341,6 @@ func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD 
 	go func() {
 		err := c.getChangeInFundsOwningStock()
 		if err != nil {
-			//return nil, err
 			errs[25] = err
 		}
 
@@ -392,7 +350,6 @@ func ChartIBDNew(filterOrders []*transaction.Transaction, winnersIBD, losersIBD 
 	go func() {
 		err := c.getQtrsOfIncreasingFundOwnership()
 		if err != nil {
-			//return nil, err
 			errs[26] = err
 		}
 
@@ -423,11 +380,8 @@ func (c *ChartIBD) getMarketCapitalization() error {
 		true,
 		func(p *plot.Plot) {
 			p.X.Padding = vg.Points(config.ChartXLabelPadding)
-			//p.X.Tick.Label.Rotation = config.ChartLabelRotation
-
 			p.X.Tick.Label.XAlign = draw.XLeft
 			p.X.Tick.Label.YAlign = draw.YCenter
-
 			p.Y.Tick.Label.XAlign = draw.XRight
 		},
 	)
@@ -490,109 +444,6 @@ func (c *ChartIBD) getMarketCapitalization() error {
 
 	return nil
 
-	//g := make([][]interface{}, 0)
-
-	//g = append(g, []interface{}{
-	//"Market Capitalization",
-	//"Winner",
-	//map[string]string{
-	//"role": "style",
-	//},
-	//"Loser",
-	//map[string]string{
-	//"role": "style",
-	//},
-	//})
-
-	//var smallCapThreshold int64 = 1000000000
-	//var largeCapThreshold int64 = 10000000000
-
-	//smallCapW := 0
-	//midCapW := 0
-	//largeCapW := 0
-
-	//smallCapL := 0
-	//midCapL := 0
-	//largeCapL := 0
-
-	//for _, o := range c.ibdCheckupsW {
-	//for _, f := range o.GetContents() {
-	//if f.GetLabel() == "Market Capitalization" {
-
-	//v := strings.Replace(f.GetValue(), "$", "", -1)
-	//vi, err := strconv.ParseInt(v, 10, 64)
-	//if err != nil {
-	//return err
-	//}
-
-	//if vi <= smallCapThreshold {
-	//smallCapW += 1
-	//} else if vi <= largeCapThreshold {
-	//midCapW += 1
-	//} else if vi > largeCapThreshold {
-	//largeCapW += 1
-	//}
-
-	//break
-	//}
-	//}
-	//}
-
-	//for _, o := range c.ibdCheckupsL {
-	//for _, f := range o.GetContents() {
-	//if f.GetLabel() == "Market Capitalization" {
-
-	//v := strings.Replace(f.GetValue(), "$", "", -1)
-	//vi, err := strconv.ParseInt(v, 10, 64)
-	//if err != nil {
-	//return err
-	//}
-
-	//if vi <= smallCapThreshold {
-	//smallCapL += 1
-	//} else if vi <= largeCapThreshold {
-	//midCapL += 1
-	//} else if vi > largeCapThreshold {
-	//largeCapL += 1
-	//}
-
-	//break
-	//}
-	//}
-	//}
-
-	//g = append(g, []interface{}{
-	//"Small Cap",
-	//smallCapW,
-	//fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
-	//smallCapL,
-	//fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
-	//})
-
-	//g = append(g, []interface{}{
-	//"Mid Cap",
-	//midCapW,
-	//fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
-	//midCapL,
-	//fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
-	//})
-
-	//g = append(g, []interface{}{
-	//"Large Cap",
-	//largeCapW,
-	//fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
-	//largeCapL,
-	//fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
-	//})
-
-	//jg, err := datautils.JsonB64Encrypt(g)
-	//if err != nil {
-	//return err
-	//}
-
-	//c.MarketCapitalization = jg
-
-	//return nil
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -606,242 +457,6 @@ func (c *ChartIBD) getUpDownVolumeRatio() error {
 	if err != nil {
 		return err
 	}
-
-	//p, err := makePlot(
-	//"Up/Down Volume",
-	//"",
-	//"",
-	//true,
-	//func(p *plot.Plot) {
-	//p.X.Padding = vg.Points(config.ChartXLabelPadding)
-	//p.X.Tick.Label.Rotation = config.ChartLabelRotation
-
-	//p.X.Tick.Label.XAlign = draw.XLeft
-	//p.X.Tick.Label.YAlign = draw.YCenter
-
-	//p.Y.Tick.Label.XAlign = draw.XRight
-	//},
-	//)
-	//if err != nil {
-	//return err
-	//}
-
-	//var interval float64 = 0.5
-
-	//keys, winnersG, losersG, wmax, lmax, err :=
-	//makeValueSlice(
-	//c.winnersI,
-	//c.losersI,
-	//func(o interface{}) (interface{}, error) {
-
-	//t := o.(*ibd.IBDCheckup)
-	//value := t.Contents["Up/Down Volume"]
-
-	//var grps float64
-
-	//if value == config.NullValue {
-	//grps = math.MaxFloat64
-	//} else {
-
-	//vf, err := strconv.ParseFloat(value, 64)
-	//if err != nil {
-	//return "", err
-	//}
-
-	//grp := math.Floor(vf / interval)
-	//grps = float64(grp * interval)
-
-	//}
-
-	//return grps, nil
-	//},
-	//func(keys []interface{}) {
-	//sort.Slice(keys, func(i, j int) bool {
-	//is := keys[i].(float64)
-	//js := keys[j].(float64)
-
-	//return is < js
-	//})
-	//},
-	//func(key interface{}) string {
-
-	//k := key.(float64)
-
-	//p := message.NewPrinter(message.MatchLanguage("en"))
-	//var grpk string
-
-	//if k == math.MaxFloat64 {
-	//grpk = config.NullValue
-	//} else {
-	//grp := math.Floor(k / interval)
-	//grpk = p.Sprintf(config.IntervalFormat, grp*interval, (grp+1)*interval)
-	//}
-
-	//return grpk
-	//},
-	//)
-	//if err != nil {
-	//return err
-	//}
-
-	//err = makeBarCharts(p, keys, winnersG, losersG, wmax, lmax)
-	//if err != nil {
-	//return err
-	//}
-
-	//c.UpDownVolumeRatio, err = plotToDataUrl(p)
-	//if err != nil {
-	//return err
-	//}
-
-	//return nil
-
-	//g := make([][]interface{}, 0)
-
-	//g = append(g, []interface{}{
-	//label,
-	//"Winner",
-	//map[string]string{
-	//"role": "style",
-	//},
-	//"Loser",
-	//map[string]string{
-	//"role": "style",
-	//},
-	//})
-
-	//intervalDictW := make(map[float64]int)
-	//intervalDictL := make(map[float64]int)
-
-	//for _, o := range winners {
-	//for _, f := range o.GetContents() {
-	//if f.GetLabel() == label {
-	//var grps float64
-
-	//if f.GetValue() == config.NullValue {
-	//grps = math.MaxFloat64
-	//} else {
-
-	//vf, err := strconv.ParseFloat(f.GetValue(), 64)
-	//if err != nil {
-	//return "", err
-	//}
-
-	//grp := math.Floor(vf / interval)
-	//grps = float64(grp * interval)
-	//}
-
-	//if val, ok := intervalDictW[grps]; ok {
-	//intervalDictW[grps] = val + 1
-	//} else {
-	//intervalDictW[grps] = 1
-	//}
-
-	//break
-	//}
-	//}
-	//}
-
-	//for _, o := range losers {
-	//for _, f := range o.GetContents() {
-	//if f.GetLabel() == label {
-	//var grps float64
-
-	//if f.GetValue() == config.NullValue {
-	//grps = math.MaxFloat64
-	//} else {
-
-	//vf, err := strconv.ParseFloat(f.GetValue(), 64)
-	//if err != nil {
-	//return "", err
-	//}
-
-	//grp := math.Floor(vf / interval)
-	//grps = float64(grp * interval)
-	//}
-
-	//if val, ok := intervalDictL[grps]; ok {
-	//intervalDictL[grps] = val + 1
-	//} else {
-	//intervalDictL[grps] = 1
-	//}
-
-	//break
-	//}
-	//}
-	//}
-
-	//ck := make([]float64, 0)
-
-	//for k, _ := range intervalDictW {
-	//ck = append(ck, k)
-	//}
-
-	//outer:
-	//for k, _ := range intervalDictL {
-	//for _, c := range ck {
-	//if c == k {
-	//continue outer
-	//}
-	//}
-
-	//ck = append(ck, k)
-	//}
-
-	//sort.Float64s(ck)
-
-	//p := message.NewPrinter(message.MatchLanguage("en"))
-
-	//for _, k := range ck {
-
-	//var vw int
-	//var vl int
-
-	//var grpk string
-
-	//if k == math.MaxFloat64 {
-	//grpk = config.NullValue
-	//} else {
-	//grp := math.Floor(float64(k) / interval)
-	////grpk = fmt.Sprintf(config.IntervalFormat, grp*interval, (grp+1)*interval)
-	//grpk = p.Sprintf(config.IntervalFormat, grp*interval, (grp+1)*interval)
-	//}
-
-	//if v, ok := intervalDictW[k]; ok {
-	//vw = v
-	//} else {
-	//vw = 0
-	//}
-
-	//if v, ok := intervalDictL[k]; ok {
-	//vl = v
-	//} else {
-	//vl = 0
-	//}
-
-	//g = append(g, []interface{}{
-	//grpk,
-	//vw,
-	//fmt.Sprintf(config.StyleFormat, config.WinnerColor, config.WinnerOpacity),
-	//vl,
-	//fmt.Sprintf(config.StyleFormat, config.LoserColor, config.LoserOpacity),
-	//})
-	//}
-
-	//jg, err := datautils.JsonB64Encrypt(g)
-	//if err != nil {
-	//return "", err
-	//}
-
-	//return jg, nil
-
-	//var err error
-	//var interval float64 = 0.5
-
-	//c.UpDownVolumeRatio, err = columnChartFloatInterval("Up/Down Volume", interval, c.ibdCheckupsW, c.ibdCheckupsL)
-	//if err != nil {
-	//return err
-	//}
 
 	return nil
 }

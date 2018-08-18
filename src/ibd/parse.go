@@ -20,12 +20,9 @@ const (
 	regexPercent = `([0-9.-]+)%`
 	regexPrice   = `<span[^>]+>\s*\$([0-9.]+)\s*<\/span>`
 
-	//regexMktCap = `\$\s*([0-9.]+)\s*(\w+)`
 	regexMktCap = `^\$\s*([0-9.]+)\s*(\w+)$`
-	//regexVolume = `([0-9.,]+)\s*(\w*)`
 	regexVolume = `^([0-9.,]+)\s*(\w*)$`
 
-	//regexFloat = `^[0-9.]+$`
 	regexFloat = `^\d+\.\d+$`
 	regexInt   = `^[0-9]+$`
 
@@ -83,7 +80,6 @@ func init() {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 type IBDCheckup struct {
-	//Contents []*field
 	Contents map[string]string
 }
 
@@ -91,50 +87,10 @@ type IBDCheckup struct {
 
 func IBDCheckupNew() *IBDCheckup {
 	checkup := new(IBDCheckup)
-	//checkup.Contents = make([]*field, 0)
 	checkup.Contents = make(map[string]string)
 
 	return checkup
 }
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//func (i *IBDCheckup) GetContents() []datautils.Fields {
-
-//f := make([]datautils.Fields, len(i.Contents))
-
-//for i, c := range i.Contents {
-//f[i] = c
-//}
-
-//return f
-//}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//type field struct {
-//Label     string
-//Value     string
-//Condition string `json:",omitempty"`
-//}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//func (f *field) GetLabel() string {
-//return f.Label
-//}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//func (f *field) GetValue() string {
-//return f.Value
-//}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//func (f *field) SetValue(value string) {
-//f.Value = value
-//}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -162,12 +118,6 @@ func Parse(buffer *bytes.Buffer) (*IBDCheckup, error) {
 
 	checkup.Contents["Symbol"] = symbol
 
-	//checkup.Contents = append(checkup.Contents, &field{
-	//"Symbol",
-	//symbol,
-	//"",
-	//})
-
 	results = reRankInGroup.FindAllStringSubmatch(buffer.String(), -1)
 
 	for _, v := range results {
@@ -182,12 +132,6 @@ func Parse(buffer *bytes.Buffer) (*IBDCheckup, error) {
 		if s == symbol {
 
 			checkup.Contents["Rank in Group"] = strings.TrimSpace(r)
-
-			//checkup.Contents = append(checkup.Contents, &field{
-			//"Rank in Group",
-			//strings.TrimSpace(r),
-			//"",
-			//})
 
 			break
 		}
@@ -250,19 +194,8 @@ func Parse(buffer *bytes.Buffer) (*IBDCheckup, error) {
 
 	found:
 
-		//condition := strings.TrimSpace(r[5])
-
-		//if value == none {
-		//condition = none
-		//}
-
 		checkup.Contents[strings.TrimSpace(match[1])] = value
 
-		//checkup.Contents = append(checkup.Contents, &field{
-		//strings.TrimSpace(match[1]),
-		//value,
-		//condition,
-		//})
 	}
 
 	return checkup, nil

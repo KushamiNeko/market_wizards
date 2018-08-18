@@ -10,7 +10,7 @@ import (
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 type ChartMarketSmith struct {
-	filterOrders []*transaction.Transaction
+	filterOrders []*transaction.Trade
 
 	winnersMS []*bytes.Buffer
 	losersMS  []*bytes.Buffer
@@ -70,7 +70,7 @@ type ChartMarketSmith struct {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func ChartMarketSmithNew(filterOrders []*transaction.Transaction, winnersMS, losersMS []*bytes.Buffer) (*ChartMarketSmith, error) {
+func ChartMarketSmithNew(filterOrders []*transaction.Trade, winnersMS, losersMS []*bytes.Buffer) (*ChartMarketSmith, error) {
 
 	c := new(ChartMarketSmith)
 

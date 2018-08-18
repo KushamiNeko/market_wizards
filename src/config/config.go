@@ -9,8 +9,6 @@ import (
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-
 const (
 	CacheStoreKeyLens = 9
 
@@ -19,12 +17,6 @@ const (
 	KeyLengthDefault = 64
 	KeyLengthStrong  = 128
 	KeyLengthMax     = 256
-
-	//KeyLengthMin     = 32
-	//KeyLengthShort   = 64
-	//KeyLengthDefault = 128
-	//KeyLengthStrong  = 256
-	//KeyLengthMax     = 512
 
 	NamespaceIBD         = "--ibd-checkup--"
 	NamespaceMarketSmith = "--marketsmith--"

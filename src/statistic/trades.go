@@ -10,13 +10,12 @@ import (
 	"strings"
 	"transaction"
 
-	//"github.com/montanaflynn/stats"
 	"gonum.org/v1/gonum/stat"
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-type TransactionStat struct {
+type Trades struct {
 	TotalTrade int
 
 	Price map[int]int
@@ -40,7 +39,7 @@ type TransactionStat struct {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func NewTransactionStat(orders []*transaction.Transaction) (*TransactionStat, error) {
+func newTrades(orders []*transaction.Trade) (*Trades, error) {
 
 	dictPrice := make(map[int]int)
 
@@ -53,7 +52,7 @@ func NewTransactionStat(orders []*transaction.Transaction) (*TransactionStat, er
 
 	for _, o := range orders {
 
-		grp := math.Floor(o.Buy.Price / config.PriceInterval)
+		grp := math.Floor(o.Open.Price / config.PriceInterval)
 		grps := int(grp * config.PriceInterval)
 
 		if val, ok := dictPrice[grps]; ok {
@@ -62,7 +61,7 @@ func NewTransactionStat(orders []*transaction.Transaction) (*TransactionStat, er
 			dictPrice[grps] = 1
 		}
 
-		buyPoint := strings.TrimSpace(o.Buy.BuyPoint)
+		buyPoint := strings.TrimSpace(o.Open.BuyPoint)
 
 		if val, ok := dictBuyPoint[buyPoint]; ok {
 			dictBuyPoint[buyPoint] = val + 1
@@ -70,11 +69,11 @@ func NewTransactionStat(orders []*transaction.Transaction) (*TransactionStat, er
 			dictBuyPoint[buyPoint] = 1
 		}
 
-		sliceGainP = append(sliceGainP, o.Sell.GainP)
-		sliceGainD = append(sliceGainD, o.Sell.GainD)
-		sliceDaysHeld = append(sliceDaysHeld, float64(o.Sell.DaysHeld))
+		sliceGainP = append(sliceGainP, o.Close.GainP)
+		sliceGainD = append(sliceGainD, o.Close.GainD)
+		sliceDaysHeld = append(sliceDaysHeld, float64(o.Close.DaysHeld))
 
-		stages := strconv.FormatFloat(math.Floor(o.Buy.Stage), 'f', -1, 64)
+		stages := strconv.FormatFloat(math.Floor(o.Open.Stage), 'f', -1, 64)
 
 		if val, ok := dictStage[stages]; ok {
 			dictStage[stages] = val + 1
@@ -84,73 +83,26 @@ func NewTransactionStat(orders []*transaction.Transaction) (*TransactionStat, er
 
 	}
 
-	t := new(TransactionStat)
+	t := new(Trades)
 	t.TotalTrade = len(orders)
 	t.Price = dictPrice
 	t.BuyPoint = dictBuyPoint
 	t.Stage = dictStage
 
-	//var err error
-
-	t.GainPMean = stat.Mean(sliceGainP, nil)
-	//t.GainPMean, err = stats.Mean(sliceGainP)
-	//if err != nil {
-	//return nil, err
-	//}
-
 	sort.Float64s(sliceGainP)
-
 	t.GainPMax = sliceGainP[len(sliceGainP)-1]
-	//t.GainPMax, err = stats.Max(sliceGainP)
-	//if err != nil {
-	//return nil, err
-	//}
-
 	t.GainPMin = sliceGainP[0]
-	//t.GainPMin, err = stats.Min(sliceGainP)
-	//if err != nil {
-	//return nil, err
-	//}
-
-	t.GainDMean = stat.Mean(sliceGainD, nil)
-	//t.GainDMean, err = stats.Mean(sliceGainD)
-	//if err != nil {
-	//return nil, err
-	//}
+	t.GainPMean = stat.Mean(sliceGainP, nil)
 
 	sort.Float64s(sliceGainD)
-
 	t.GainDMax = sliceGainD[len(sliceGainD)-1]
-	//t.GainDMax, err = stats.Max(sliceGainD)
-	//if err != nil {
-	//return nil, err
-	//}
-
 	t.GainDMin = sliceGainD[0]
-	//t.GainDMin, err = stats.Min(sliceGainD)
-	//if err != nil {
-	//return nil, err
-	//}
-
-	t.DaysHeldMean = stat.Mean(sliceDaysHeld, nil)
-	//t.DaysHeldMean, err = stats.Mean(sliceDaysHeld)
-	//if err != nil {
-	//return nil, err
-	//}
+	t.GainDMean = stat.Mean(sliceGainD, nil)
 
 	sort.Float64s(sliceDaysHeld)
-
 	t.DaysHeldMax = sliceDaysHeld[len(sliceDaysHeld)-1]
-	//t.DaysHeldMax, err = stats.Max(sliceDaysHeld)
-	//if err != nil {
-	//return nil, err
-	//}
-
 	t.DaysHeldMin = sliceDaysHeld[0]
-	//t.DaysHeldMin, err = stats.Min(sliceDaysHeld)
-	//if err != nil {
-	//return nil, err
-	//}
+	t.DaysHeldMean = stat.Mean(sliceDaysHeld, nil)
 
 	return t, nil
 }

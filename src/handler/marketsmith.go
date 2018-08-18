@@ -57,7 +57,6 @@ func marketsmithPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//objectRequest := new(ObjectRequestBody)
 	objectRequest := new(datautils.DateSymbolStorage)
 
 	err = datautils.JsonRequestBodyDecode(r, objectRequest)
@@ -112,12 +111,6 @@ func marketsmithPost(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-
-	//_, err = collection.InsertOne(context.Background(), marketsmithDatastore)
-	//if err != nil {
-	//http.Error(w, err.Error(), http.StatusInternalServerError)
-	//return
-	//}
 
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(http.StatusText(http.StatusOK)))

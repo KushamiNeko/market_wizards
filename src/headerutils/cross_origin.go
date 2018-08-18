@@ -41,9 +41,9 @@ func CrossOriginOptions(w http.ResponseWriter) {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func AccessControlAllowFronted(w http.ResponseWriter) {
-	//w.Header().Add("Access-Control-Allow-Origin", config.WebFrontendOrigin)
-}
+//func AccessControlAllowFronted(w http.ResponseWriter) {
+//w.Header().Add("Access-Control-Allow-Origin", config.WebFrontendOrigin)
+//}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
