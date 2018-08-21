@@ -123,6 +123,12 @@
           C
         </button>
 
+        <button id="dropdown-priority-e"
+          class="dropdown-item watch-list-item"
+          type="button">
+          E
+        </button>
+
       </div>
 
     </div>
@@ -229,6 +235,12 @@
           class="dropdown-item watch-list-item"
           type="button">
           B
+        </button>
+
+        <button id="dropdown-grs-c"
+          class="dropdown-item watch-list-item"
+          type="button">
+          C
         </button>
 
       </div>
@@ -350,6 +362,12 @@
           C
         </button>
 
+        <button id="dropdown-fundamentals-d"
+          class="dropdown-item watch-list-item"
+          type="button">
+          D
+        </button>
+
       </div>
 
     </div>
@@ -358,6 +376,68 @@
       class="invalid-feedback watch-list-validate">
       Invalid Fundamentals
     </div>
+
+    <label for="input-note"
+      class="watch-list-margin-top watch-list-label">
+      Note
+    </label>
+
+    <input type="text"
+      id="input-note"
+      class="form-control watch-list-input"
+      placeholder="note"
+      value="{{if .}}{{.Note}}{{end}}"
+      aria-label="note">
+
+    <div id="validate-note"
+      class="invalid-feedback watch-list-validate">
+      Invalid Note
+    </div>
+
+    <button type="button"
+      id="button-flag"
+      class="btn btn-lg watch-list-button watch-list-margin-top {{if .Flag}}btn-danger{{else}}btn-dark{{end}}">
+      <i id="button-flag-icon"
+        class="material-icons watch-list-button-icons">
+
+        <!---->
+        {{if.Flag}}
+        <!---->
+
+        flag
+
+        <!---->
+        {{else}}
+        <!---->
+
+        outlined_flag
+
+        <!---->
+        {{end}}
+        <!---->
+
+      </i>
+    </button>
+
+    <!---->
+    {{if.Flag}}
+    <!---->
+
+    <script>
+      var flag = true;
+    </script>
+
+    <!---->
+    {{else}}
+    <!---->
+
+    <script>
+      var flag = false;
+    </script>
+
+    <!---->
+    {{end}}
+    <!---->
 
     <div class="watch-list-separator">
     </div>

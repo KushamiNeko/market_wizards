@@ -34,6 +34,26 @@ $("#button-cancel").click(function() {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
+$("#button-flag").click(function() {
+  flag = !flag;
+
+  if (flag) {
+    $("#button-flag-icon").html("flag");
+
+    $("#button-flag").removeClass("btn-dark");
+    $("#button-flag").addClass("btn-danger");
+
+  } else {
+    $("#button-flag-icon").html("outlined_flag");
+
+    $("#button-flag").removeClass("btn-danger");
+    $("#button-flag").addClass("btn-dark");
+  }
+
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
 $("#button-create").click(function() {
   $(".invalid-feedback").hide();
 
@@ -97,6 +117,14 @@ $("#button-create").click(function() {
 
   var fundamentals = $("#dropdownMenu-fundamentals").html().split(":")[1].trim();
 
+  //if ($("#input-note").val().match(/^[A-Z]+$/) === null) {
+  //$("#validate-note").show();
+  //$("#input-note").focus();
+  //return;
+  //}
+
+  var note = $("#input-note").val().trim();
+
   inProcess("#button-create");
 
   var wlData = {
@@ -107,6 +135,8 @@ $("#button-create").click(function() {
     "RS": rs,
     "Fundamentals": fundamentals,
     "Status": status,
+    "Note": note,
+    "Flag": flag,
   };
 
   var wlJsonBody = JSON.stringify(wlData);
@@ -147,6 +177,7 @@ function dropdownClick(menu, target) {
 dropdownClick("#dropdownMenu-priority", "#dropdown-priority-a");
 dropdownClick("#dropdownMenu-priority", "#dropdown-priority-b");
 dropdownClick("#dropdownMenu-priority", "#dropdown-priority-c");
+dropdownClick("#dropdownMenu-priority", "#dropdown-priority-e");
 
 dropdownClick("#dropdownMenu-status", "#dropdown-status-a");
 dropdownClick("#dropdownMenu-status", "#dropdown-status-b");
@@ -154,6 +185,7 @@ dropdownClick("#dropdownMenu-status", "#dropdown-status-c");
 
 dropdownClick("#dropdownMenu-grs", "#dropdown-grs-a");
 dropdownClick("#dropdownMenu-grs", "#dropdown-grs-b");
+dropdownClick("#dropdownMenu-grs", "#dropdown-grs-c");
 
 dropdownClick("#dropdownMenu-rs", "#dropdown-rs-a");
 dropdownClick("#dropdownMenu-rs", "#dropdown-rs-b");
@@ -163,6 +195,7 @@ dropdownClick("#dropdownMenu-rs", "#dropdown-rs-d");
 dropdownClick("#dropdownMenu-fundamentals", "#dropdown-fundamentals-a");
 dropdownClick("#dropdownMenu-fundamentals", "#dropdown-fundamentals-b");
 dropdownClick("#dropdownMenu-fundamentals", "#dropdown-fundamentals-c");
+dropdownClick("#dropdownMenu-fundamentals", "#dropdown-fundamentals-d");
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 

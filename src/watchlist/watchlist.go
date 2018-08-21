@@ -23,7 +23,9 @@ type WatchListItem struct {
 	Fundamentals string
 
 	Status string
-	//Note         string
+	Note   string
+
+	Flag bool
 
 	PositionSize int `bson:"-" json:"-"`
 }

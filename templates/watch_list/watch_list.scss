@@ -1,4 +1,5 @@
 @import "../_share_scss/share";
+@import "../_common_scss/material_design_style/colors";
 
 .watch-list-container {
   @include share-container;
@@ -45,6 +46,11 @@
 .watch-list-item {
   @include share-label;
   width: 100%;
+}
+
+.watch-list-item-flag {
+  background-color: rgba($paper-blue-grey-900, $dark-primary-opacity) !important;
+  color: white !important;
 }
 
 .watch-list-separator {

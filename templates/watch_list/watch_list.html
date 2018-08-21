@@ -170,6 +170,7 @@
           <th scope="col">GRS</th>
           <th scope="col">RS</th>
           <th scope="col">F</th>
+          <th scope="col">Note</th>
 
           <!---->
           <th scope="col">{{.PositionSize}}</th>
@@ -186,7 +187,8 @@
         {{range $i, $t := .Items}}
         <!---->
 
-        <tr id="tr-watch-list-item-{{$i}}">
+        <tr id="tr-watch-list-item-{{$i}}"
+          class="{{if .Flag}}watch-list-item-flag{{end}}">
           <td>{{$t.Symbol}}</td>
           <td>{{$t.Price}}</td>
 
@@ -196,6 +198,8 @@
           <td>{{$t.GRS}}</td>
           <td>{{$t.RS}}</td>
           <td>{{$t.Fundamentals}}</td>
+
+          <td>{{$t.Note}}</td>
 
           <td>{{$t.PositionSize}}</td>
           <td>
