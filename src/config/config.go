@@ -57,12 +57,14 @@ const (
 
 	WinnerOpacity = 0.5
 	LoserOpacity  = 0.5
+
+	StatisticBase = 20
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const (
-	ChartMultiplier = 0.6
+	ChartMultiplier = 0.75
 
 	ChartWidth  = 1920 * ChartMultiplier
 	ChartHeight = 1080 * ChartMultiplier
@@ -91,6 +93,9 @@ const (
 var (
 	WinnerRGBA = color.NRGBA{R: 3, G: 169, B: 255, A: 127}
 	LoserRGBA  = color.NRGBA{R: 255, G: 50, B: 70, A: 127}
+
+	PointRGBA = color.NRGBA{R: 255, G: 50, B: 70, A: 127}
+	LineRGBA  = color.NRGBA{R: 255, G: 50, B: 70, A: 127}
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////

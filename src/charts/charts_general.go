@@ -30,15 +30,21 @@ type ChartGeneral struct {
 	winnersI []interface{}
 	losersI  []interface{}
 
+	Threshold float64
+
 	GainVsDaysHeld template.URL
 	BuyPoints      template.URL
 	PriceInterval  template.URL
 	Stage          template.URL
+
+	BattingAverage template.URL
+	AverageGL      template.URL
+	MaxGL          template.URL
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func ChartGeneralNew(filterOrders, winners, losers []*transaction.Trade) (*ChartGeneral, error) {
+func ChartGeneralNew(filterOrders, winners, losers []*transaction.Trade, threshold float64) (*ChartGeneral, error) {
 
 	var wg sync.WaitGroup
 
@@ -52,6 +58,8 @@ func ChartGeneralNew(filterOrders, winners, losers []*transaction.Trade) (*Chart
 	c.winnersI = make([]interface{}, len(c.winners))
 	c.losersI = make([]interface{}, len(c.losers))
 
+	c.Threshold = threshold
+
 	for i, v := range c.winners {
 		c.winnersI[i] = v
 	}
@@ -60,45 +68,60 @@ func ChartGeneralNew(filterOrders, winners, losers []*transaction.Trade) (*Chart
 		c.losersI[i] = v
 	}
 
-	fs := 4
+	fs := 5
+	ei := 0
 
 	wg.Add(fs)
 	errs := make([]error, fs)
 
-	go func() {
+	go func(ei int) {
 		err := c.getGainVsDaysHeld()
 		if err != nil {
-			errs[0] = err
+			errs[ei] = err
 		}
 		wg.Done()
-	}()
+	}(ei)
+	ei += 1
 
-	go func() {
+	go func(ei int) {
 		err := c.getBuyPoints()
 		if err != nil {
-			errs[1] = err
+			errs[ei] = err
 		}
 
 		wg.Done()
-	}()
+	}(ei)
+	ei += 1
 
-	go func() {
+	go func(ei int) {
 		err := c.getPriceInterval()
 		if err != nil {
-			errs[2] = err
+			errs[ei] = err
 		}
 
 		wg.Done()
-	}()
+	}(ei)
+	ei += 1
 
-	go func() {
+	go func(ei int) {
 		err := c.getStage()
 		if err != nil {
-			errs[3] = err
+			errs[ei] = err
 		}
 
 		wg.Done()
-	}()
+	}(ei)
+	ei += 1
+
+	go func(ei int) {
+		err := c.getBattingAverage()
+		if err != nil {
+			errs[ei] = err
+		}
+
+		wg.Done()
+	}(ei)
+	ei += 1
 
 	wg.Wait()
 
@@ -359,6 +382,104 @@ func (c *ChartGeneral) getStage() error {
 
 	return nil
 
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (c *ChartGeneral) getBattingAverage() error {
+
+	all := make([]*transaction.Trade, 0)
+
+	for _, w := range c.winners {
+		all = append(all, w)
+	}
+
+	for _, l := range c.losers {
+		all = append(all, l)
+	}
+
+	sort.Slice(all, func(i, j int) bool {
+		return all[i].Close.Date < all[j].Close.Date
+	})
+
+	max := 0.0
+	pts := make(plotter.XYs, 0)
+
+	round := int(float64(len(all)) / config.StatisticBase)
+
+	for i := 0; i < round; i++ {
+		slice := all[i*config.StatisticBase : (i+1)*config.StatisticBase]
+
+		win := 0.0
+
+		for _, s := range slice {
+			if s.Close.GainP >= c.Threshold {
+				win += 1.0
+			}
+		}
+
+		batting := float64(win) / float64(config.StatisticBase)
+
+		pts = append(pts, struct{ X, Y float64 }{
+			float64(config.StatisticBase * (i + 1)),
+			batting,
+		})
+
+		if batting > max {
+			max = batting
+		}
+	}
+
+	p, err := makePlot(
+		"Batting Average",
+		"Trades",
+		"",
+		true,
+		nil,
+	)
+	if err != nil {
+		return err
+	}
+
+	line, points, err := plotter.NewLinePoints(pts)
+	if err != nil {
+		return err
+	}
+
+	line.Color = config.WinnerRGBA
+	points.Shape = draw.CircleGlyph{}
+	points.Radius = vg.Points(config.ChartPointRadius)
+	points.Color = config.WinnerRGBA
+
+	p.Add(line, points)
+	p.Y.Max = max * config.ChartLegendPaddingYRatio
+	//p.Y.Max = p.Y.Max * (((config.ChartBarXPaddingRatio - 1.0) / 2.0) + 1.0)
+	p.Y.Min = -(p.Y.Max * (config.ChartBarXPaddingRatio - 1.0) / 2.0)
+
+	//p.X.Min = -(p.X.Max * (config.ChartBarXPaddingRatio - 1.0) / 2.0)
+	//p.X.Max = p.X.Max * (((config.ChartBarXPaddingRatio - 1.0) / 2.0) + 1.0)
+
+	c.BattingAverage, err = plotToDataUrl(p)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (c *ChartGeneral) getAverageGL() error {
+
+	return nil
+
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (c *ChartGeneral) getMaxGL() error {
+
+	return nil
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

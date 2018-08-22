@@ -278,7 +278,7 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 	stat.EndDate = ends
 	stat.LossThresholdP = threshold
 
-	stat.ChartGeneral, err = charts.ChartGeneralNew(orders, winners, losers)
+	stat.ChartGeneral, err = charts.ChartGeneralNew(orders, winners, losers, threshold)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

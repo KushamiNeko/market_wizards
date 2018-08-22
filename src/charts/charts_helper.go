@@ -247,8 +247,8 @@ func makeBarCharts(
 
 	p.Y.Max = math.Max(wmax, lmax) * config.ChartLegendPaddingYRatio
 
-	p.X.Min = -(p.X.Max * (config.ChartBarXPaddingRatio - 1.0))
-	p.X.Max = p.X.Max * config.ChartBarXPaddingRatio
+	//p.X.Min = -(p.X.Max * (config.ChartBarXPaddingRatio - 1.0))
+	//p.X.Max = p.X.Max * config.ChartBarXPaddingRatio
 
 	p.Legend.Add("winners", wb)
 	p.Legend.Add("losers", lb)

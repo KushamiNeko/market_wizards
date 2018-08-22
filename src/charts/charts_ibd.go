@@ -108,7 +108,8 @@ func ChartIBDNew(filterOrders []*transaction.Trade, winnersIBD, losersIBD []*byt
 		c.losersI[i] = checkup
 	}
 
-	fs := 27
+	fs := 18
+	ei := 0
 
 	errs := make([]error, fs)
 	wg.Add(fs)
@@ -116,245 +117,272 @@ func ChartIBDNew(filterOrders []*transaction.Trade, winnersIBD, losersIBD []*byt
 	go func() {
 		err := c.getMarketCapitalization()
 		if err != nil {
-			errs[0] = err
+			errs[ei] = err
 		}
 
 		wg.Done()
 	}()
+	ei += 1
 
 	go func() {
 		err := c.getUpDownVolumeRatio()
 		if err != nil {
-			errs[1] = err
+			errs[ei] = err
 		}
 
 		wg.Done()
 	}()
+	ei += 1
 
 	go func() {
 		err := c.getRSRating()
 		if err != nil {
-			errs[2] = err
+			errs[ei] = err
 		}
 
 		wg.Done()
 	}()
+	ei += 1
 
 	go func() {
 		err := c.getIndustryGroupRank()
 		if err != nil {
-			errs[3] = err
+			errs[ei] = err
 		}
 
 		wg.Done()
 	}()
+	ei += 1
 
 	go func() {
 		err := c.getCompositeRating()
 		if err != nil {
-			errs[4] = err
+			errs[ei] = err
 		}
 
 		wg.Done()
 	}()
+	ei += 1
 
 	go func() {
 		err := c.getEPSRating()
 		if err != nil {
-			errs[5] = err
+			errs[ei] = err
 		}
 
 		wg.Done()
 	}()
+	ei += 1
 
 	go func() {
 		err := c.getSMRRating()
 		if err != nil {
-			errs[6] = err
+			errs[ei] = err
 		}
 
 		wg.Done()
 	}()
+	ei += 1
 
 	go func() {
 		err := c.getAccDisRating()
 		if err != nil {
-			errs[7] = err
+			errs[ei] = err
 		}
 
 		wg.Done()
 	}()
+	ei += 1
 
 	go func() {
 		err := c.getEPSChgLastQtr()
 		if err != nil {
-			errs[8] = err
+			errs[ei] = err
 		}
 
 		wg.Done()
 	}()
+	ei += 1
 
 	go func() {
 		err := c.getLast3QtrsAvgEPSGrowth()
 		if err != nil {
-			errs[9] = err
+			errs[ei] = err
 		}
 
 		wg.Done()
 	}()
+	ei += 1
 
-	go func() {
-		err := c.getQtrsofEPSAcceleration()
-		if err != nil {
-			errs[10] = err
-		}
+	//go func() {
+	//err := c.getQtrsofEPSAcceleration()
+	//if err != nil {
+	//errs[ei] = err
+	//}
 
-		wg.Done()
-	}()
+	//wg.Done()
+	//}()
+	//ei += 1
 
-	go func() {
-		err := c.getEPSEstChgCurrentQtr()
-		if err != nil {
-			errs[11] = err
-		}
+	//go func() {
+	//err := c.getEPSEstChgCurrentQtr()
+	//if err != nil {
+	//errs[ei] = err
+	//}
 
-		wg.Done()
-	}()
+	//wg.Done()
+	//}()
+	//ei += 1
 
-	go func() {
-		err := c.getEstimateRevisions()
-		if err != nil {
-			errs[12] = err
-		}
+	//go func() {
+	//err := c.getEstimateRevisions()
+	//if err != nil {
+	//errs[ei] = err
+	//}
 
-		wg.Done()
-	}()
+	//wg.Done()
+	//}()
+	//ei += 1
 
 	go func() {
 		err := c.getLastQtrEarningsSurprise()
 		if err != nil {
-			errs[13] = err
+			errs[ei] = err
 		}
 
 		wg.Done()
 	}()
+	ei += 1
 
 	go func() {
 		err := c.getThreeYrEPSGrowthRate()
 		if err != nil {
-			errs[14] = err
+			errs[ei] = err
 		}
 
 		wg.Done()
 	}()
+	ei += 1
 
-	go func() {
-		err := c.getConsecutiveYrsofAnnualEPSGrowth()
-		if err != nil {
-			errs[15] = err
-		}
+	//go func() {
+	//err := c.getConsecutiveYrsofAnnualEPSGrowth()
+	//if err != nil {
+	//errs[ei] = err
+	//}
 
-		wg.Done()
-	}()
+	//wg.Done()
+	//}()
+	//ei += 1
 
-	go func() {
-		err := c.getEPSEstChgforCurrentYear()
-		if err != nil {
-			errs[16] = err
-		}
+	//go func() {
+	//err := c.getEPSEstChgforCurrentYear()
+	//if err != nil {
+	//errs[ei] = err
+	//}
 
-		wg.Done()
-	}()
+	//wg.Done()
+	//}()
+	//ei += 1
 
 	go func() {
 		err := c.getSalesChgLastQtr()
 		if err != nil {
-			errs[17] = err
+			errs[ei] = err
 		}
 
 		wg.Done()
 	}()
+	ei += 1
 
 	go func() {
 		err := c.getThreeYrSalesGrowthRate()
 		if err != nil {
-			errs[18] = err
+			errs[ei] = err
 		}
 
 		wg.Done()
 	}()
+	ei += 1
 
 	go func() {
 		err := c.getAnnualPreTaxMargin()
 		if err != nil {
-			errs[19] = err
+			errs[ei] = err
 		}
 
 		wg.Done()
 	}()
+	ei += 1
 
 	go func() {
 		err := c.getAnnualROE()
 		if err != nil {
-			errs[20] = err
+			errs[ei] = err
 		}
 
 		wg.Done()
 	}()
+	ei += 1
 
 	go func() {
 		err := c.getDebtEquityRatio()
 		if err != nil {
-			errs[21] = err
+			errs[ei] = err
 		}
 
 		wg.Done()
 	}()
+	ei += 1
 
-	go func() {
-		err := c.getOff52WeekHigh()
-		if err != nil {
-			errs[22] = err
-		}
+	//go func() {
+	//err := c.getOff52WeekHigh()
+	//if err != nil {
+	//errs[ei] = err
+	//}
 
-		wg.Done()
-	}()
+	//wg.Done()
+	//}()
+	//ei += 1
 
-	go func() {
-		err := c.getPricevs50DayMovingAverage()
-		if err != nil {
-			errs[23] = err
-		}
+	//go func() {
+	//err := c.getPricevs50DayMovingAverage()
+	//if err != nil {
+	//errs[ei] = err
+	//}
 
-		wg.Done()
-	}()
+	//wg.Done()
+	//}()
+	//ei += 1
 
 	go func() {
 		err := c.getFiftyDayAverageVolume()
 		if err != nil {
-			errs[24] = err
+			errs[ei] = err
 		}
 
 		wg.Done()
 	}()
+	ei += 1
 
-	go func() {
-		err := c.getChangeInFundsOwningStock()
-		if err != nil {
-			errs[25] = err
-		}
+	//go func() {
+	//err := c.getChangeInFundsOwningStock()
+	//if err != nil {
+	//errs[ei] = err
+	//}
 
-		wg.Done()
-	}()
+	//wg.Done()
+	//}()
+	//ei += 1
 
-	go func() {
-		err := c.getQtrsOfIncreasingFundOwnership()
-		if err != nil {
-			errs[26] = err
-		}
+	//go func() {
+	//err := c.getQtrsOfIncreasingFundOwnership()
+	//if err != nil {
+	//errs[ei] = err
+	//}
 
-		wg.Done()
-	}()
+	//wg.Done()
+	//}()
+	//ei += 1
 
 	wg.Wait()
 
