@@ -13,6 +13,7 @@ import (
 	"transaction"
 
 	"golang.org/x/text/message"
+	"gonum.org/v1/gonum/stat"
 	"gonum.org/v1/plot"
 	"gonum.org/v1/plot/plotter"
 	"gonum.org/v1/plot/vg"
@@ -27,6 +28,8 @@ type ChartGeneral struct {
 	winners []*transaction.Trade
 	losers  []*transaction.Trade
 
+	SortedTrades []*transaction.Trade
+
 	winnersI []interface{}
 	losersI  []interface{}
 
@@ -37,9 +40,9 @@ type ChartGeneral struct {
 	PriceInterval  template.URL
 	Stage          template.URL
 
-	BattingAverage template.URL
-	AverageGL      template.URL
-	MaxGL          template.URL
+	BattingAverage  template.URL
+	AverageGainLoss template.URL
+	//MaxGL          template.URL
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -60,6 +63,22 @@ func ChartGeneralNew(filterOrders, winners, losers []*transaction.Trade, thresho
 
 	c.Threshold = threshold
 
+	trades := make([]*transaction.Trade, 0)
+
+	for _, w := range c.winners {
+		trades = append(trades, w)
+	}
+
+	for _, l := range c.losers {
+		trades = append(trades, l)
+	}
+
+	sort.Slice(trades, func(i, j int) bool {
+		return trades[i].Close.Date < trades[j].Close.Date
+	})
+
+	c.SortedTrades = trades
+
 	for i, v := range c.winners {
 		c.winnersI[i] = v
 	}
@@ -68,7 +87,7 @@ func ChartGeneralNew(filterOrders, winners, losers []*transaction.Trade, thresho
 		c.losersI[i] = v
 	}
 
-	fs := 5
+	fs := 6
 	ei := 0
 
 	wg.Add(fs)
@@ -115,6 +134,16 @@ func ChartGeneralNew(filterOrders, winners, losers []*transaction.Trade, thresho
 
 	go func(ei int) {
 		err := c.getBattingAverage()
+		if err != nil {
+			errs[ei] = err
+		}
+
+		wg.Done()
+	}(ei)
+	ei += 1
+
+	go func(ei int) {
+		err := c.getAverageGainLoss()
 		if err != nil {
 			errs[ei] = err
 		}
@@ -388,27 +417,13 @@ func (c *ChartGeneral) getStage() error {
 
 func (c *ChartGeneral) getBattingAverage() error {
 
-	all := make([]*transaction.Trade, 0)
-
-	for _, w := range c.winners {
-		all = append(all, w)
-	}
-
-	for _, l := range c.losers {
-		all = append(all, l)
-	}
-
-	sort.Slice(all, func(i, j int) bool {
-		return all[i].Close.Date < all[j].Close.Date
-	})
-
 	max := 0.0
 	pts := make(plotter.XYs, 0)
 
-	round := int(float64(len(all)) / config.StatisticBase)
+	round := int(float64(len(c.SortedTrades)) / config.StatisticBase)
 
 	for i := 0; i < round; i++ {
-		slice := all[i*config.StatisticBase : (i+1)*config.StatisticBase]
+		slice := c.SortedTrades[i*config.StatisticBase : (i+1)*config.StatisticBase]
 
 		win := 0.0
 
@@ -455,7 +470,6 @@ func (c *ChartGeneral) getBattingAverage() error {
 
 	p.Add(line, points)
 	p.Y.Max = max * config.ChartLegendPaddingYRatio
-	//p.Y.Max = p.Y.Max * (((config.ChartBarXPaddingRatio - 1.0) / 2.0) + 1.0)
 	p.Y.Min = -(p.Y.Max * (config.ChartBarPaddingXRatio - 1.0) / 2.0)
 
 	//p.X.Min = -(p.X.Max * (config.ChartBarXPaddingRatio - 1.0) / 2.0)
@@ -471,17 +485,108 @@ func (c *ChartGeneral) getBattingAverage() error {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (c *ChartGeneral) getAverageGL() error {
+func (c *ChartGeneral) getAverageGainLoss() error {
+
+	max := 0.0
+	min := 0.0
+
+	ptsw := make(plotter.XYs, 0)
+	ptsl := make(plotter.XYs, 0)
+
+	round := int(float64(len(c.SortedTrades)) / config.StatisticBase)
+
+	for i := 0; i < round; i++ {
+		slice := c.SortedTrades[i*config.StatisticBase : (i+1)*config.StatisticBase]
+
+		mws := make([]float64, 0)
+		mls := make([]float64, 0)
+
+		for _, s := range slice {
+			if s.Close.GainP >= c.Threshold {
+				mws = append(mws, s.Close.GainP)
+
+				if s.Close.GainP > max {
+					max = s.Close.GainP
+				}
+
+			} else {
+				mls = append(mls, s.Close.GainP)
+
+				if s.Close.GainP < min {
+					min = s.Close.GainP
+				}
+			}
+		}
+
+		mw := stat.Mean(mws, nil)
+		ml := stat.Mean(mls, nil)
+
+		ptsw = append(ptsw, struct{ X, Y float64 }{
+			float64(config.StatisticBase * (i + 1)),
+			mw,
+		})
+
+		ptsl = append(ptsl, struct{ X, Y float64 }{
+			float64(config.StatisticBase * (i + 1)),
+			ml,
+		})
+	}
+
+	p, err := makePlot(
+		"Gain/Loss Average",
+		"",
+		"Gain(%)",
+		true,
+		nil,
+	)
+	if err != nil {
+		return err
+	}
+
+	linew, pointsw, err := plotter.NewLinePoints(ptsw)
+	if err != nil {
+		return err
+	}
+
+	linew.Color = config.WinnerRGBA
+	linew.LineStyle.Width = vg.Points(config.ChartLineWidth)
+
+	pointsw.Shape = draw.CircleGlyph{}
+	pointsw.Radius = vg.Points(config.ChartPointRadius)
+	pointsw.Color = config.WinnerRGBA
+
+	p.Add(linew, pointsw)
+
+	linel, pointsl, err := plotter.NewLinePoints(ptsl)
+	if err != nil {
+		return err
+	}
+
+	linel.Color = config.LoserRGBA
+	linel.LineStyle.Width = vg.Points(config.ChartLineWidth)
+
+	pointsl.Shape = draw.CircleGlyph{}
+	pointsl.Radius = vg.Points(config.ChartPointRadius)
+	pointsl.Color = config.LoserRGBA
+
+	p.Add(linel, pointsl)
+
+	p.Legend.Add("winners", linew, pointsw)
+	p.Legend.Add("losers", linel, pointsl)
+
+	p.Y.Max = max * config.ChartLegendPaddingYRatio
+	p.Y.Min = min * config.ChartLegendPaddingYRatio
+
+	//p.X.Min = -(p.X.Max * (config.ChartBarXPaddingRatio - 1.0) / 2.0)
+	//p.X.Max = p.X.Max * (((config.ChartBarXPaddingRatio - 1.0) / 2.0) + 1.0)
+
+	c.AverageGainLoss, err = plotToDataUrl(p)
+	if err != nil {
+		return err
+	}
 
 	return nil
 
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-func (c *ChartGeneral) getMaxGL() error {
-
-	return nil
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -65,7 +65,7 @@ const (
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const (
-	ChartMultiplier = 0.75
+	ChartMultiplier = 0.65
 
 	ChartWidth  = 1920.0 * ChartMultiplier
 	ChartHeight = 1080.0 * ChartMultiplier
