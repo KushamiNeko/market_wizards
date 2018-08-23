@@ -407,7 +407,7 @@ func (c *ChartIBD) getMarketCapitalization() error {
 		"",
 		true,
 		func(p *plot.Plot) {
-			p.X.Padding = vg.Points(config.ChartXLabelPadding)
+			p.X.Padding = vg.Points(config.ChartLabelPaddingX)
 			p.X.Tick.Label.XAlign = draw.XLeft
 			p.X.Tick.Label.YAlign = draw.YCenter
 			p.Y.Tick.Label.XAlign = draw.XRight
@@ -749,7 +749,7 @@ func (c *ChartIBD) getThreeYrSalesGrowthRate() error {
 func (c *ChartIBD) getAnnualPreTaxMargin() error {
 
 	var err error
-	var interval float64 = 5.0
+	var interval float64 = 10.0
 
 	c.AnnualPreTaxMargin, err = barChartPercent("Annual Pre-Tax Margin", interval, c.winnersI, c.losersI)
 	if err != nil {
@@ -779,7 +779,7 @@ func (c *ChartIBD) getAnnualROE() error {
 func (c *ChartIBD) getDebtEquityRatio() error {
 
 	var err error
-	var interval float64 = 5.0
+	var interval float64 = 20.0
 
 	c.DebtEquityRatio, err = barChartPercent("Debt/Equity Ratio", interval, c.winnersI, c.losersI)
 	if err != nil {

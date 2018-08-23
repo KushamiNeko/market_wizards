@@ -59,6 +59,7 @@ const (
 	LoserOpacity  = 0.5
 
 	StatisticBase = 20
+	StatisticSMA  = 5
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -66,24 +67,25 @@ const (
 const (
 	ChartMultiplier = 0.75
 
-	ChartWidth  = 1920 * ChartMultiplier
-	ChartHeight = 1080 * ChartMultiplier
+	ChartWidth  = 1920.0 * ChartMultiplier
+	ChartHeight = 1080.0 * ChartMultiplier
 
-	ChartFontSizeL = 25 * ChartMultiplier
-	ChartFontSizeM = 25 * ChartMultiplier
-	ChartFontSizeS = 25 * ChartMultiplier
+	ChartFontSizeL = 25.0 * ChartMultiplier
+	ChartFontSizeM = 25.0 * ChartMultiplier
+	ChartFontSizeS = 25.0 * ChartMultiplier
 
-	ChartPointRadius = 9 * ChartMultiplier
-	ChartBarWidth    = 16 * ChartMultiplier
+	ChartPointRadius = 9.0 * ChartMultiplier
+	ChartBarWidth    = 20.0 * ChartMultiplier
+	ChartLineWidth   = 2.0 * ChartMultiplier
 
 	ChartFont = "Helvetica"
 	//ChartFont          = "Helvetica-Oblique"
-	ChartLabelRotation = -90 * math.Pi / 180.0
+	ChartLabelRotation = -90.0 * math.Pi / 180.0
 
-	ChartXLabelPadding       = 15 * ChartMultiplier
+	ChartLabelPaddingX       = 15.0 * ChartMultiplier
 	ChartLegendPaddingYRatio = 1.15
 
-	ChartBarXPaddingRatio = 1.035
+	ChartBarPaddingXRatio = 1.035
 
 	ChartDataUrlFormat = "data:image/png;base64,%s"
 )
@@ -94,8 +96,8 @@ var (
 	WinnerRGBA = color.NRGBA{R: 3, G: 169, B: 255, A: 127}
 	LoserRGBA  = color.NRGBA{R: 255, G: 50, B: 70, A: 127}
 
-	PointRGBA = color.NRGBA{R: 255, G: 50, B: 70, A: 127}
-	LineRGBA  = color.NRGBA{R: 255, G: 50, B: 70, A: 127}
+	SMARGBA  = color.NRGBA{R: 0, G: 150, B: 136, A: 127}
+	InfoRGBA = color.NRGBA{R: 255, G: 111, B: 0, A: 127}
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////

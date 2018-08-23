@@ -194,8 +194,8 @@ func (c *ChartGeneral) getGainVsDaysHeld() error {
 	p.Add(ws, ls)
 	p.Y.Max = max * config.ChartLegendPaddingYRatio
 
-	p.X.Min = -(p.X.Max * (config.ChartBarXPaddingRatio - 1.0) / 2.0)
-	p.X.Max = p.X.Max * (((config.ChartBarXPaddingRatio - 1.0) / 2.0) + 1.0)
+	p.X.Min = -(p.X.Max * (config.ChartBarPaddingXRatio - 1.0) / 2.0)
+	p.X.Max = p.X.Max * (((config.ChartBarPaddingXRatio - 1.0) / 2.0) + 1.0)
 
 	p.Legend.Add("winners", ws)
 	p.Legend.Add("losers", ls)
@@ -446,15 +446,17 @@ func (c *ChartGeneral) getBattingAverage() error {
 		return err
 	}
 
-	line.Color = config.WinnerRGBA
+	line.Color = config.InfoRGBA
+	line.LineStyle.Width = vg.Points(config.ChartLineWidth)
+
 	points.Shape = draw.CircleGlyph{}
 	points.Radius = vg.Points(config.ChartPointRadius)
-	points.Color = config.WinnerRGBA
+	points.Color = config.InfoRGBA
 
 	p.Add(line, points)
 	p.Y.Max = max * config.ChartLegendPaddingYRatio
 	//p.Y.Max = p.Y.Max * (((config.ChartBarXPaddingRatio - 1.0) / 2.0) + 1.0)
-	p.Y.Min = -(p.Y.Max * (config.ChartBarXPaddingRatio - 1.0) / 2.0)
+	p.Y.Min = -(p.Y.Max * (config.ChartBarPaddingXRatio - 1.0) / 2.0)
 
 	//p.X.Min = -(p.X.Max * (config.ChartBarXPaddingRatio - 1.0) / 2.0)
 	//p.X.Max = p.X.Max * (((config.ChartBarXPaddingRatio - 1.0) / 2.0) + 1.0)

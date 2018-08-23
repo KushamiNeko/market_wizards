@@ -245,13 +245,115 @@ func makeBarCharts(
 
 	p.Add(wb, lb)
 
+	max := 0.0
+
+	if wmax > lmax {
+		max = wmax
+	} else {
+		max = lmax
+	}
+
+	pts := make(plotter.XYs, len(winnersG))
+	//sma := make(plotter.XYs, len(winnersG))
+
+	for i, _ := range winnersG {
+
+		batting := winnersG[i] / (winnersG[i] + losersG[i])
+		batting = batting * max
+
+		pts[i] = struct{ X, Y float64 }{
+			float64(i),
+			batting,
+		}
+
+		//// Calculate Simple Moving Average
+		//smaf := make([]float64, len(winnersG))
+		//smab := make([]float64, len(winnersG))
+
+		//if i < config.StatisticSMA-1.0 {
+		////sma[i] = struct{ X, Y float64 }{
+		////float64(i),
+		////batting,
+		////}
+
+		//smaf[i] = batting
+
+		//} else {
+
+		//bs := make([]float64, config.StatisticSMA)
+
+		//for j := 0; j < config.StatisticSMA; j++ {
+		//b := winnersG[i-j] / (winnersG[i-j] + losersG[i-j])
+		//b = b * max
+		//bs[j] = b
+		//}
+
+		//s := stat.Mean(bs, nil)
+		//smaf[i] = s
+		//}
+
+		//if i > len(winnersG)-config.StatisticSMA-1.0 {
+		//smab[i] = batting
+		//} else {
+		//bs := make([]float64, config.StatisticSMA)
+
+		//for j := 0; j < config.StatisticSMA; j++ {
+		//b := winnersG[i+j] / (winnersG[i+j] + losersG[i+j])
+		//b = b * max
+		//bs[j] = b
+		//}
+
+		//s := stat.Mean(bs, nil)
+		//smab[i] = s
+		//}
+
+		//sma[i] = struct{ X, Y float64 }{
+		//float64(i),
+		//stat.Mean([]float64{
+		//smaf[i],
+		//smab[i],
+		//}, nil),
+		//}
+		//// Calculate Simple Moving Average
+
+	}
+
+	line, points, err := plotter.NewLinePoints(pts)
+	if err != nil {
+		return err
+	}
+
+	line.Color = config.InfoRGBA
+	line.LineStyle.Width = vg.Points(config.ChartLineWidth)
+
+	points.Shape = draw.CircleGlyph{}
+	points.Radius = vg.Points(config.ChartPointRadius)
+	points.Color = config.InfoRGBA
+
+	p.Add(line, points)
+
+	//smaLine, smaPoints, err := plotter.NewLinePoints(sma)
+	//if err != nil {
+	//return err
+	//}
+
+	//smaLine.Color = config.SMARGBA
+	//smaPoints.Shape = draw.CircleGlyph{}
+	//smaPoints.Radius = vg.Points(config.ChartPointRadius)
+	//smaPoints.Color = config.SMARGBA
+
+	//p.Add(smaLine, smaPoints)
+
 	p.Y.Max = math.Max(wmax, lmax) * config.ChartLegendPaddingYRatio
 
-	//p.X.Min = -(p.X.Max * (config.ChartBarXPaddingRatio - 1.0))
-	//p.X.Max = p.X.Max * config.ChartBarXPaddingRatio
+	//p.X.Min = -(p.X.Max * float64(config.ChartBarPaddingXRatio-1.0))
+	//p.X.Max = p.X.Max * float64(config.ChartBarPaddingXRatio)
+	p.X.Min = -(p.X.Max * (float64(config.ChartBarPaddingXRatio) - 1.0) / 2.0)
+	p.X.Max = p.X.Max * (((float64(config.ChartBarPaddingXRatio) - 1.0) / 2.0) + 1.0)
 
 	p.Legend.Add("winners", wb)
 	p.Legend.Add("losers", lb)
+	p.Legend.Add("batting average", line, points)
 
 	p.NominalX(keys...)
 
@@ -261,7 +363,7 @@ func makeBarCharts(
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func barChartSetup(p *plot.Plot) {
-	p.X.Padding = vg.Points(config.ChartXLabelPadding)
+	p.X.Padding = vg.Points(config.ChartLabelPaddingX)
 
 	p.X.Tick.Label.XAlign = draw.XLeft
 	p.X.Tick.Label.YAlign = draw.YCenter
