@@ -10,6 +10,7 @@
 
 .login-button {
   @include share-button;
+  width: 100%;
 }
 
 .login-button-icons {

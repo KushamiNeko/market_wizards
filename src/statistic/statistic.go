@@ -3,7 +3,7 @@ package statistic
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import (
-	"charts"
+	"analysis"
 	"fmt"
 	"math"
 	"transaction"
@@ -16,9 +16,9 @@ type Statistic struct {
 	EndDate        string
 	LossThresholdP float64
 
-	ChartGeneral     *charts.ChartGeneral
-	ChartIBD         *charts.ChartIBD
-	ChartMarketSmith *charts.ChartMarketSmith
+	ChartGeneral     *analysis.ChartGeneral
+	ChartIBD         *analysis.ChartIBD
+	ChartMarketSmith *analysis.ChartMarketSmith
 
 	TotalTrade int
 

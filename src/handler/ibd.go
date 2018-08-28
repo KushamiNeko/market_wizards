@@ -82,25 +82,25 @@ func ibdPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ibdDatastore := datautils.DateSymbolStorageNewBytes(objectRequest.Date, objectRequest.Symbol, ibdJson)
+	ibdObject := datautils.DateSymbolStorageNewBytes(objectRequest.Date, objectRequest.Symbol, ibdJson)
 
 	collection := client.MongoClient.Database(config.NamespaceIBD).Collection(cookie)
 
 	filter := bson.NewDocument(
-		bson.EC.Interface("date", ibdDatastore.Date),
-		bson.EC.Interface("symbol", ibdDatastore.Symbol),
+		bson.EC.Interface("date", ibdObject.Date),
+		bson.EC.Interface("symbol", ibdObject.Symbol),
 	)
 
 	err = collection.FindOne(context.Background(), filter).Decode(&datautils.DateSymbolStorage{})
 	if err == nil {
-		_, err = collection.ReplaceOne(context.Background(), filter, ibdDatastore)
+		_, err = collection.ReplaceOne(context.Background(), filter, ibdObject)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 	} else {
 		if err == mongo.ErrNoDocuments {
-			_, err = collection.InsertOne(context.Background(), ibdDatastore)
+			_, err = collection.InsertOne(context.Background(), ibdObject)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return

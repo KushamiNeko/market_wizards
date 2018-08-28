@@ -127,6 +127,14 @@ func watchListGet(w http.ResponseWriter, r *http.Request) {
 		iis := fmt.Sprintf("%v%v%v%v%v%v", ii.Priority, ii.Status, ii.GRS, ii.RS, ii.Fundamentals, ii.Symbol)
 		ijs := fmt.Sprintf("%v%v%v%v%v%v", ij.Priority, ij.Status, ij.GRS, ij.RS, ij.Fundamentals, ij.Symbol)
 
+		if ii.Priority == "P" && ij.Priority != "P" {
+			return true
+		}
+
+		if ii.Priority != "P" && ij.Priority == "P" {
+			return false
+		}
+
 		return iis < ijs
 	})
 

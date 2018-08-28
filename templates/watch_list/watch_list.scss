@@ -48,6 +48,16 @@
   width: 100%;
 }
 
+.watch-list-item-portfolio {
+  background-color: rgba($paper-light-blue-700, $dark-primary-opacity) !important;
+  color: white !important;
+}
+
+.watch-list-item-earnings {
+  background-color: rgba($paper-teal-700, $dark-primary-opacity) !important;
+  color: white !important;
+}
+
 .watch-list-item-flag {
   background-color: rgba($paper-blue-grey-900, $dark-primary-opacity) !important;
   color: white !important;

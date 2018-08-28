@@ -151,7 +151,7 @@
       id="button-calculate"
       class="btn btn-lg btn-dark watch-list-margin-top watch-list-button">
       <i class="material-icons watch-list-button-icons">search</i>
-      Calculate 
+      Query 
     </button>
 
     <div class="watch-list-separator">
@@ -188,7 +188,15 @@
         <!---->
 
         <tr id="tr-watch-list-item-{{$i}}"
-          class="{{if .Flag}}watch-list-item-flag{{end}}">
+          class="
+          {{if .Flag}}
+          watch-list-item-flag
+          {{else if eq .Priority `P` }}
+          watch-list-item-portfolio
+          {{else if eq .Priority `E`}}
+          watch-list-item-earnings
+          {{end}}
+          ">
           <td>{{$t.Symbol}}</td>
           <td>{{$t.Price}}</td>
 

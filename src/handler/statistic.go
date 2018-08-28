@@ -3,8 +3,8 @@ package handler
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import (
+	"analysis"
 	"bytes"
-	"charts"
 	"client"
 	"config"
 	"context"
@@ -278,19 +278,19 @@ func statisticGet(w http.ResponseWriter, r *http.Request) {
 	stat.EndDate = ends
 	stat.LossThresholdP = threshold
 
-	stat.ChartGeneral, err = charts.ChartGeneralNew(orders, winners, losers, threshold)
+	stat.ChartGeneral, err = analysis.ChartGeneralNew(orders, winners, losers, threshold)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	stat.ChartIBD, err = charts.ChartIBDNew(orders, winnersIBD, losersIBD)
+	stat.ChartIBD, err = analysis.ChartIBDNew(orders, winnersIBD, losersIBD)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	stat.ChartMarketSmith, err = charts.ChartMarketSmithNew(orders, winnersMS, losersMS)
+	stat.ChartMarketSmith, err = analysis.ChartMarketSmithNew(orders, winnersMS, losersMS)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

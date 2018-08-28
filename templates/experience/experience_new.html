@@ -1,0 +1,77 @@
+{{define "ExperienceNew"}}
+
+<html lang="en">
+
+<head>
+
+  <!---->
+  {{template "IndexHead"}}
+  <!---->
+
+  <!---->
+  {{template "IndexIcon"}}
+  <!---->
+
+  <!---->
+  {{template "CDNCSS"}}
+  <!---->
+
+  <!---->
+  {{template "ShareCSS"}}
+  <!---->
+
+  <!---->
+  {{template "ExperienceCSS"}}
+  <!---->
+
+</head>
+
+<body>
+
+  <!---->
+  {{template "ShareNavbar"}}
+  <!---->
+
+  <div class="experience-container">
+
+    <label for="input-note"
+      class="experience-margin-top experience-label">
+      Experience
+    </label>
+
+    <textarea class="form-control experience-input"
+      id="input-note"
+      rows="30">
+    </textarea>
+
+    <button type="button"
+      id="button-create"
+      class="btn btn-lg btn-dark experience-button experience-margin-top"
+      style="width: 100%;">
+      <i class="material-icons experience-button-icons">edit</i>
+      Create
+    </button>
+
+  </div>
+
+  <!---->
+  {{template "ShareFooter"}}
+  <!---->
+
+  <!---->
+  {{template "CDNJS"}}
+  <!---->
+
+  <!---->
+  {{template "ShareJS"}}
+  <!---->
+
+  <!---->
+  {{template "ExperienceNewJS"}}
+  <!---->
+
+</body>
+
+</html>
+
+{{end}}

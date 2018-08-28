@@ -1,29 +1,72 @@
 @import "../_share_scss/share";
 
-.login-container {
+.experience-container {
   @include share-container;
 }
 
-.login-margin-top {
+.experience-margin-top {
   @include share-margin-top;
 }
 
-.login-button {
+.experience-button {
   @include share-button;
+  width: 100%;
 }
 
-.login-button-icons {
+.experience-item-button-row {
+  @include layout-horizontal;
+  @include layout-end-justified;
+}
+
+.experience-item-button {
+  @include share-button;
+  margin-top: $share-margin;
+  margin-bottom: $share-margin;
+  margin-left: $share-margin;
+
+  width: 7em;
+}
+
+.experience-button-icons {
   @include share-button-icons;
 }
 
-.login-label {
+.experience-separator {
+  @include share-separator;
+  margin-top: 2em;
+  margin-bottom: 0;
+}
+
+.experience-item-separator {
+  @include share-separator;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.experience-label {
   @include share-label;
 }
 
-.login-input {
+.experience-input {
   @include share-input;
 }
 
-.login-validate {
+.experience-item {
+  @include share-margin-top;
+  @include shadow-2dp;
+}
+
+.experience-card {
+  border-width: 0;
+}
+
+.experience-content {
+  @include share-label;
+
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.experience-validate {
   @include share-validate;
 }

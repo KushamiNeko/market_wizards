@@ -3,9 +3,11 @@ package datautils
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import (
+	"config"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"hashutils"
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -173,6 +175,107 @@ func (d *DateStorage) JsonDecode(buffer []byte) error {
 	if d.Data == "" {
 		return fmt.Errorf("Data cannot be empty")
 	}
+
+	return nil
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+type DateIdStorage struct {
+	Date int
+	Id   string
+	Data string
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func DateIdStorageNewBytes(date int, data []byte) *DateIdStorage {
+	d := new(DateIdStorage)
+
+	d.Date = date
+	d.Id = hashutils.RandBytesB64(config.KeyLengthDefault)
+	d.Data = base64.StdEncoding.EncodeToString(data)
+
+	return d
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func DateIdStorageNewString(date int, data string) *DateIdStorage {
+	d := new(DateIdStorage)
+
+	d.Date = date
+	d.Id = hashutils.RandBytesB64(config.KeyLengthDefault)
+	d.Data = data
+
+	return d
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (d *DateIdStorage) JsonDecode(buffer []byte) error {
+
+	err := json.Unmarshal(buffer, d)
+	if err != nil {
+		return err
+	}
+
+	if d.Date == 0 {
+		return fmt.Errorf("Date cannot be empty")
+	}
+
+	if d.Data == "" {
+		return fmt.Errorf("Data cannot be empty")
+	}
+
+	d.Id = hashutils.RandBytesB64(config.KeyLengthDefault)
+
+	return nil
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+type IdStorage struct {
+	Id   string
+	Data string
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func IdStorageNewBytes(data []byte) *IdStorage {
+	d := new(IdStorage)
+
+	d.Id = hashutils.RandBytesB64(config.KeyLengthDefault)
+	d.Data = base64.StdEncoding.EncodeToString(data)
+
+	return d
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func IdStorageNewString(data string) *IdStorage {
+	d := new(IdStorage)
+
+	d.Id = hashutils.RandBytesB64(config.KeyLengthDefault)
+	d.Data = data
+
+	return d
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (d *IdStorage) JsonDecode(buffer []byte) error {
+
+	err := json.Unmarshal(buffer, d)
+	if err != nil {
+		return err
+	}
+
+	if d.Data == "" {
+		return fmt.Errorf("Data cannot be empty")
+	}
+
+	d.Id = hashutils.RandBytesB64(config.KeyLengthDefault)
 
 	return nil
 }

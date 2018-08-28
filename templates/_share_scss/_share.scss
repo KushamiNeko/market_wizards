@@ -3,6 +3,8 @@
 @import "../_common_scss/material_design_style/colors";
 @import "../_common_scss/material_design_style/shadows";
 
+$share-margin: 1.25em;
+
 @mixin share-font-family {
   //font-family: 'Noto Sans', sans-serif;
   //font-family: 'Oxygen', sans-serif;
@@ -27,7 +29,8 @@
 
 @mixin share-margin-top {
   //margin-top: 2em;
-  margin-top: 1.25em;
+  //margin-top: 1.25em;
+  margin-top: $share-margin;
 }
 
 @mixin share-label {

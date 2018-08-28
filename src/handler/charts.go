@@ -15,8 +15,8 @@ func Charts(w http.ResponseWriter, r *http.Request) {
 	case http.MethodGet:
 		chartsGet(w, r)
 
-	case http.MethodPost:
-		chartsPost(w, r)
+	//case http.MethodPost:
+	//chartsPost(w, r)
 
 	default:
 		http.NotFound(w, r)

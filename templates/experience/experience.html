@@ -1,4 +1,4 @@
-{{define "Login"}}
+{{define "Experience"}}
 
 <html lang="en">
 
@@ -21,7 +21,7 @@
   <!---->
 
   <!---->
-  {{template "LoginCSS"}}
+  {{template "ExperienceCSS"}}
   <!---->
 
 </head>
@@ -32,66 +32,71 @@
   {{template "ShareNavbar"}}
   <!---->
 
-  <div class="login-container">
-
-    <label for="input-email"
-      class="login-margin-top login-label">
-      Email
-    </label>
-
-    <div class="input-group">
-
-      <input type="email"
-        id="input-email"
-        class="form-control login-input"
-        placeholder="email"
-        aria-label="email">
-
-      <span class="input-group-addon login-input">
-        @gmail.com
-      </span>
-
-    </div>
-
-    <div id="validate-email"
-      class="invalid-feedback login-validate">
-      Invalid Email
-    </div>
-
-    <label for="input-password"
-      class="login-margin-top login-label">
-      Password
-    </label>
-
-    <input type="password"
-      id="input-password"
-      class="form-control login-input"
-      placeholder="password"
-      aria-label="password">
-
-    <div id="validate-password"
-      class="invalid-feedback login-validate">
-      Invalid Password
-    </div>
-
-    <!--<button type="button"-->
-    <!--id="button-create"-->
-    <!--class="btn btn-lg btn-secondary login-margin-top login-button"-->
-    <!--style="width: 100%;">-->
-    <!--Create-->
-    <!--</button>-->
-
-    <!--<button type="button"-->
-    <!--id="button-reset"-->
-    <!--class="btn btn-lg btn-dark login-margin-top my-button">Reset</button>-->
+  <div class="experience-container">
 
     <button type="button"
-      id="button-login"
-      class="btn btn-lg btn-dark login-button login-margin-top"
-      style="width: 100%;">
-      <i class="material-icons login-button-icons">lock_open</i>
-      Login
+      id="button-new"
+      class="btn btn-lg btn-dark experience-button experience-margin-top">
+      <i class="material-icons experience-button-icons">add</i>
+      New Experience
     </button>
+
+    <button type="button"
+      id="button-back"
+      class="btn btn-lg btn-dark experience-margin-top experience-button">
+      <i class="material-icons experience-button-icons">home</i>
+      Back to Action
+    </button>
+
+    <div class="experience-separator">
+    </div>
+
+    <!---->
+    {{range $i, $v := .}}
+    <!---->
+
+    <div class="col-sm-12 experience-item">
+      <div class="card experience-card">
+        <div class="card-body">
+
+          <!---->
+          {{range $j, $s := $v}}
+          <!---->
+
+          <span class="experience-content">{{$s}}</span><br>
+
+          <!---->
+          {{end}}
+          <!---->
+
+        </div>
+
+        <div class="experience-item-separator">
+        </div>
+
+        <div class="experience-item-button-row">
+
+          <button type="button"
+            id="button-edit-item-{{$i}}"
+            class="btn btn-light experience-item-button">
+            <i class="material-icons experience-button-icons">edit</i>
+          </button>
+
+          <button type="button"
+            id="button-delete-item-{{$i}}"
+            class="btn btn-light experience-item-button">
+            <i class="material-icons experience-button-icons">delete</i>
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!---->
+    {{end}}
+    <!---->
 
   </div>
 
@@ -108,7 +113,7 @@
   <!---->
 
   <!---->
-  {{template "LoginJS"}}
+  {{template "ExperienceJS"}}
   <!---->
 
 </body>
