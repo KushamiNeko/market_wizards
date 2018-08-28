@@ -1,0 +1,140 @@
+<!---->
+{{define "WatchListCard"}}
+<!---->
+
+<div class="row">
+
+  <!---->
+  {{range $i, $t := .Items}}
+  <!---->
+
+  <div class="card watch-list-card col-sm-4 
+    {{if .Flag}}
+    watch-list-item-flag
+    {{else if eq .Priority `P` }}
+    watch-list-item-portfolio
+    {{else if eq .Priority `E`}}
+    watch-list-item-earnings
+    {{else}}
+    watch-list-item-normal
+    {{end}}
+    ">
+
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item watch-list-card-label">
+        {{$t.Symbol}}
+
+        <div>
+          <button type="button"
+            id="button-watch-list-item-edit-{{$i}}"
+            class="btn btn-light watch-list-card-item-button">
+            <i class="material-icons watch-list-button-icons">edit</i>
+          </button>
+
+          <button type="button"
+            id="button-watch-list-item-delete-{{$i}}"
+            class="btn btn-light watch-list-card-item-button">
+            <i class="material-icons watch-list-button-icons">delete</i>
+          </button>
+        </div>
+
+      </li>
+
+      <li class="list-group-item watch-list-card-item">
+        <span>
+          Price: 
+        </span>
+        <span>
+          {{$t.Price}}
+        </span>
+      </li>
+
+      <li class="list-group-item watch-list-card-item">
+        <span>
+          Priority: 
+        </span>
+        <span>
+          {{$t.Priority}}
+        </span>
+      </li>
+
+      <li class="list-group-item watch-list-card-item">
+        <span>
+          Status: 
+        </span>
+        <span>
+          {{$t.Status}}
+        </span>
+      </li>
+
+      <li class="list-group-item watch-list-card-item">
+        <span>
+          Group Relative Strength: 
+        </span>
+        <span>
+          {{$t.GRS}}
+        </span>
+      </li>
+
+      <li class="list-group-item watch-list-card-item">
+        <span>
+          Relative Strength: 
+        </span>
+        <span>
+          {{$t.RS}}
+        </span>
+      </li>
+
+      <li class="list-group-item watch-list-card-item">
+        <span>
+          Fundamentals: 
+        </span>
+        <span>
+          {{$t.Fundamentals}}
+        </span>
+      </li>
+
+      <li class="list-group-item watch-list-card-item">
+        <span>
+          Note: 
+        </span>
+        <span>
+          {{$t.Note}}
+        </span>
+      </li>
+
+      <!--<li class="list-group-item"-->
+      <!--style="background-color: transparent;">-->
+      <!--<span>-->
+      <!--Note: -->
+      <!--</span>-->
+      <!--<span class="watch-list-card-item-note">-->
+      <!--{{$t.Note}}-->
+      <!--</span>-->
+      <!--</li>-->
+
+      <li class="list-group-item watch-list-card-item">
+        <span>
+          Position Size: 
+        </span>
+        <span>
+          {{$t.PositionSize}}
+        </span>
+      </li>
+
+    </ul>
+
+    <div style="margin-bottom: 1em;">
+    </div>
+
+  </div>
+
+  <!---->
+  {{end}}
+  <!---->
+
+</div>
+
+<!---->
+{{end}}
+<!---->

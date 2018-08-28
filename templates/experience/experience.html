@@ -41,13 +41,6 @@
       New Experience
     </button>
 
-    <button type="button"
-      id="button-back"
-      class="btn btn-lg btn-dark experience-margin-top experience-button">
-      <i class="material-icons experience-button-icons">home</i>
-      Back to Action
-    </button>
-
     <div class="experience-separator">
     </div>
 
@@ -55,7 +48,7 @@
     {{range $i, $v := .}}
     <!---->
 
-    <div class="col-sm-12 experience-item">
+    <div class="experience-item">
       <div class="card experience-card">
         <div class="card-body">
 
@@ -97,6 +90,16 @@
     <!---->
     {{end}}
     <!---->
+
+    <div class="experience-separator">
+    </div>
+
+    <button type="button"
+      id="button-back"
+      class="btn btn-lg btn-dark experience-margin-top experience-button">
+      <i class="material-icons experience-button-icons">home</i>
+      Back to Action
+    </button>
 
   </div>
 

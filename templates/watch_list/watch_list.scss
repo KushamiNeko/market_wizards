@@ -1,5 +1,7 @@
 @import "../_share_scss/share";
 @import "../_common_scss/material_design_style/colors";
+@import "../_common_scss/material_design_style/typography";
+@import "../_common_scss/material_design_style/layout";
 
 .watch-list-container {
   @include share-container;
@@ -34,6 +36,40 @@
   @include share-input;
 }
 
+.watch-list-card {
+  @include share-input;
+  @include share-margin-top;
+  border-color: white;
+  border-width: 0.15em;
+  border-radius: $share-border-radius;
+}
+
+.watch-list-card-label {
+  @include layout-horizontal;
+  @include layout-justified;
+  background-color: transparent;
+  @include font-title;
+}
+
+.watch-list-card-item {
+  @include layout-horizontal;
+  @include layout-justified;
+  background-color: transparent;
+}
+
+.watch-list-card-item-button {
+  background-color: transparent;
+  border-width: 0;
+  color: inherit;
+}
+
+.watch-list-card-item-note {
+  @include share-input;
+  word-break: normal;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
 .watch-list-validate {
   @include share-validate;
 }
@@ -46,6 +82,10 @@
 .watch-list-item {
   @include share-label;
   width: 100%;
+}
+
+.watch-list-item-normal {
+  background-color: rgba($paper-grey-300, $dark-primary-opacity) !important;
 }
 
 .watch-list-item-portfolio {

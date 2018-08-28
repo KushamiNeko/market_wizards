@@ -16,6 +16,7 @@
 .experience-item-button-row {
   @include layout-horizontal;
   @include layout-end-justified;
+  padding-right: 1.5em;
 }
 
 .experience-item-button {
@@ -53,11 +54,12 @@
 
 .experience-item {
   @include share-margin-top;
-  @include shadow-2dp;
 }
 
 .experience-card {
+  @include shadow-2dp;
   border-width: 0;
+  border-radius: $share-border-radius;
 }
 
 .experience-content {

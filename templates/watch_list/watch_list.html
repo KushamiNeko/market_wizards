@@ -1,4 +1,6 @@
+<!---->
 {{define "WatchList"}}
+<!---->
 
 <html lang="en">
 
@@ -157,81 +159,13 @@
     <div class="watch-list-separator">
     </div>
 
-    <table class="table table-striped watch-list-margin-top watch-list-table">
+    <!---->
+    <!--{template "WatchListTable" .}}-->
+    <!---->
 
-      <thead class="thead-dark">
-        <tr>
-          <th scope="col">Symbol</th>
-          <th scope="col">Price</th>
-
-          <th scope="col">Priority</th>
-          <th scope="col">Status</th>
-
-          <th scope="col">GRS</th>
-          <th scope="col">RS</th>
-          <th scope="col">F</th>
-          <th scope="col">Note</th>
-
-          <!---->
-          <th scope="col">{{.PositionSize}}</th>
-          <!---->
-
-          <th scope="col"></th>
-
-        </tr>
-      </thead>
-
-      <tbody>
-
-        <!---->
-        {{range $i, $t := .Items}}
-        <!---->
-
-        <tr id="tr-watch-list-item-{{$i}}"
-          class="
-          {{if .Flag}}
-          watch-list-item-flag
-          {{else if eq .Priority `P` }}
-          watch-list-item-portfolio
-          {{else if eq .Priority `E`}}
-          watch-list-item-earnings
-          {{end}}
-          ">
-          <td>{{$t.Symbol}}</td>
-          <td>{{$t.Price}}</td>
-
-          <td>{{$t.Priority}}</td>
-          <td>{{$t.Status}}</td>
-
-          <td>{{$t.GRS}}</td>
-          <td>{{$t.RS}}</td>
-          <td>{{$t.Fundamentals}}</td>
-
-          <td>{{$t.Note}}</td>
-
-          <td>{{$t.PositionSize}}</td>
-          <td>
-            <button type="button"
-              id="button-watch-list-item-edit-{{$i}}"
-              class="btn btn-light">
-              <i class="material-icons watch-list-button-icons">edit</i>
-            </button>
-
-            <button type="button"
-              id="button-watch-list-item-delete-{{$i}}"
-              class="btn btn-light">
-              <i class="material-icons watch-list-button-icons">delete</i>
-            </button>
-          </td>
-        </tr>
-
-        <!---->
-        {{end}}
-        <!---->
-
-      </tbody>
-
-    </table>
+    <!---->
+    {{template "WatchListCard" .}}
+    <!---->
 
     <div class="watch-list-separator">
     </div>
@@ -313,4 +247,6 @@
 
 </html>
 
+<!---->
 {{end}}
+<!---->
