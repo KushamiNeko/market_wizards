@@ -52,9 +52,15 @@
   margin-top: 2em;
 }
 
+.statistic-list-label {
+  @include font-subhead;
+  @include share-font-family;
+}
+
 .statistic-list-item {
   @include layout-horizontal;
   @include layout-justified;
+  @include share-label;
 }
 
 .statistic-color-general {
@@ -63,7 +69,6 @@
 }
 
 .statistic-color-display {
-  //background-color: $paper-cyan-a400;
   background-color: $paper-green-a200;
 }
 
@@ -73,7 +78,6 @@
 }
 
 .statistic-color-info {
-  //background-color: $paper-purple-a200;
   background-color: $paper-cyan-a400;
 }
 
@@ -83,11 +87,5 @@
 }
 
 .statistic-color-warning {
-  //background-color: $paper-pink-a100;
   background-color: $paper-amber-a200;
-}
-
-li {
-  @include font-subhead;
-  font-family: 'Padauk', sans-serif;
 }

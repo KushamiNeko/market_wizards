@@ -71,13 +71,13 @@ $("#button-create").click(function() {
 
   var price = parseFloat($("#input-price").val());
 
-  if (!$("#dropdownMenu-priority").html().includes(":")) {
-    $("#validate-priority").show();
-    $("#dropdownMenu-priority").focus();
-    return;
-  }
+  //if (!$("#dropdownMenu-priority").html().includes(":")) {
+  //$("#validate-priority").show();
+  //$("#dropdownMenu-priority").focus();
+  //return;
+  //}
 
-  var priority = $("#dropdownMenu-priority").html().split(":")[1].trim();
+  //var priority = $("#dropdownMenu-priority").html().split(":")[1].trim();
 
   if (!$("#dropdownMenu-status").html().includes(":")) {
     $("#validate-status").show();
@@ -124,7 +124,7 @@ $("#button-create").click(function() {
   var wlData = {
     "Symbol": symbol,
     "Price": price,
-    "Priority": priority,
+    //"Priority": priority,
     "GRS": grs,
     "RS": rs,
     "Fundamentals": fundamentals,
@@ -178,6 +178,7 @@ dropdownClick("#dropdownMenu-status", "#dropdown-status-a");
 dropdownClick("#dropdownMenu-status", "#dropdown-status-b");
 dropdownClick("#dropdownMenu-status", "#dropdown-status-c");
 dropdownClick("#dropdownMenu-status", "#dropdown-status-d");
+dropdownClick("#dropdownMenu-status", "#dropdown-status-e");
 
 dropdownClick("#dropdownMenu-grs", "#dropdown-grs-a");
 dropdownClick("#dropdownMenu-grs", "#dropdown-grs-b");

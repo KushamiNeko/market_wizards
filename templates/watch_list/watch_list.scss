@@ -49,6 +49,9 @@
   @include layout-justified;
   background-color: transparent;
   @include font-title;
+  @media (max-width: $share-media-max-width) {
+    @include font-subhead;
+  }
 }
 
 .watch-list-card-item {

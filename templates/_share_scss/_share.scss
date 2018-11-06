@@ -6,6 +6,8 @@
 $share-margin: 1.25em;
 $share-border-radius: 1em;
 
+$share-media-max-width: 1000px;
+
 @mixin share-font-family {
   //font-family: 'Noto Sans', sans-serif;
   //font-family: 'Oxygen', sans-serif;
@@ -18,7 +20,7 @@ $share-border-radius: 1em;
   margin-left: auto;
   margin-right: auto;
 
-  @media (max-width: 1000px) {
+  @media (max-width: $share-media-max-width) {
     width: 85%;
   }
 }
@@ -35,13 +37,21 @@ $share-border-radius: 1em;
 }
 
 @mixin share-label {
-  @include font-subhead;
   @include share-font-family;
+  @include font-subhead;
+
+  @media (max-width: $share-media-max-width) {
+    @include font-body1;
+  }
 }
 
 @mixin share-input {
-  @include font-subhead;
   @include share-font-family;
+  @include font-subhead;
+
+  @media (max-width: $share-media-max-width) {
+    @include font-body1;
+  }
 }
 
 @mixin share-validate {

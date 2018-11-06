@@ -8,12 +8,12 @@
   {{range $i, $t := .Items}}
   <!---->
 
-  <div class="card watch-list-card col-sm-4 
+  <div class="card watch-list-card col-sm-6
     {{if .Flag}}
     watch-list-item-flag
-    {{else if eq .Priority `P` }}
+    {{else if eq .Status `Portfolio` }}
     watch-list-item-portfolio
-    {{else if eq .Priority `E`}}
+    {{else if eq .Status `Earnings`}}
     watch-list-item-earnings
     {{else}}
     watch-list-item-normal
@@ -42,25 +42,25 @@
 
       <li class="list-group-item watch-list-card-item">
         <span>
-          Price: 
+          Price:
         </span>
         <span>
           {{$t.Price}}
         </span>
       </li>
 
-      <li class="list-group-item watch-list-card-item">
-        <span>
-          Priority: 
-        </span>
-        <span>
-          {{$t.Priority}}
-        </span>
-      </li>
+      <!--<li class="list-group-item watch-list-card-item">-->
+      <!--<span>-->
+      <!--Priority:-->
+      <!--</span>-->
+      <!--<span>-->
+      <!--{$t.Priority}}-->
+      <!--</span>-->
+      <!--</li>-->
 
       <li class="list-group-item watch-list-card-item">
         <span>
-          Status: 
+          Status:
         </span>
         <span>
           {{$t.Status}}
@@ -69,7 +69,7 @@
 
       <li class="list-group-item watch-list-card-item">
         <span>
-          Group Relative Strength: 
+          Group Relative Strength:
         </span>
         <span>
           {{$t.GRS}}
@@ -78,7 +78,7 @@
 
       <li class="list-group-item watch-list-card-item">
         <span>
-          Relative Strength: 
+          Relative Strength:
         </span>
         <span>
           {{$t.RS}}
@@ -87,7 +87,7 @@
 
       <li class="list-group-item watch-list-card-item">
         <span>
-          Fundamentals: 
+          Fundamentals:
         </span>
         <span>
           {{$t.Fundamentals}}
@@ -96,26 +96,16 @@
 
       <li class="list-group-item watch-list-card-item">
         <span>
-          Note: 
+          Note:
         </span>
         <span>
           {{$t.Note}}
         </span>
       </li>
 
-      <!--<li class="list-group-item"-->
-      <!--style="background-color: transparent;">-->
-      <!--<span>-->
-      <!--Note: -->
-      <!--</span>-->
-      <!--<span class="watch-list-card-item-note">-->
-      <!--{{$t.Note}}-->
-      <!--</span>-->
-      <!--</li>-->
-
       <li class="list-group-item watch-list-card-item">
         <span>
-          Position Size: 
+          Position Size:
         </span>
         <span>
           {{$t.PositionSize}}

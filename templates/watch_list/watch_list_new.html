@@ -77,74 +77,74 @@
       Invalid Price
     </div>
 
-    <div class="dropdown watch-list-margin-top">
+    <!--<div class="dropdown watch-list-margin-top">-->
 
-      <button class="btn btn-lg btn-dark watch-list-button dropdown-toggle"
-        type="button"
-        id="dropdownMenu-priority"
-        data-toggle="dropdown"
-        aria-haspopup="true"
-        aria-expanded="false">
+    <!--<button class="btn btn-lg btn-dark watch-list-button dropdown-toggle"-->
+    <!--type="button"-->
+    <!--id="dropdownMenu-priority"-->
+    <!--data-toggle="dropdown"-->
+    <!--aria-haspopup="true"-->
+    <!--aria-expanded="false">-->
 
-        <!---->
-        {{if .}}
-        <!---->
+    <!---->
+    <!--{if .}}-->
+    <!---->
 
-        Priority &nbsp; : {{.Priority}}
+    <!--Priority &nbsp; : {.Priority}}-->
 
-        <!---->
-        {{else}}
-        <!---->
+    <!---->
+    <!--{else}}-->
+    <!---->
 
-        Priority
+    <!--Priority-->
 
-        <!---->
-        {{end}}
-        <!---->
+    <!---->
+    <!--{end}}-->
+    <!---->
 
-      </button>
+    <!--</button>-->
 
-      <div class="dropdown-menu watch-list-menu"
-        aria-labelledby="dropdownMenu">
+    <!--<div class="dropdown-menu watch-list-menu"-->
+    <!--aria-labelledby="dropdownMenu">-->
 
-        <button id="dropdown-priority-a"
-          class="dropdown-item watch-list-item"
-          type="button">
-          A
-        </button>
+    <!--<button id="dropdown-priority-a"-->
+    <!--class="dropdown-item watch-list-item"-->
+    <!--type="button">-->
+    <!--A-->
+    <!--</button>-->
 
-        <button id="dropdown-priority-b"
-          class="dropdown-item watch-list-item"
-          type="button">
-          B
-        </button>
+    <!--<button id="dropdown-priority-b"-->
+    <!--class="dropdown-item watch-list-item"-->
+    <!--type="button">-->
+    <!--B-->
+    <!--</button>-->
 
-        <button id="dropdown-priority-c"
-          class="dropdown-item watch-list-item"
-          type="button">
-          C
-        </button>
+    <!--<button id="dropdown-priority-c"-->
+    <!--class="dropdown-item watch-list-item"-->
+    <!--type="button">-->
+    <!--C-->
+    <!--</button>-->
 
-        <button id="dropdown-priority-e"
-          class="dropdown-item watch-list-item"
-          type="button">
-          E
-        </button>
+    <!--<button id="dropdown-priority-e"-->
+    <!--class="dropdown-item watch-list-item"-->
+    <!--type="button">-->
+    <!--E-->
+    <!--</button>-->
 
-        <button id="dropdown-priority-p"
-          class="dropdown-item watch-list-item"
-          type="button">
-          P
-        </button>
+    <!--<button id="dropdown-priority-p"-->
+    <!--class="dropdown-item watch-list-item"-->
+    <!--type="button">-->
+    <!--P-->
+    <!--</button>-->
 
-      </div>
+    <!--</div>-->
 
-    </div>
+    <!--</div>-->
 
-    <div id="validate-priority"
-      class="invalid-feedback watch-list-validate">
-      Invalid Priority
-    </div>
+    <!--<div id="validate-priority"-->
+    <!--class="invalid-feedback watch-list-validate">-->
+    <!--Invalid Priority-->
+    <!--</div>-->
 
     <div class="dropdown watch-list-margin-top">
 
@@ -163,13 +163,13 @@
 
         <!---->
         {{else}}
-        <!---->
+          <!---->
 
-        Status
+          Status
 
-        <!---->
-        {{end}}
-        <!---->
+          <!---->
+          {{end}}
+          <!---->
 
       </button>
 
@@ -194,11 +194,17 @@
           Accelerating
         </button>
 
-        <!--<button id="dropdown-status-d"-->
-        <!--class="dropdown-item watch-list-item"-->
-        <!--type="button">-->
-        <!--Aboard-->
-        <!--</button>-->
+        <button id="dropdown-status-d"
+          class="dropdown-item watch-list-item"
+          type="button">
+          Portfolio
+        </button>
+
+        <button id="dropdown-status-e"
+          class="dropdown-item watch-list-item"
+          type="button">
+          Earnings
+        </button>
 
       </div>
 
@@ -226,13 +232,13 @@
 
         <!---->
         {{else}}
-        <!---->
+          <!---->
 
-        Group Relative Strength
+          Group Relative Strength
 
-        <!---->
-        {{end}}
-        <!---->
+          <!---->
+          {{end}}
+          <!---->
 
       </button>
 
@@ -283,13 +289,13 @@
 
         <!---->
         {{else}}
-        <!---->
+          <!---->
 
-        Relative Strength
+          Relative Strength
 
-        <!---->
-        {{end}}
-        <!---->
+          <!---->
+          {{end}}
+          <!---->
 
       </button>
 
@@ -346,13 +352,13 @@
 
         <!---->
         {{else}}
-        <!---->
+          <!---->
 
-        Fundamentals
+          Fundamentals
 
-        <!---->
-        {{end}}
-        <!---->
+          <!---->
+          {{end}}
+          <!---->
       </button>
 
       <div class="dropdown-menu watch-list-menu"
@@ -422,13 +428,13 @@
 
         <!---->
         {{else}}
-        <!---->
+          <!---->
 
-        outlined_flag
+          outlined_flag
 
-        <!---->
-        {{end}}
-        <!---->
+          <!---->
+          {{end}}
+          <!---->
 
       </i>
     </button>
@@ -443,32 +449,32 @@
 
     <!---->
     {{else}}
-    <!---->
+      <!---->
 
-    <script>
-      var flag = false;
+      <script>
+        var flag = false;
     </script>
 
-    <!---->
-    {{end}}
-    <!---->
+      <!---->
+      {{end}}
+      <!---->
 
-    <div class="watch-list-separator">
-    </div>
+      <div class="watch-list-separator">
+      </div>
 
-    <button type="button"
-      id="button-create"
-      class="btn btn-lg btn-dark watch-list-button watch-list-margin-top">
-      <i class="material-icons watch-list-button-icons">add</i>
-      Create
-    </button>
+      <button type="button"
+        id="button-create"
+        class="btn btn-lg btn-dark watch-list-button watch-list-margin-top">
+        <i class="material-icons watch-list-button-icons">add</i>
+        Create
+      </button>
 
-    <button type="button"
-      id="button-cancel"
-      class="btn btn-lg btn-dark watch-list-margin-top watch-list-button">
-      <i class="material-icons watch-list-button-icons">close</i>
-      Cancel
-    </button>
+      <button type="button"
+        id="button-cancel"
+        class="btn btn-lg btn-dark watch-list-margin-top watch-list-button">
+        <i class="material-icons watch-list-button-icons">close</i>
+        Cancel
+      </button>
 
   </div>
 

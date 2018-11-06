@@ -13,7 +13,7 @@ type WatchListItem struct {
 	Symbol string
 	Price  float64
 
-	Priority string
+	//Priority string
 
 	GRS string
 	RS  string
@@ -45,9 +45,9 @@ func (w *WatchListItem) JsonDecode(buffer []byte) error {
 		return fmt.Errorf("Price cannot be empty")
 	}
 
-	if w.Priority == "" {
-		return fmt.Errorf("Priority cannot be empty")
-	}
+	//if w.Priority == "" {
+	//return fmt.Errorf("Priority cannot be empty")
+	//}
 
 	if w.RS == "" {
 		return fmt.Errorf("Relative Strength cannot be empty")
