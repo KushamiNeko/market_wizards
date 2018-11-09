@@ -120,44 +120,136 @@ func watchListGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	sort.Slice(items, func(i, j int) bool {
-		ii := items[i]
-		ij := items[j]
+	portfolio := make([]*watchlist.WatchListItem, 0)
+	earnings := make([]*watchlist.WatchListItem, 0)
+	flaged := make([]*watchlist.WatchListItem, 0)
+	remaining := make([]*watchlist.WatchListItem, 0)
 
-		//iis := fmt.Sprintf("%v%v%v%v%v%v", ii.Priority, ii.Status, ii.GRS, ii.RS, ii.Fundamentals, ii.Symbol)
-		//ijs := fmt.Sprintf("%v%v%v%v%v%v", ij.Priority, ij.Status, ij.GRS, ij.RS, ij.Fundamentals, ij.Symbol)
+	sortedItems := make([]*watchlist.WatchListItem, 0)
 
-		iis := fmt.Sprintf("%v%v%v%v%v", ii.Status, ii.GRS, ii.RS, ii.Fundamentals, ii.Symbol)
-		ijs := fmt.Sprintf("%v%v%v%v%v", ij.Status, ij.GRS, ij.RS, ij.Fundamentals, ij.Symbol)
-
-		//if ii.Priority == "P" && ij.Priority != "P" {
-		//return true
-		//}
-
-		//if ii.Priority != "P" && ij.Priority == "P" {
-		//return false
-		//}
-
-		if ii.Status == "Portfolio" && ij.Status != "Portfolio" {
-			return true
+	for _, i := range items {
+		if i.Status == "Portfolio" {
+			portfolio = append(portfolio, i)
+		} else if i.Status == "Earnings" {
+			earnings = append(earnings, i)
+		} else if i.Flag {
+			flaged = append(flaged, i)
+		} else {
+			remaining = append(remaining, i)
 		}
+	}
 
-		if ii.Status != "Portfolio" && ij.Status == "Portfolio" {
-			return false
-		}
+	sort.Slice(portfolio, func(i, j int) bool {
+		ii := portfolio[i]
+		ij := portfolio[j]
 
-		if ii.Status == "Earnings" && ij.Status != "Earnings" {
-			return true
-		}
-
-		if ii.Status != "Earnings" && ij.Status == "Earnings" {
-			return false
-		}
+		iis := fmt.Sprintf("%v%v%v%v", ii.GRS, ii.RS, ii.Fundamentals, ii.Symbol)
+		ijs := fmt.Sprintf("%v%v%v%v", ij.GRS, ij.RS, ij.Fundamentals, ij.Symbol)
 
 		return iis < ijs
 	})
 
-	wt.Items = items
+	sort.Slice(earnings, func(i, j int) bool {
+		ii := earnings[i]
+		ij := earnings[j]
+
+		iis := fmt.Sprintf("%v%v%v%v", ii.GRS, ii.RS, ii.Fundamentals, ii.Symbol)
+		ijs := fmt.Sprintf("%v%v%v%v", ij.GRS, ij.RS, ij.Fundamentals, ij.Symbol)
+
+		return iis < ijs
+	})
+
+	sort.Slice(flaged, func(i, j int) bool {
+		ii := flaged[i]
+		ij := flaged[j]
+
+		iis := fmt.Sprintf("%v%v%v%v%v", ii.Status[0], ii.GRS, ii.RS, ii.Fundamentals, ii.Symbol)
+		ijs := fmt.Sprintf("%v%v%v%v%v", ij.Status[0], ij.GRS, ij.RS, ij.Fundamentals, ij.Symbol)
+
+		return iis < ijs
+	})
+
+	sort.Slice(remaining, func(i, j int) bool {
+		ii := remaining[i]
+		ij := remaining[j]
+
+		iis := fmt.Sprintf("%v%v%v%v%v", ii.Status[0], ii.GRS, ii.RS, ii.Fundamentals, ii.Symbol)
+		ijs := fmt.Sprintf("%v%v%v%v%v", ij.Status[0], ij.GRS, ij.RS, ij.Fundamentals, ij.Symbol)
+
+		return iis < ijs
+	})
+
+	for _, i := range portfolio {
+		sortedItems = append(sortedItems, i)
+	}
+
+	for _, i := range earnings {
+		sortedItems = append(sortedItems, i)
+	}
+
+	for _, i := range flaged {
+		sortedItems = append(sortedItems, i)
+	}
+
+	for _, i := range remaining {
+		sortedItems = append(sortedItems, i)
+	}
+
+	//sort.Slice(items, func(i, j int) bool {
+	//ii := items[i]
+	//ij := items[j]
+
+	////iis := fmt.Sprintf("%v%v%v%v%v%v", ii.Priority, ii.Status, ii.GRS, ii.RS, ii.Fundamentals, ii.Symbol)
+	////ijs := fmt.Sprintf("%v%v%v%v%v%v", ij.Priority, ij.Status, ij.GRS, ij.RS, ij.Fundamentals, ij.Symbol)
+
+	////if ii.Priority == "P" && ij.Priority != "P" {
+	////return true
+	////}
+
+	////if ii.Priority != "P" && ij.Priority == "P" {
+	////return false
+	////}
+
+	//priority := "G"
+
+	//if ii.Status == "Portfolio" && ij.Status != "Portfolio" {
+	////return true
+	//priority = "A"
+	//}
+
+	//if ii.Status != "Portfolio" && ij.Status == "Portfolio" {
+	////return false
+	//priority = "B"
+	//}
+
+	//if ii.Status == "Earnings" && ij.Status != "Earnings" {
+	////return true
+	//priority = "C"
+	//}
+
+	//if ii.Status != "Earnings" && ij.Status == "Earnings" {
+	////return false
+	//priority = "D"
+	//}
+
+	//if ii.Flag == true && ij.Flag != false {
+	////return true
+	//priority = "E"
+	//}
+
+	//if ii.Flag != true && ij.Flag == false {
+	////return false
+	//priority = "F"
+	//}
+
+	//iis := fmt.Sprintf("%v%v%v%v%v%v", priority, ii.Status, ii.GRS, ii.RS, ii.Fundamentals, ii.Symbol)
+	//ijs := fmt.Sprintf("%v%v%v%v%v%v", priority, ij.Status, ij.GRS, ij.RS, ij.Fundamentals, ij.Symbol)
+
+	//return iis < ijs
+	//})
+
+	//wt.Items = items
+	wt.Items = sortedItems
 
 	if capital == "" || size == "" {
 		writeTemplate(w, "WatchList", wt, nil)
